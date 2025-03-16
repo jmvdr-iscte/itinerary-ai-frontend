@@ -1,249 +1,64 @@
+<script setup lang="ts">
+import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
+</script>
+
 <template>
-  <div class="landing-page">
-    <header class="header">
-      <nav class="nav">
-        <h1 class="logo">TripFlow</h1>
-        <ul class="nav-links">
-          <li><router-link to="#features">Features</router-link></li>
-          <li><router-link to="#about">About</router-link></li>
-          <li><router-link to="#contact">Contact</router-link></li>
-          <li><button class="cta-button">Plan Your Trip</button></li>
-        </ul>
-      </nav>
-    </header>
+  <div class="bg-[#0F1629] text-white min-h-screen flex flex-col w-screen">
+    <AppHeader />
 
-    <section class="hero">
-      <h2>AI-Powered Travel Perfection</h2>
-      <p>Craft your dream itinerary with intelligent route optimization</p>
-      <button class="cta-button">Start Your Journey</button>
-      <div class="gradient-accent"></div>
-    </section>
+    <main class="flex-1 w-full">
+      <!-- Hero Section -->
+      <section class="relative text-center py-32 px-6 bg-gradient-to-r from-[#512D6D] to-[#8B5CF6] w-screen">
+        <h1 class="text-5xl font-extrabold tracking-tight">AI-Powered Travel Itineraries</h1>
+        <p class="mt-4 text-lg text-gray-200">
+          Let our AI generate the perfect trip tailored to your interests.
+        </p>
+        <a
+          href="#get-started"
+          class="mt-6 inline-block bg-[#1E293B] text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-[#334155] transition">
+          Get Your Itinerary
+        </a>
+      </section>
 
-    <section id="features" class="features">
-      <div class="feature-card">
-        <div class="feature-icon">🧳</div>
-        <h3>Smart Packing</h3>
-        <p>AI-generated packing lists based on destination and weather</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🗺️</div>
-        <h3>Route Genius</h3>
-        <p>Optimized daily plans with perfect timing</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⏱️</div>
-        <h3>Real-Time Updates</h3>
-        <p>Instant adjustments for delays and closures</p>
-      </div>
-    </section>
+      <!-- Features Section -->
+      <section class="py-16 px-6 w-screen">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl font-bold text-[#8B5CF6]">Why Choose Itinerary AI?</h2>
+          <p class="mt-4 text-gray-300">
+            Our AI analyzes your preferences, location, and time constraints to create an optimized travel plan.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10 max-w-6xl mx-auto">
+          <div class="p-6 bg-[#1E293B] rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold text-[#8B5CF6]">Personalized Trips</h3>
+            <p class="mt-2 text-gray-400">Tailored recommendations based on your interests.</p>
+          </div>
+          <div class="p-6 bg-[#1E293B] rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold text-[#8B5CF6]">Optimized Routes</h3>
+            <p class="mt-2 text-gray-400">Efficient travel planning to maximize your experience.</p>
+          </div>
+          <div class="p-6 bg-[#1E293B] rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-semibold text-[#8B5CF6]">Seamless Integration</h3>
+            <p class="mt-2 text-gray-400">Google Maps links for easy navigation.</p>
+          </div>
+        </div>
+      </section>
 
-    <footer class="footer">
-      <p>&copy; 2025 TripFlow - Travel Smarter, Not Harder</p>
-    </footer>
+      <!-- Call to Action -->
+      <section id="get-started" class="text-center py-20 bg-gradient-to-r from-[#512D6D] to-[#8B5CF6] w-screen">
+        <h2 class="text-4xl font-bold">Start Planning Your Trip</h2>
+        <p class="mt-4 text-gray-200">Get your AI-powered itinerary in just a few clicks.</p>
+        <a
+          href="#"
+          class="mt-6 inline-block bg-[#1E293B] text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-[#334155] transition">
+          Generate Itinerary
+        </a>
+      </section>
+    </main>
+
+    <AppFooter />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'LandingPage',
-});
-</script>
-
-<style scoped>
-/* Color Scheme */
-:root {
-  --deep-ocean: #0F172A;
-  --sky-blue: #3B82F6;
-  --tropical-teal: #2DD4BF;
-  --sunset-orange: #F97316;
-  --moonlight: #F8FAFC;
-  --twilight-purple: #818CF8;
-}
-
-/* Base Styles */
-.landing-page {
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--moonlight);
-  background-color: var(--deep-ocean);
-  min-height: 100vh;
-  position: relative;
-}
-
-/* Header Fixes */
-.header {
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(12px);
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(248, 250, 252, 0.1);
-}
-
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  height: 80px;
-}
-
-.logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--sky-blue), var(--tropical-teal));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-links a {
-  color: var(--moonlight);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.nav-links a:hover {
-  color: var(--tropical-teal);
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -5px;
-  left: 0;
-  background: linear-gradient(90deg, var(--sky-blue), var(--tropical-teal));
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-/* Main Content Centering */
-.main-content {
-  padding-top: 80px; /* Header height offset */
-  min-height: calc(100vh - 160px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero {
-  text-align: center;
-  padding: 6rem 2rem;
-  max-width: 1200px;
-  width: 100%;
-}
-
-.hero h2 {
-  font-size: 3rem;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(45deg, var(--moonlight), var(--tropical-teal));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p {
-  font-size: 1.25rem;
-  color: rgba(248, 250, 252, 0.9);
-  max-width: 600px;
-  margin: 0 auto 2.5rem;
-}
-
-/* Features Grid */
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 4rem 2rem;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.feature-card {
-  padding: 2rem;
-  background: rgba(248, 250, 252, 0.05);
-  border-radius: 16px;
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--tropical-teal);
-}
-
-/* CTA Button */
-.cta-button {
-  background: linear-gradient(135deg, var(--sky-blue), var(--twilight-purple));
-  color: var(--moonlight);
-  padding: 0.8rem 2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 2rem;
-  background: rgba(15, 23, 42, 0.95);
-  border-top: 1px solid rgba(59, 130, 246, 0.1);
-  margin-top: auto;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .nav {
-    padding: 0 1rem;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hero {
-    padding: 4rem 1rem;
-  }
-
-  .hero h2 {
-    font-size: 2rem;
-  }
-
-  .features {
-    padding: 2rem 1rem;
-    grid-template-columns: 1fr;
-  }
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-</style>
+<style scoped></style>

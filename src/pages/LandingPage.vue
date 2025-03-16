@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
+import ProductShowcase from "@/components/ProductShowcase.vue";
 </script>
 
 <template>
@@ -9,7 +10,7 @@ import AppFooter from "@/components/AppFooter.vue";
 
     <main class="flex-1 w-full">
       <!-- Hero Section -->
-      <section class="relative text-center py-32 px-6 bg-gradient-to-r from-[#512D6D] to-[#8B5CF6] w-screen">
+      <section class="relative text-center py-32 px-6 bg-gradient-to-r from-[#512D6D] to-[#8B5CF6] w-full">
         <h1 class="text-5xl font-extrabold tracking-tight">AI-Powered Travel Itineraries</h1>
         <p class="mt-4 text-lg text-gray-200">
           Let our AI generate the perfect trip tailored to your interests.
@@ -22,9 +23,9 @@ import AppFooter from "@/components/AppFooter.vue";
       </section>
 
       <!-- Features Section -->
-      <section class="py-16 px-6 w-screen">
+      <section class="py-16 px-6 w-full">
         <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl font-bold text-[#8B5CF6]">Why Choose Itinerary AI?</h2>
+          <h2 class="text-3xl font-bold text-[#8B5CF6]">Why Choose TripFlowAI?</h2>
           <p class="mt-4 text-gray-300">
             Our AI analyzes your preferences, location, and time constraints to create an optimized travel plan.
           </p>
@@ -45,20 +46,10 @@ import AppFooter from "@/components/AppFooter.vue";
         </div>
       </section>
 
-      <!-- Call to Action -->
-      <section id="get-started" class="text-center py-20 bg-gradient-to-r from-[#512D6D] to-[#8B5CF6] w-screen">
-        <h2 class="text-4xl font-bold">Start Planning Your Trip</h2>
-        <p class="mt-4 text-gray-200">Get your AI-powered itinerary in just a few clicks.</p>
-        <a
-          href="#"
-          class="mt-6 inline-block bg-[#1E293B] text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-[#334155] transition">
-          Generate Itinerary
-        </a>
-      </section>
+      <!-- Product Section -->
+      <ProductShowcase id="get-started" />
     </main>
 
     <AppFooter />
   </div>
 </template>
-
-<style scoped></style>

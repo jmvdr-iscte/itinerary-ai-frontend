@@ -33,11 +33,12 @@
         </ul>
 
         <!-- Call to Action -->
-        <a
-          href="#"
-          class="block mt-6 text-center bg-[#8B5CF6] text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-[#6B46C1] transition">
-          Get Your Itinerary
-        </a>
+    <router-link
+      to="/questionnaire"
+      class="block mt-6 text-center bg-[#8B5CF6] text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-md hover:bg-[#6B46C1] transition">
+      Get Your Itinerary
+    </router-link>
+
       </div>
 
       <!-- Social Proof -->

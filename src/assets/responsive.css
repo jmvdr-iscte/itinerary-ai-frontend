@@ -1,0 +1,139 @@
+/* Responsive styles for the landing page */
+
+/* Mobile first approach */
+@media (max-width: 640px) {
+  /* Hero section adjustments */
+  #hero h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  #hero .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  #hero .cta-buttons a {
+    width: 100%;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Features section adjustments */
+  .feature-card {
+    padding: 1.5rem !important;
+  }
+  
+  /* Product showcase adjustments */
+  .pricing-card {
+    padding: 1.5rem !important;
+  }
+  
+  /* Footer adjustments */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Hero section adjustments */
+  #hero h1 {
+    font-size: 3.5rem !important;
+  }
+  
+  /* Features section adjustments */
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* Product showcase adjustments */
+  .product-columns {
+    flex-direction: column !important;
+  }
+  
+  .product-columns > div {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Fix for mobile viewport height issues */
+@media (max-width: 768px) {
+  .min-h-screen, .min-h-\[90vh\] {
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  #hero {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+  }
+  
+  .scroll-indicator {
+    display: none !important;
+  }
+}
+
+/* High resolution screens */
+@media (min-width: 1920px) {
+  .max-w-7xl {
+    max-width: 1400px !important;
+  }
+  
+  #hero h1 {
+    font-size: 5rem !important;
+  }
+  
+  .feature-card, .pricing-card {
+    padding: 2.5rem !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .bg-gradient-to-br, .bg-gradient-to-r, .animate-float, .animate-pulse {
+    animation: none !important;
+    background: white !important;
+    color: black !important;
+  }
+  
+  .text-white, .text-gray-300, .text-gray-400 {
+    color: black !important;
+  }
+  
+  .bg-\[\#0F1629\], .bg-\[\#1E293B\] {
+    background-color: white !important;
+  }
+  
+  .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+  
+  .fixed, .sticky {
+    position: relative !important;
+  }
+  
+  .hidden {
+    display: block !important;
+  }
+}
+
+/* Dark mode preference */
+@media (prefers-color-scheme: light) {
+  .dark-mode-toggle {
+    display: block !important;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

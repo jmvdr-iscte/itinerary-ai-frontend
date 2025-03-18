@@ -18,7 +18,7 @@ onMounted(() => {
       observer.disconnect();
     }
   }, { threshold: 0.2 });
-
+  
   const footerSection = document.querySelector('footer');
   if (footerSection) {
     observer.observe(footerSection);
@@ -31,7 +31,7 @@ onMounted(() => {
     <!-- Background Elements -->
     <div class="absolute inset-0 bg-grid-pattern opacity-5 z-0"></div>
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
-
+    
     <!-- Content Container -->
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 transform transition-all duration-700"
@@ -69,7 +69,7 @@ onMounted(() => {
             </a>
           </div>
         </div>
-
+        
         <!-- Quick Links -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Quick Links</h3>
@@ -80,7 +80,7 @@ onMounted(() => {
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Blog</a></li>
           </ul>
         </div>
-
+        
         <!-- Company -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Company</h3>
@@ -91,7 +91,7 @@ onMounted(() => {
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Terms of Service</a></li>
           </ul>
         </div>
-
+        
         <!-- Newsletter -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Stay Updated</h3>
@@ -106,16 +106,16 @@ onMounted(() => {
           </div>
         </div>
       </div>
-
+      
       <!-- Divider -->
       <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent mb-8 transform transition-all duration-700 delay-200"
            :class="isInView ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'"></div>
-
+      
       <!-- Bottom Footer -->
       <div class="flex flex-col md:flex-row justify-between items-center transform transition-all duration-700 delay-300"
            :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
         <p class="text-sm text-center md:text-left">&copy; {{ currentYear }} TripFlowAI. All rights reserved.</p>
-
+        
         <div class="flex space-x-6 mt-4 md:mt-0">
           <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</a>
           <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Terms of Service</a>
@@ -123,7 +123,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
+    
     <!-- Back to Top Button -->
     <a href="#" class="fixed bottom-8 right-8 bg-[#1E293B] text-white p-3 rounded-full shadow-lg hover:bg-[#8B5CF6] transition-colors z-50">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ onMounted(() => {
 
 <style scoped>
 .bg-grid-pattern {
-  background-image:
+  background-image: 
     linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 40px 40px;

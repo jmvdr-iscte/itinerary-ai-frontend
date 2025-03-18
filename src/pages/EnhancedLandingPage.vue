@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import ImprovedAppHeader from '@/components/ImprovedAppHeader.vue';
-import EnhancedHeroSection from '@/components/EnhancedHeroSection.vue';
-import FeaturesSection from '@/components/FeaturesSection.vue';
-import EnhancedProductShowcase from '@/components/EnhancedProductShowcase.vue';
-import EnhancedFooter from '@/components/EnhancedFooter.vue';
+import ImprovedAppHeader from './components/ImprovedAppHeader.vue';
+import EnhancedHeroSection from './components/EnhancedHeroSection.vue';
+import FeaturesSection from './components/FeaturesSection.vue';
+import EnhancedProductShowcase from './components/EnhancedProductShowcase.vue';
+import EnhancedFooter from './components/EnhancedFooter.vue';
 
 // Fix for mobile viewport height issues
 onMounted(() => {
@@ -47,6 +47,6 @@ onMounted(() => {
 </template>
 
 <style>
-@import '../assets/animations.css';
-@import '../assets/responsive.css';
+@import './styles/animations.css';
+@import './styles/responsive.css';
 </style>

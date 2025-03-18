@@ -13,7 +13,7 @@ onMounted(() => {
       observer.disconnect();
     }
   }, { threshold: 0.2 });
-
+  
   const showcaseSection = document.getElementById('get-started');
   if (showcaseSection) {
     observer.observe(showcaseSection);
@@ -59,28 +59,28 @@ const features = [
 </script>
 
 <template>
-  <section
-    id="get-started"
+  <section 
+    id="get-started" 
     class="py-24 px-6 relative overflow-hidden"
   >
     <!-- Background Elements -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#2D1B69] via-[#512D6D] to-[#8B5CF6] z-0"></div>
-
+    
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 z-0 overflow-hidden">
       <!-- Decorative circles -->
       <div class="absolute top-1/4 -left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-
+      
       <!-- Grid pattern -->
       <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-
+      
       <!-- Floating elements -->
       <div class="absolute top-1/3 left-1/4 w-8 h-8 bg-white/10 rounded-full animate-float"></div>
       <div class="absolute top-2/3 right-1/4 w-6 h-6 bg-white/10 rounded-full animate-float" style="animation-delay: 1s;"></div>
       <div class="absolute bottom-1/4 left-1/3 w-4 h-4 bg-white/10 rounded-full animate-float" style="animation-delay: 2s;"></div>
     </div>
-
+    
     <!-- Content Container -->
     <div class="max-w-7xl mx-auto relative z-10">
       <div class="flex flex-col lg:flex-row items-center gap-16">
@@ -91,19 +91,19 @@ const features = [
           <div class="inline-flex items-center justify-center px-4 py-1.5 bg-white/10 backdrop-blur-sm rounded-full mb-6">
             <span class="text-xs font-semibold uppercase tracking-wider text-white">Limited Time Offer</span>
           </div>
-
+          
           <!-- Product Title -->
           <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-white">
             AI-Powered <span class="text-purple-200">Travel Itineraries</span>
           </h2>
-
+          
           <p class="text-xl text-white/80 mb-8">Your personalized travel planner, powered by advanced AI to create the perfect trip experience.</p>
-
+          
           <!-- Testimonials Carousel -->
           <div class="mb-10 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
             <div class="flex items-center mb-4">
               <div class="flex -space-x-2">
-                <div v-for="(testimonial, index) in testimonials" :key="index"
+                <div v-for="(testimonial, index) in testimonials" :key="index" 
                      class="w-10 h-10 rounded-full bg-purple-500/30 flex items-center justify-center text-xl">
                   {{ testimonial.avatar }}
                 </div>
@@ -117,11 +117,11 @@ const features = [
                 </div>
               </div>
             </div>
-
+            
             <div class="relative overflow-hidden h-32">
               <div class="absolute inset-0 flex flex-col transition-transform duration-500 transform"
                    :style="{transform: `translateY(-${100 * Math.floor(Date.now() / 5000) % testimonials.length}%)`}">
-                <div v-for="(testimonial, index) in testimonials" :key="index"
+                <div v-for="(testimonial, index) in testimonials" :key="index" 
                      class="py-4 flex-shrink-0 h-full">
                   <p class="text-white/90 italic">{{ testimonial.text }}</p>
                   <div class="mt-2 text-sm text-white/70">
@@ -131,7 +131,7 @@ const features = [
               </div>
             </div>
           </div>
-
+          
           <!-- Trust Badges -->
           <div class="flex flex-wrap justify-center sm:justify-start gap-6 items-center text-white/60">
             <div class="flex items-center">
@@ -154,12 +154,12 @@ const features = [
             </div>
           </div>
         </div>
-
+        
         <!-- Right Column: Pricing Card -->
         <div class="w-full lg:w-1/2 transform transition-all duration-700 delay-200"
              :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
           <!-- Pricing Card -->
-          <div
+          <div 
             class="bg-[#1E293B]/90 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-2xl border border-purple-500/20 relative overflow-hidden transition-all duration-300"
             :class="{ 'transform scale-[1.02] shadow-purple-500/20': isHovered }"
             @mouseenter="setHovered(true)"
@@ -167,12 +167,12 @@ const features = [
           >
             <!-- Card Shine Effect -->
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent shine-effect"></div>
-
+            
             <!-- Popular Badge -->
             <div class="absolute -top-1 -right-1 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-bl-lg rounded-tr-lg shadow-lg transform rotate-0">
               MOST POPULAR
             </div>
-
+            
             <h3 class="text-3xl font-bold text-white">TripFlow AI</h3>
             <p class="text-gray-400 mt-2">Create your perfect itinerary in seconds.</p>
 
@@ -183,7 +183,7 @@ const features = [
               <span class="ml-4 line-through text-gray-500">$19.99</span>
               <span class="ml-2 bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-semibold">50% OFF</span>
             </div>
-
+            
             <!-- Divider -->
             <div class="my-6 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
 
@@ -206,12 +206,12 @@ const features = [
             >
               Get Your Itinerary
             </router-link>
-
+            
             <!-- Guarantee Text -->
             <p class="text-center text-sm text-gray-400 mt-4">
               <span class="inline-block mr-1">🔒</span> 100% secure payment with SSL encryption
             </p>
-
+            
             <!-- Payment Methods -->
             <div class="flex justify-center mt-6 space-x-3">
               <div class="w-10 h-6 bg-gray-700 rounded"></div>
@@ -220,7 +220,7 @@ const features = [
               <div class="w-10 h-6 bg-gray-700 rounded"></div>
             </div>
           </div>
-
+          
           <!-- Social Proof -->
           <p class="text-center text-white/70 mt-6 flex items-center justify-center">
             <span class="inline-block w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></span>
@@ -244,7 +244,7 @@ const features = [
 }
 
 .bg-grid-pattern {
-  background-image:
+  background-image: 
     linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 40px 40px;

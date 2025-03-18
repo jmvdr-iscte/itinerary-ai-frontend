@@ -29,11 +29,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header
+  <header 
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
     :class="[
-      isScrolled
-        ? 'bg-[#1E293B]/95 backdrop-blur-md py-3 shadow-lg'
+      isScrolled 
+        ? 'bg-[#1E293B]/95 backdrop-blur-md py-3 shadow-lg' 
         : 'bg-transparent py-5'
     ]"
   >
@@ -49,13 +49,13 @@ onUnmounted(() => {
           TripFlow<span class="text-[#8B5CF6]">AI</span>
         </h1>
       </div>
-
+      
       <!-- Desktop Navigation -->
       <nav class="hidden md:block">
         <ul class="flex space-x-8">
           <li>
-            <a
-              href="#"
+            <a 
+              href="#" 
               class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
             >
               Home
@@ -63,8 +63,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#features"
+            <a 
+              href="#features" 
               class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
             >
               Features
@@ -72,8 +72,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#get-started"
+            <a 
+              href="#get-started" 
               class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
             >
               Pricing
@@ -81,8 +81,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
+            <a 
+              href="#" 
               class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
             >
               Contact
@@ -91,57 +91,57 @@ onUnmounted(() => {
           </li>
         </ul>
       </nav>
-
+      
       <!-- CTA Button -->
       <div class="hidden md:block">
-        <a
-          href="#get-started"
+        <a 
+          href="#get-started" 
           class="bg-gradient-to-r from-[#6B46C1] to-[#8B5CF6] text-white px-5 py-2 rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/20 transition-all transform hover:scale-105"
         >
           Get Started
         </a>
       </div>
-
+      
       <!-- Mobile Menu Button -->
-      <button
+      <button 
         class="md:hidden text-white focus:outline-none"
         @click="toggleMobileMenu"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="h-6 w-6" 
+          fill="none" 
+          viewBox="0 0 24 24" 
           stroke="currentColor"
         >
-          <path
-            v-if="!isMobileMenuOpen"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
+          <path 
+            v-if="!isMobileMenuOpen" 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M4 6h16M4 12h16M4 18h16" 
           />
-          <path
-            v-else
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
+          <path 
+            v-else 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M6 18L18 6M6 6l12 12" 
           />
         </svg>
       </button>
     </div>
-
+    
     <!-- Mobile Menu -->
-    <div
-      v-if="isMobileMenuOpen"
+    <div 
+      v-if="isMobileMenuOpen" 
       class="md:hidden absolute top-full left-0 right-0 bg-[#1E293B]/95 backdrop-blur-md shadow-lg py-4 px-6 transition-all duration-300 animate-slideDown"
     >
       <nav>
         <ul class="space-y-4">
           <li>
-            <a
-              href="#"
+            <a 
+              href="#" 
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -149,8 +149,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#features"
+            <a 
+              href="#features" 
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -158,8 +158,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#get-started"
+            <a 
+              href="#get-started" 
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -167,8 +167,8 @@ onUnmounted(() => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
+            <a 
+              href="#" 
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -176,9 +176,9 @@ onUnmounted(() => {
             </a>
           </li>
         </ul>
-
-        <a
-          href="#get-started"
+        
+        <a 
+          href="#get-started" 
           class="block mt-6 bg-gradient-to-r from-[#6B46C1] to-[#8B5CF6] text-white px-5 py-2 rounded-full font-medium text-center"
           @click="closeMobileMenu"
         >
@@ -187,7 +187,7 @@ onUnmounted(() => {
       </nav>
     </div>
   </header>
-
+  
   <!-- Spacer to prevent content from being hidden under fixed header -->
   <div class="h-20"></div>
 </template>

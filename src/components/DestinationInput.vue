@@ -1,121 +1,62 @@
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
+const props = defineProps<{
+  modelValue: string;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
+
+const updateValue = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  emit('update:modelValue', target.value);
+};
+
+// Popular destinations for autocomplete
+const popularDestinations = [
+  'Paris, France',
+  'Tokyo, Japan',
+  'New York, USA',
+  'Rome, Italy',
+  'London, UK',
+  'Barcelona, Spain',
+  'Sydney, Australia',
+  'Dubai, UAE',
+  'Singapore',
+  'Amsterdam, Netherlands'
+];
+</script>
+
 <template>
-	<input
-		ref="inputRef"
-		type="text"
-		@input="handleInput"
-		class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-		placeholder="Enter destination (City, Country)"
-	/>
+  <div class="destination-input">
+    <label class="block text-gray-300 font-medium mb-2">Destination</label>
+    <div class="relative">
+      <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+        </svg>
+      </span>
+      <input 
+        :value="modelValue"
+        @input="updateValue"
+        type="text" 
+        placeholder="Where do you want to go?"
+        class="w-full pl-10 p-4 rounded-xl bg-[#0F1629] text-white border border-gray-700 focus:border-[#8B5CF6] focus:ring-2 focus:ring-[#8B5CF6]/50 focus:outline-none transition-all"
+        list="destinations"
+      >
+      <datalist id="destinations">
+        <option v-for="destination in popularDestinations" :key="destination" :value="destination"></option>
+      </datalist>
+    </div>
+  </div>
 </template>
 
-<script lang="ts">
-//TODO FIx colering
-import { defineComponent, ref, onMounted, watch } from 'vue';
-
-interface AddressComponents {
-	long_name: string;
-	short_name: string;
-	types: string[];
+<style scoped>
+/* Style the datalist dropdown */
+input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
 }
-
-export default defineComponent({
-	name: 'DestinationInput',
-	props: {
-		modelValue: {
-			type: String,
-			required: true,
-		},
-	},
-	emits: ['update:modelValue'],
-	setup(props, { emit }) {
-		const inputRef = ref<HTMLInputElement | null>(null);
-		let autocomplete: google.maps.places.Autocomplete | null = null;
-		const inputValue = ref(props.modelValue);
-
-		const loadGoogleMapsScript = (): Promise<void> => {
-			return new Promise((resolve, reject) => {
-				if (window.google?.maps?.places) {
-					resolve();
-					return;
-				}
-
-				const script = document.createElement('script');
-				script.src = `https://maps.googleapis.com/maps/api/js?key=${
-					import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-				}&libraries=places`;
-				script.async = true;
-				script.defer = true;
-				script.onload = () => resolve();
-				script.onerror = (error) => reject(error);
-				document.head.appendChild(script);
-			});
-		};
-
-		const getAddressComponent = (
-			components: AddressComponents[],
-			type: string
-		): string => {
-			const component = components.find((c) => c.types.includes(type));
-			return component?.long_name || '';
-		};
-
-		const formatAddress = (place: google.maps.places.PlaceResult): string => {
-			const components = place.address_components || [];
-			const city = getAddressComponent(components, 'locality');
-			const state = getAddressComponent(components, 'administrative_area_level_1');
-			const country = getAddressComponent(components, 'country');
-
-			if (!city && !country) return place.name || '';
-
-			let formatted = city;
-			if (state) formatted += `, ${state}`;
-			formatted += `, ${country}`;
-
-			return formatted;
-		};
-
-		const initializeAutocomplete = () => {
-			if (inputRef.value) {
-				autocomplete = new google.maps.places.Autocomplete(inputRef.value, {
-					types: ['(cities)'],
-					fields: ['address_components', 'name'],
-				});
-
-				autocomplete.addListener('place_changed', () => {
-					const place = autocomplete?.getPlace();
-					if (place && place.address_components) {
-						const formatted = formatAddress(place);
-						inputRef.value!.value = formatted;
-						emit('update:modelValue', formatted);
-					}
-				});
-			}
-		};
-
-		const handleInput = (event: Event) => {
-			const value = (event.target as HTMLInputElement).value;
-			inputValue.value = value;
-			emit('update:modelValue', value);
-		};
-
-		watch(() => props.modelValue, (newVal) => {
-			if (inputRef.value && newVal !== inputRef.value.value) {
-				inputRef.value.value = newVal;
-			}
-		});
-
-		onMounted(async () => {
-			await loadGoogleMapsScript();
-			initializeAutocomplete();
-			if (inputRef.value) {
-				inputRef.value.value = props.modelValue;
-			}
-		});
-
-		return {
-			inputRef,
-			handleInput,
-		};
-	},
-});
-</script>
+</style>

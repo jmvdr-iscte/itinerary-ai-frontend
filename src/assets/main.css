@@ -1,34 +1,24 @@
 @import './base.css';
 
-#app {
-  width: 100vw;
-  min-width: 100vw;
-  padding: 0; /* Remove unnecessary padding */
-  font-weight: normal;
+/* Import Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom color variables */
+:root {
+  --color-primary: #8B5CF6;
+  --color-primary-dark: #6B46C1;
+  --color-primary-light: #A78BFA;
+  --color-bg-dark: #0F1629;
+  --color-bg-card: #1E293B;
+  --color-text: #FFFFFF;
+  --color-text-secondary: #94A3B8;
+  --color-border: rgba(75, 85, 99, 0.3);
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+/* Base styles */
+body {
+  @apply bg-gradient-to-br from-[#0F1629] to-[#1A2333] text-white min-h-screen font-sans antialiased;
+  background-attachment: fixed;
 }

@@ -18,7 +18,7 @@ onMounted(() => {
       observer.disconnect();
     }
   }, { threshold: 0.2 });
-  
+
   const footerSection = document.querySelector('footer');
   if (footerSection) {
     observer.observe(footerSection);
@@ -31,7 +31,7 @@ onMounted(() => {
     <!-- Background Elements -->
     <div class="absolute inset-0 bg-grid-pattern opacity-5 z-0"></div>
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
-    
+
     <!-- Content Container -->
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12 transform transition-all duration-700"
@@ -39,15 +39,15 @@ onMounted(() => {
         <!-- Logo & About -->
         <div class="md:col-span-1">
           <div class="flex items-center mb-4">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-[#6B46C1] to-[#8B5CF6] flex items-center justify-center mr-3 shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              TripFlow<span class="text-[#8B5CF6]">AI</span>
-            </h2>
-          </div>
+        <img
+          src="/tripflowai_icon_small.png"
+          alt="TripFlowAI Logo"
+          class="w-10 h-10"
+        />
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          TripFlow<span class="text-[#8B5CF6]">AI</span>
+        </h1>
+      </div>
           <p class="text-gray-500 mb-4">
             AI-powered travel itineraries tailored to your preferences and interests.
           </p>
@@ -69,7 +69,7 @@ onMounted(() => {
             </a>
           </div>
         </div>
-        
+
         <!-- Quick Links -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Quick Links</h3>
@@ -80,7 +80,7 @@ onMounted(() => {
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Blog</a></li>
           </ul>
         </div>
-        
+
         <!-- Company -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Company</h3>
@@ -91,7 +91,7 @@ onMounted(() => {
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Terms of Service</a></li>
           </ul>
         </div>
-        
+
         <!-- Newsletter -->
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Stay Updated</h3>
@@ -106,16 +106,16 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      
+
       <!-- Divider -->
       <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent mb-8 transform transition-all duration-700 delay-200"
            :class="isInView ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'"></div>
-      
+
       <!-- Bottom Footer -->
       <div class="flex flex-col md:flex-row justify-between items-center transform transition-all duration-700 delay-300"
            :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
         <p class="text-sm text-center md:text-left">&copy; {{ currentYear }} TripFlowAI. All rights reserved.</p>
-        
+
         <div class="flex space-x-6 mt-4 md:mt-0">
           <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</a>
           <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Terms of Service</a>
@@ -123,7 +123,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    
+
     <!-- Back to Top Button -->
     <a href="#" class="fixed bottom-8 right-8 bg-[#1E293B] text-white p-3 rounded-full shadow-lg hover:bg-[#8B5CF6] transition-colors z-50">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ onMounted(() => {
 
 <style scoped>
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 40px 40px;

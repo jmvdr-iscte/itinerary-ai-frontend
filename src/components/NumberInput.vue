@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, computed, watch } from 'vue';
 
 const props = defineProps<{
   modelValue: number;
@@ -12,10 +12,16 @@ const emit = defineEmits<{
 }>();
 
 const minValue = props.min || 1;
-const maxValue = props.max || 10;
+const maxValue = computed(() => Math.min(props.max ?? 10));
+
+const tempValue = ref(props.modelValue.toString());
+
+watch(() => props.modelValue, (newValue) => {
+  tempValue.value = newValue.toString();
+});
 
 const increment = () => {
-  if (props.modelValue < maxValue) {
+  if (props.modelValue < maxValue.value) {
     emit('update:modelValue', props.modelValue + 1);
   }
 };
@@ -28,16 +34,28 @@ const decrement = () => {
 
 const updateValue = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const value = parseInt(target.value);
+  const value = target.value.trim();
 
-  if (!isNaN(value)) {
-    if (value < minValue) {
-      emit('update:modelValue', minValue);
-    } else if (value > maxValue) {
-      emit('update:modelValue', maxValue);
-    } else {
-      emit('update:modelValue', value);
+  // Prevent non-numeric input
+  if (!/^\d*$/.test(value)) {
+    tempValue.value = props.modelValue.toString();
+    return;
+  }
+
+  let numericValue = parseInt(value, 10);
+
+  if (!isNaN(numericValue)) {
+    // Enforce min and max constraints
+    if (numericValue < minValue) {
+      numericValue = minValue;
+    } else if (numericValue > maxValue.value) {
+      numericValue = maxValue.value;
     }
+
+    tempValue.value = numericValue.toString();
+    emit('update:modelValue', numericValue);
+  } else {
+    tempValue.value = "";
   }
 };
 </script>
@@ -59,18 +77,11 @@ const updateValue = (event: Event) => {
       </button>
       <div class="relative flex-grow">
         <input
-          :value="modelValue"
+          v-model="tempValue"
           @input="updateValue"
-          type="number"
-          :min="minValue"
-          :max="maxValue"
+          type="text"
           class="w-full p-4 text-center bg-[#0F1629] text-white border-t border-b border-gray-700 focus:outline-none"
         >
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        </div>
       </div>
       <button
         type="button"

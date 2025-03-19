@@ -7,6 +7,7 @@ import NumberInput from "@/components/NumberInput.vue";
 import DateTimeInput from "@/components/DateTimeInput.vue";
 import EmailPopup from "@/components/EmailPopup.vue";
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
+import BudgetInput from "@/components/BudgetInput.vue";
 import '@/assets/main.css';
 
 const router = useRouter();
@@ -18,6 +19,7 @@ const originLocation = ref(null);
 const fromDate = ref("");
 const toDate = ref("");
 const transportation = ref<string[]>([]);
+const budget = ref<number | string>(""); // Added budget field
 const showEmailPopup = ref(false);
 const email = ref("");
 const windowWidth = ref(window.innerWidth);
@@ -86,6 +88,7 @@ const submitForm = () => {
     from: fromDate.value,
     to: toDate.value,
     transportation: transportation.value,
+    budget: budget.value, // Added budget to the request body
     email: email.value,
   };
   console.log("Submitting: ", requestBody);
@@ -133,7 +136,10 @@ const submitForm = () => {
               />
 
               <!-- Number of People -->
-              <NumberInput v-model="numberOfPeople" :min="1" :max="10" />
+              <NumberInput v-model="numberOfPeople" :min="1" :max="20" />
+
+              <!-- Budget Input - Added to left column with min=0 and max=1,000,000 -->
+              <BudgetInput v-model="budget" :min="0" :max="1000000" />
             </div>
 
             <!-- Right Column -->

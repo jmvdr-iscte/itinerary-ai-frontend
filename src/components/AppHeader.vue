@@ -37,15 +37,18 @@ onUnmounted(() => {
         : 'bg-transparent py-5'
     ]"
   >
-      <div class="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-8">
       <!-- Logo -->
       <div class="flex items-center">
-        <img src="/public/tripflowai_icon_small.png" alt="TripFlowAI Logo" class="w-10 h-10 rounded-full mr-3 shadow-lg">
+        <img
+          src="/tripflowai_icon_small.png"
+          alt="TripFlowAI Logo"
+          class="w-10 h-10 rounded-full mr-3 shadow-lg"
+        />
         <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
           TripFlow<span class="text-[#8B5CF6]">AI</span>
         </h1>
       </div>
-    </div>
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:block">

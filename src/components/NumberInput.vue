@@ -12,7 +12,7 @@ const emit = defineEmits<{
 }>();
 
 const minValue = props.min || 1;
-const maxValue = computed(() => Math.min(props.max ?? 10));
+const maxValue = computed(() => Math.min(props.max ?? 20));
 
 const tempValue = ref(props.modelValue.toString());
 
@@ -42,7 +42,7 @@ const updateValue = (event: Event) => {
     return;
   }
 
-  let numericValue = parseInt(value, 10);
+  let numericValue = parseInt(value, 20);
 
   if (!isNaN(numericValue)) {
     // Enforce min and max constraints

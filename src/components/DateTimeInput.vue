@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{
@@ -12,6 +12,30 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
+
+const minDate = ref('');
+const maxDate = ref('');
+
+onMounted(() => {
+  // Set minimum date to today
+  const today = new Date();
+  const maxFutureDate = new Date();
+  maxFutureDate.setFullYear(today.getFullYear() + 2); // Allow booking up to 2 years in the future
+
+  minDate.value = formatDateForInput(today);
+  maxDate.value = formatDateForInput(maxFutureDate);
+});
+
+// Format date for datetime-local input
+const formatDateForInput = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
 
 const updateValue = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -28,14 +52,19 @@ const updateValue = (event: Event) => {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </span>
-      <input 
-        :value="modelValue" 
-        @input="updateValue" 
-        type="datetime-local" 
+      <input
+        :value="modelValue"
+        @input="updateValue"
+        type="datetime-local"
+        :min="minDate"
+        :max="maxDate"
         :placeholder="placeholder || ''"
-        class="w-full pl-10 p-4 rounded-xl bg-[#0F1629] text-white border border-gray-700 focus:border-[#8B5CF6] focus:ring-2 focus:ring-[#8B5CF6]/50 focus:outline-none transition-all"
+        class="w-full pl-10 p-4 rounded-xl bg-[#1E293B] text-white border border-gray-700 focus:border-[#8B5CF6] focus:ring-2 focus:ring-[#8B5CF6]/50 focus:outline-none transition-all"
       >
     </div>
+    <p class="text-xs text-gray-400 mt-1">
+      <span class="text-purple-400">*</span> Including specific time improves AI recommendations
+    </p>
   </div>
 </template>
 

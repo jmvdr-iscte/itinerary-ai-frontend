@@ -334,9 +334,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="origin-input">
+  <div class="form-group">
     <label class="form-label">Origin</label>
-    <p class="text-sm text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
+    <p class="text-xs text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
 
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -351,7 +351,7 @@ onUnmounted(() => {
         @input="updateValue"
         type="text"
         placeholder="Enter your address or search for a location"
-        class="form-input pr-20"
+        class="w-full pl-10 p-3 rounded-xl bg-[#1E293B] text-white border border-gray-700 focus:border-purple-500 focus:ring focus:ring-purple-500/20 transition"
         :disabled="isLoading"
       >
       <div class="absolute inset-y-0 right-0 flex items-center">
@@ -398,7 +398,7 @@ onUnmounted(() => {
       :class="{'animate-expand-vertical': showMap}"
     >
       <div ref="mapElement" class="w-full h-64"></div>
-      <div class="bg-[#0F1629] p-3 text-xs text-gray-400">
+      <div class="bg-[#1E293B] p-3 text-xs text-gray-400">
         <p class="mb-1"><strong>Privacy Tip:</strong> For privacy reasons, you can select a nearby location instead of your exact address.</p>
         <p>Drag the marker to adjust your location or search for a different address above.</p>
       </div>
@@ -448,5 +448,11 @@ onUnmounted(() => {
 
 .animate-expand-vertical {
   animation: expandVertical 0.3s ease-out forwards;
+}
+
+/* Add subtle animation on focus */
+input:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
 }
 </style>

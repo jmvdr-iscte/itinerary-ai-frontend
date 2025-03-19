@@ -20,10 +20,10 @@ onMounted(() => {
   setTimeout(() => {
     isVisible.value = true;
   }, 100);
-  
+
   // Add event listener for parallax effect
   window.addEventListener('mousemove', handleMouseMove);
-  
+
   return () => {
     window.removeEventListener('mousemove', handleMouseMove);
   };
@@ -31,72 +31,72 @@ onMounted(() => {
 </script>
 
 <template>
-  <section 
+  <section
     id="hero"
     class="relative min-h-[90vh] flex items-center justify-center overflow-hidden"
   >
     <!-- Background Gradient -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#2D1B69] via-[#512D6D] to-[#8B5CF6] z-0"></div>
-    
+
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 z-10 overflow-hidden">
       <!-- Decorative circles -->
-      <div 
+      <div
         class="absolute top-1/4 -left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"
         :style="{
           transform: `translate(${parallaxOffset.x * -1.5}px, ${parallaxOffset.y * -1.5}px)`
         }"
       ></div>
-      <div 
+      <div
         class="absolute bottom-1/4 -right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"
         :style="{
           transform: `translate(${parallaxOffset.x * 1.5}px, ${parallaxOffset.y * 1.5}px)`
         }"
       ></div>
-      
+
       <!-- Grid pattern -->
       <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      
+
       <!-- Floating elements -->
       <div class="absolute top-1/3 left-1/4 w-8 h-8 bg-white/10 rounded-full animate-float"></div>
       <div class="absolute top-2/3 right-1/4 w-6 h-6 bg-white/10 rounded-full animate-float" style="animation-delay: 1s;"></div>
       <div class="absolute bottom-1/4 left-1/3 w-4 h-4 bg-white/10 rounded-full animate-float" style="animation-delay: 2s;"></div>
     </div>
-    
+
     <!-- Content Container -->
     <div class="relative z-20 text-center px-6 max-w-5xl mx-auto">
       <!-- Animated Badge -->
-      <div 
+      <div
         class="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white/90 text-sm font-medium transform transition-all duration-700"
         :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'"
       >
         <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
         AI-Powered Travel Planning Made Simple
       </div>
-      
+
       <!-- Main Heading -->
-      <h1 
+      <h1
         class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 transition-all duration-700 relative"
         :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'"
       >
         <span class="block">AI-Powered</span>
         <span class="bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">Travel Itineraries</span>
-        
+
         <!-- Decorative elements -->
         <span class="absolute -top-6 -right-6 text-4xl transform rotate-12 opacity-50">✨</span>
         <span class="absolute -bottom-4 -left-4 text-3xl transform -rotate-12 opacity-50">🌍</span>
       </h1>
-      
+
       <!-- Subheading -->
-      <p 
+      <p
         class="mt-6 text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-8 transition-all duration-700"
         :class="[isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10', `delay-${animationDelay + 100}`]"
       >
         Let our AI generate the perfect trip tailored to your interests, preferences, and travel style.
       </p>
-      
+
       <!-- CTA Buttons -->
-      <div 
+      <div
         class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10 transition-all duration-700"
         :class="[isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10', `delay-${animationDelay + 200}`]"
       >
@@ -109,7 +109,7 @@ onMounted(() => {
             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </a>
-        
+
         <a
           href="#features"
           class="px-8 py-4 bg-transparent border border-white/30 text-white rounded-full text-lg font-semibold hover:bg-white/10 transition-all duration-300"
@@ -117,9 +117,9 @@ onMounted(() => {
           Learn More
         </a>
       </div>
-      
+
       <!-- Scroll Indicator -->
-      <div 
+      <div
         class="absolute bottom-10 left-1/2 transform -translate-x-1/2 transition-all duration-700 delay-500"
         :class="isVisible ? 'opacity-100' : 'opacity-0'"
       >
@@ -152,7 +152,7 @@ onMounted(() => {
 }
 
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 40px 40px;

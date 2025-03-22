@@ -6,6 +6,7 @@ import TransportationSelector from "@/components/TransportationSelector.vue";
 import NumberInput from "@/components/NumberInput.vue";
 import DateTimeInput from "@/components/DateTimeInput.vue";
 import EmailPopup from "@/components/EmailPopup.vue";
+import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue"; // Import your updated component
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
 import BudgetInput from "@/components/BudgetInput.vue";
 import '@/assets/main.css';
@@ -21,10 +22,14 @@ const toDate = ref("");
 const transportation = ref<string[]>([]);
 const budget = ref<number | string>(""); // Added budget field
 const showEmailPopup = ref(false);
+const showPaymentMethodsPopup = ref(false);
 const email = ref("");
+const selectedPaymentMethod = ref("credit_card"); // Default payment method
 const windowWidth = ref(window.innerWidth);
 const isMobile = computed(() => windowWidth.value < 768);
 const isLoading = ref(true);
+const showError = ref(false);
+const errorMessage = ref("");
 
 // Google Maps API Key - Replace with your actual API key
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -73,13 +78,33 @@ const closeEmailPopup = () => {
   showEmailPopup.value = false;
 };
 
+const openPaymentMethodsPopup = () => {
+  showEmailPopup.value = false;
+  showPaymentMethodsPopup.value = true;
+};
+
+const closePaymentMethodsPopup = () => {
+  showPaymentMethodsPopup.value = false;
+};
+
 const handleLocationSelected = (location) => {
   originLocation.value = location;
   origin.value = location.address;
 };
 
-const submitForm = () => {
-  const requestBody = {
+const submitEmail = () => {
+  // After email is submitted, show payment methods popup
+  openPaymentMethodsPopup();
+};
+
+const handlePaymentError = (message) => {
+  showError.value = true;
+  errorMessage.value = message;
+  showPaymentMethodsPopup.value = false;
+};
+
+const getTripData = () => {
+  return {
     categories: categories.value,
     destination: destination.value,
     number_of_people: numberOfPeople.value,
@@ -88,11 +113,14 @@ const submitForm = () => {
     from: fromDate.value,
     to: toDate.value,
     transportation: transportation.value,
-    budget: budget.value, // Added budget to the request body
-    email: email.value,
+    budget: budget.value,
+    email: email.value
   };
-  console.log("Submitting: ", requestBody);
-  router.push("/checkout");
+};
+
+const submitPaymentMethod = () => {
+  // The payment method component will handle the itinerary creation and payment processing
+  console.log("Selected payment method:", selectedPaymentMethod.value);
 };
 </script>
 
@@ -112,6 +140,23 @@ const submitForm = () => {
         <p class="text-gray-300">Loading your trip planner...</p>
       </div>
 
+      <!-- Error Message -->
+      <div v-else-if="showError" class="card p-8 flex flex-col items-center justify-center space-y-4">
+        <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-white">Error</h3>
+        <p class="text-gray-300 text-center">{{ errorMessage }}</p>
+        <button
+          @click="showError = false"
+          class="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transition"
+        >
+          Try Again
+        </button>
+      </div>
+
       <!-- Main Card -->
       <div v-else class="card w-full animate-fadeIn">
         <!-- Header -->
@@ -126,7 +171,7 @@ const submitForm = () => {
             <!-- Left Column -->
             <div class="space-y-6">
               <!-- Destination -->
-              <DestinationInput v-model="destination" />
+              <DestinationInput v-model="destination" :api-key="googleMapsApiKey" />
 
               <!-- Origin with Google Maps -->
               <GoogleMapsOriginInput
@@ -136,7 +181,7 @@ const submitForm = () => {
               />
 
               <!-- Number of People -->
-              <NumberInput v-model="numberOfPeople" :min="1" :max="20" />
+              <NumberInput v-model="numberOfPeople" :min="1" :max="10" />
 
               <!-- Budget Input - Added to left column with min=0 and max=1,000,000 -->
               <BudgetInput v-model="budget" :min="0" :max="1000000" />
@@ -175,8 +220,18 @@ const submitForm = () => {
     <EmailPopup
       v-model="email"
       v-model:show="showEmailPopup"
-      @submit="submitForm"
+      @submit="submitEmail"
       @cancel="closeEmailPopup"
+    />
+
+    <!-- Payment Methods Popup Component -->
+    <PaymentMethodsPopup
+      v-model:selectedMethod="selectedPaymentMethod"
+      v-model:show="showPaymentMethodsPopup"
+      :tripData="getTripData()"
+      @submit="submitPaymentMethod"
+      @cancel="closePaymentMethodsPopup"
+      @error="handlePaymentError"
     />
   </div>
 </template>

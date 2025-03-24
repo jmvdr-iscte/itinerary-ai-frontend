@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -6,9 +7,10 @@ import TransportationSelector from "@/components/TransportationSelector.vue";
 import NumberInput from "@/components/NumberInput.vue";
 import DateTimeInput from "@/components/DateTimeInput.vue";
 import EmailPopup from "@/components/EmailPopup.vue";
-import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue"; // Import your updated component
+import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue";
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
 import BudgetInput from "@/components/BudgetInput.vue";
+import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue"; // Import the new component
 import '@/assets/main.css';
 
 const router = useRouter();
@@ -20,11 +22,12 @@ const originLocation = ref(null);
 const fromDate = ref("");
 const toDate = ref("");
 const transportation = ref<string[]>([]);
-const budget = ref<number | string>(""); // Added budget field
+const budget = ref<number | string>("");
+const activityPace = ref("MODERATE"); // Add activity pace with default value
 const showEmailPopup = ref(false);
 const showPaymentMethodsPopup = ref(false);
 const email = ref("");
-const selectedPaymentMethod = ref("credit_card"); // Default payment method
+const selectedPaymentMethod = ref("credit_card");
 const windowWidth = ref(window.innerWidth);
 const isMobile = computed(() => windowWidth.value < 768);
 const isLoading = ref(true);
@@ -114,6 +117,7 @@ const getTripData = () => {
     to: toDate.value,
     transportation: transportation.value,
     budget: budget.value,
+    activity_pace: activityPace.value, // Include activity pace in trip data
     email: email.value
   };
 };
@@ -183,7 +187,7 @@ const submitPaymentMethod = () => {
               <!-- Number of People -->
               <NumberInput v-model="numberOfPeople" :min="1" :max="10" />
 
-              <!-- Budget Input - Added to left column with min=0 and max=1,000,000 -->
+              <!-- Budget Input -->
               <BudgetInput v-model="budget" :min="0" :max="1000000" />
             </div>
 
@@ -195,6 +199,9 @@ const submitPaymentMethod = () => {
               <!-- Date Range -->
               <DateTimeInput v-model="fromDate" label="Start Date" />
               <DateTimeInput v-model="toDate" label="End Date" />
+
+              <!-- Activity Pace Selector - Added to right column -->
+              <ActivityPaceSelector v-model="activityPace" />
             </div>
 
             <!-- Submit Button - Full Width -->

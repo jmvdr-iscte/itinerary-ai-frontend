@@ -111,7 +111,8 @@ const handleSubmit = async () => {
       transportation: props.tripData.transportation,
       email: props.tripData.email,
       budget: props.tripData.budget,
-      currency: "USD" // Adding the currency field as specified
+      currency: "USD", // Adding the currency field as specified
+      activity_pace: props.tripData.activity_pace
     };
 
     console.log('Sending itinerary request with data:', itineraryRequestBody);

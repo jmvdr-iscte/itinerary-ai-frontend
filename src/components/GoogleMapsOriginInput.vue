@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { defineProps, defineEmits } from 'vue';
+
+// Add global declaration for TypeScript
+declare global {
+  interface Window {
+    google: any;
+    googleMapsCheckInterval: number;
+  }
+}
 
 const props = defineProps<{
   modelValue: string;
@@ -22,7 +30,9 @@ const mapElement = ref(null);
 const inputElement = ref(null);
 const isLoading = ref(false);
 const errorMessage = ref('');
+const errorType = ref('');
 const selectedLocation = ref(null);
+const isApiLoaded = ref(false);
 
 // Watch for external changes to modelValue
 watch(() => props.modelValue, (newValue) => {
@@ -38,11 +48,19 @@ const updateValue = () => {
 
 // Toggle map visibility
 const toggleMap = () => {
+  if (!isApiLoaded.value) {
+    errorMessage.value = 'Google Maps is still loading. Please try again in a moment.';
+    errorType.value = 'api';
+    return;
+  }
+
   showMap.value = !showMap.value;
 
   // Initialize map if it's not already initialized and we're showing it
   if (showMap.value && !mapInitialized.value) {
-    initMap();
+    nextTick(() => {
+      initMap();
+    });
   }
 };
 
@@ -51,6 +69,7 @@ const initMap = () => {
   if (!window.google || !window.google.maps) {
     console.error('Google Maps API not loaded');
     errorMessage.value = 'Google Maps could not be loaded. Please try again later.';
+    errorType.value = 'api';
     return;
   }
 
@@ -111,15 +130,38 @@ const initMap = () => {
           };
           updateValue();
           emit('location-selected', selectedLocation.value);
+        } else {
+          errorType.value = 'geocode';
+          switch(status) {
+            case 'ZERO_RESULTS':
+              errorMessage.value = 'No address found for this location. Try a different area.';
+              break;
+            case 'OVER_QUERY_LIMIT':
+              errorMessage.value = 'Too many requests. Please try again later.';
+              break;
+            case 'REQUEST_DENIED':
+              errorMessage.value = 'Location request was denied. Check API key permissions.';
+              break;
+            case 'INVALID_REQUEST':
+              errorMessage.value = 'Invalid location request.';
+              break;
+            default:
+              errorMessage.value = 'Could not find address for this location.';
+          }
+
+          // Add manual address entry option
+          errorMessage.value += ' You can still type an address manually.';
         }
       });
     });
 
     mapInitialized.value = true;
     errorMessage.value = '';
+    errorType.value = '';
   } catch (error) {
     console.error('Error initializing map:', error);
-    errorMessage.value = 'Error initializing map. Please try again later.';
+    errorMessage.value = 'Unable to initialize the map. Please try refreshing the page.';
+    errorType.value = 'map';
   }
 };
 
@@ -165,25 +207,30 @@ const initPlacesAutocomplete = () => {
         showMap.value = true;
         // Initialize map if needed
         if (!mapInitialized.value) {
-          initMap();
-          // Set marker position after map is initialized
-          setTimeout(() => {
-            if (marker.value && place.geometry) {
-              marker.value.setPosition(place.geometry.location);
-              map.value.setCenter(place.geometry.location);
-            }
-          }, 300);
+          nextTick(() => {
+            initMap();
+            // Set marker position after map is initialized
+            nextTick(() => {
+              if (marker.value && place.geometry) {
+                marker.value.setPosition(place.geometry.location);
+                map.value.setCenter(place.geometry.location);
+              }
+            });
+          });
         }
       }
     });
   } catch (error) {
     console.error('Error initializing Places Autocomplete:', error);
+    errorMessage.value = 'Error initializing address search. Please try typing your address manually.';
+    errorType.value = 'autocomplete';
   }
 };
 
 // Load Google Maps API script
 const loadGoogleMapsAPI = () => {
   if (window.google && window.google.maps && window.google.maps.places) {
+    isApiLoaded.value = true;
     return Promise.resolve();
   }
 
@@ -193,10 +240,11 @@ const loadGoogleMapsAPI = () => {
     // Check if the script is already being loaded
     if (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
       // Wait for the script to load
-      const checkGoogleMaps = setInterval(() => {
+      window.googleMapsCheckInterval = setInterval(() => {
         if (window.google && window.google.maps && window.google.maps.places) {
-          clearInterval(checkGoogleMaps);
+          clearInterval(window.googleMapsCheckInterval);
           isLoading.value = false;
+          isApiLoaded.value = true;
           resolve();
         }
       }, 100);
@@ -210,14 +258,16 @@ const loadGoogleMapsAPI = () => {
     script.async = true;
     script.defer = true;
 
-    script.onload = () => {
+    script.onload = ()  => {
       isLoading.value = false;
+      isApiLoaded.value = true;
       resolve();
     };
 
     script.onerror = () => {
       isLoading.value = false;
       errorMessage.value = 'Failed to load Google Maps API. Please check your internet connection.';
+      errorType.value = 'api';
       reject(new Error('Failed to load Google Maps API'));
     };
 
@@ -225,15 +275,32 @@ const loadGoogleMapsAPI = () => {
   });
 };
 
+// Helper function for permission guidance
+const openBrowserSettings = () => {
+  // Provide guidance based on browser
+  const isChrome = navigator.userAgent.indexOf("Chrome") > -1;
+  const isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
+
+  if (isChrome) {
+    errorMessage.value = 'In Chrome: Click the lock icon in the address bar and enable location access.';
+  } else if (isFirefox) {
+    errorMessage.value = 'In Firefox: Click the shield icon in the address bar and enable location access.';
+  } else {
+    errorMessage.value = 'Please check your browser settings to enable location access.';
+  }
+};
+
 // Use current location
 const useCurrentLocation = () => {
   if (!navigator.geolocation) {
     errorMessage.value = 'Geolocation is not supported by your browser.';
+    errorType.value = 'browser';
     return;
   }
 
   isLoading.value = true;
   errorMessage.value = '';
+  errorType.value = '';
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -268,27 +335,47 @@ const useCurrentLocation = () => {
             if (!showMap.value) {
               showMap.value = true;
               if (!mapInitialized.value) {
-                initMap();
-                // Set marker position after map is initialized
-                setTimeout(() => {
-                  if (marker.value) {
-                    marker.value.setPosition(location);
-                    map.value.setCenter(location);
-                  }
-                }, 300);
+                nextTick(() => {
+                  initMap();
+                  // Set marker position after map is initialized
+                  nextTick(() => {
+                    if (marker.value) {
+                      marker.value.setPosition(location);
+                      map.value.setCenter(location);
+                    }
+                  });
+                });
               }
             }
           } else {
-            errorMessage.value = 'Could not find address for this location.';
+            errorType.value = 'geocode';
+            switch(status) {
+              case 'ZERO_RESULTS':
+                errorMessage.value = 'No address found for this location. Try a different area.';
+                break;
+              case 'OVER_QUERY_LIMIT':
+                errorMessage.value = 'Too many requests. Please try again later.';
+                break;
+              case 'REQUEST_DENIED':
+                errorMessage.value = 'Location request was denied. Check API key permissions.';
+                break;
+              case 'INVALID_REQUEST':
+                errorMessage.value = 'Invalid location request.';
+                break;
+              default:
+                errorMessage.value = 'Could not find address for this location.';
+            }
           }
         });
       } else {
         isLoading.value = false;
         errorMessage.value = 'Google Maps API not loaded.';
+        errorType.value = 'api';
       }
     },
     (error) => {
       isLoading.value = false;
+      errorType.value = 'permission';
       switch(error.code) {
         case error.PERMISSION_DENIED:
           errorMessage.value = 'Location permission denied.';
@@ -324,11 +411,20 @@ onMounted(async () => {
 onUnmounted(() => {
   // Clean up event listeners
   if (placesAutocomplete.value) {
-    window.google.maps.event.clearInstanceListeners(placesAutocomplete.value);
+    window.google?.maps?.event.clearInstanceListeners(placesAutocomplete.value);
   }
 
   if (marker.value) {
-    window.google.maps.event.clearInstanceListeners(marker.value);
+    window.google?.maps?.event.clearInstanceListeners(marker.value);
+  }
+
+  if (map.value) {
+    window.google?.maps?.event.clearInstanceListeners(map.value);
+  }
+
+  // Cancel any pending intervals
+  if (window.googleMapsCheckInterval) {
+    clearInterval(window.googleMapsCheckInterval);
   }
 });
 </script>
@@ -336,7 +432,7 @@ onUnmounted(() => {
 <template>
   <div class="form-group">
     <label class="form-label">Origin</label>
-    <p class="text-xs text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
+    <p id="address-hint" class="text-xs text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
 
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -353,6 +449,8 @@ onUnmounted(() => {
         placeholder="Enter your address or search for a location"
         class="w-full pl-10 p-3 rounded-xl bg-[#1E293B] text-white border border-gray-700 focus:border-purple-500 focus:ring focus:ring-purple-500/20 transition"
         :disabled="isLoading"
+        aria-label="Address input"
+        :aria-describedby="errorMessage ? 'address-error' : 'address-hint'"
       >
       <div class="absolute inset-y-0 right-0 flex items-center">
         <button
@@ -361,6 +459,7 @@ onUnmounted(() => {
           class="flex items-center px-2 text-gray-400 hover:text-[#8B5CF6] transition-colors"
           title="Use current location"
           :disabled="isLoading"
+          aria-label="Use current location"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v10.764a1 1 0 01-1.447.894L15 18M5 18l-4.553-2.276A1 1 0 010 14.618V3.382a1 1 0 011.447-.894L5 4m0 14V4m6 14V4m0 0L5 4" />
@@ -372,6 +471,9 @@ onUnmounted(() => {
           class="flex items-center pr-3 text-gray-400 hover:text-[#8B5CF6] transition-colors"
           title="Toggle map view"
           :disabled="isLoading"
+          :aria-expanded="String(showMap) "
+          aria-controls="map-container"
+          aria-label="Toggle map view"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -381,23 +483,42 @@ onUnmounted(() => {
     </div>
 
     <!-- Loading indicator -->
-    <div v-if="isLoading" class="mt-2 text-center py-2">
+    <div v-if="isLoading" class="mt-2 text-center py-2" aria-live="polite">
       <div class="inline-block w-5 h-5 border-2 border-[#8B5CF6] border-t-transparent rounded-full animate-spin"></div>
       <span class="ml-2 text-sm text-gray-300">Loading...</span>
     </div>
 
     <!-- Error message -->
-    <div v-if="errorMessage" class="mt-2 text-red-400 text-sm">
+    <div v-if="errorMessage" id="address-error" class="mt-2 text-red-400 text-sm" role="alert" aria-live="assertive">
       {{ errorMessage }}
+      <div class="mt-1">
+        <button
+          v-if="errorType === 'map'"
+          @click="initMap"
+          class="text-purple-400 hover:text-purple-300 underline"
+        >
+          Try again
+        </button>
+        <button
+          v-if="errorType === 'permission'"
+          @click="openBrowserSettings"
+          class="text-purple-400 hover:text-purple-300 underline"
+        >
+          Update location permissions
+        </button>
+      </div>
     </div>
 
     <!-- Map container -->
     <div
       v-if="showMap"
+      id="map-container"
       class="mt-3 rounded-xl overflow-hidden border border-gray-700 transition-all"
       :class="{'animate-expand-vertical': showMap}"
+      role="region"
+      aria-label="Interactive map"
     >
-      <div ref="mapElement" class="w-full h-64"></div>
+      <div ref="mapElement" class="w-full h-48 sm:h-64 md:h-80"></div>
       <div class="bg-[#1E293B] p-3 text-xs text-gray-400">
         <p class="mb-1"><strong>Privacy Tip:</strong> For privacy reasons, you can select a nearby location instead of your exact address.</p>
         <p>Drag the marker to adjust your location or search for a different address above.</p>
@@ -408,7 +529,7 @@ onUnmounted(() => {
 
 <style scoped>
 /* Custom styling for Google Maps autocomplete dropdown */
-:deep(.pac-container) {
+:deep(.pac-container)  {
   background-color: #1E293B;
   border: 1px solid #4B5563;
   border-radius: 0.5rem;
@@ -454,5 +575,20 @@ onUnmounted(() => {
 input:focus {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+/* Add touch-specific styles for mobile */
+@media (pointer: coarse) {
+  /* Larger touch targets for mobile */
+  :deep(.gm-style-mtc button),
+  :deep(.gm-style button) {
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  /* Ensure controls are more spaced out */
+  :deep(.gm-style-mtc) {
+    margin: 10px !important;
+  }
 }
 </style>

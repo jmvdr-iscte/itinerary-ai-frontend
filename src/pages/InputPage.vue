@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -10,7 +9,8 @@ import EmailPopup from "@/components/EmailPopup.vue";
 import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue";
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
 import BudgetInput from "@/components/BudgetInput.vue";
-import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue"; // Import the new component
+import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue";
+import MustSeeAttractions from "@/components/MustSeeAttractions.vue"; // Import the new component
 import '@/assets/main.css';
 
 const router = useRouter();
@@ -23,7 +23,8 @@ const fromDate = ref("");
 const toDate = ref("");
 const transportation = ref<string[]>([]);
 const budget = ref<number | string>("");
-const activityPace = ref("MODERATE"); // Add activity pace with default value
+const activityPace = ref("MODERATE");
+const mustSeeAttractions = ref<string[]>([]); // Add must-see attractions array
 const showEmailPopup = ref(false);
 const showPaymentMethodsPopup = ref(false);
 const email = ref("");
@@ -117,7 +118,8 @@ const getTripData = () => {
     to: toDate.value,
     transportation: transportation.value,
     budget: budget.value,
-    activity_pace: activityPace.value, // Include activity pace in trip data
+    activity_pace: activityPace.value,
+    must_see_attractions: mustSeeAttractions.value, // Include must-see attractions in trip data
     email: email.value
   };
 };
@@ -189,6 +191,13 @@ const submitPaymentMethod = () => {
 
               <!-- Budget Input -->
               <BudgetInput v-model="budget" :min="0" :max="1000000" />
+
+              <!-- Must-See Attractions - Added to left column -->
+              <MustSeeAttractions
+                v-model="mustSeeAttractions"
+                :api-key="googleMapsApiKey"
+                :destination="destination"
+              />
             </div>
 
             <!-- Right Column -->
@@ -200,7 +209,7 @@ const submitPaymentMethod = () => {
               <DateTimeInput v-model="fromDate" label="Start Date" />
               <DateTimeInput v-model="toDate" label="End Date" />
 
-              <!-- Activity Pace Selector - Added to right column -->
+              <!-- Activity Pace Selector -->
               <ActivityPaceSelector v-model="activityPace" />
             </div>
 

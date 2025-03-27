@@ -87,8 +87,22 @@ onMounted(() => {
           <ul class="space-y-2">
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">About Us</a></li>
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Careers</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Privacy Policy</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Terms of Service</a></li>
+            <li>
+              <router-link
+                  to="/privacy-policy"
+                  class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+              >
+                Privacy Policy
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                  to="/tos"
+                  class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+              >
+                Terms of Service
+              </router-link>
+            </li>
           </ul>
         </div>
 

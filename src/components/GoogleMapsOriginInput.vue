@@ -47,7 +47,12 @@ const updateValue = () => {
 };
 
 // Toggle map visibility
-const toggleMap = () => {
+const toggleMap = (event) => {
+  // Prevent default to avoid any URL navigation
+  if (event) {
+    event.preventDefault();
+  }
+
   if (!isApiLoaded.value) {
     errorMessage.value = 'Google Maps is still loading. Please try again in a moment.';
     errorType.value = 'api';
@@ -276,7 +281,12 @@ const loadGoogleMapsAPI = () => {
 };
 
 // Helper function for permission guidance
-const openBrowserSettings = () => {
+const openBrowserSettings = (event) => {
+  // Prevent default to avoid any URL navigation
+  if (event) {
+    event.preventDefault();
+  }
+
   // Provide guidance based on browser
   const isChrome = navigator.userAgent.indexOf("Chrome") > -1;
   const isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
@@ -291,7 +301,12 @@ const openBrowserSettings = () => {
 };
 
 // Use current location
-const useCurrentLocation = () => {
+const useCurrentLocation = (event) => {
+  // Prevent default to avoid any URL navigation
+  if (event) {
+    event.preventDefault();
+  }
+
   if (!navigator.geolocation) {
     errorMessage.value = 'Geolocation is not supported by your browser.';
     errorType.value = 'browser';
@@ -431,7 +446,7 @@ onUnmounted(() => {
 
 <template>
   <div class="form-group">
-    <label class="form-label">Origin</label>
+    <label class="form-label">Starting Point</label>
     <p id="address-hint" class="text-xs text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
 
     <div class="relative">
@@ -496,6 +511,7 @@ onUnmounted(() => {
           v-if="errorType === 'map'"
           @click="initMap"
           class="text-purple-400 hover:text-purple-300 underline"
+          type="button"
         >
           Try again
         </button>
@@ -503,6 +519,7 @@ onUnmounted(() => {
           v-if="errorType === 'permission'"
           @click="openBrowserSettings"
           class="text-purple-400 hover:text-purple-300 underline"
+          type="button"
         >
           Update location permissions
         </button>

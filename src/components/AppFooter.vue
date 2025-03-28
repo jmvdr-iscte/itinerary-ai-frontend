@@ -77,7 +77,6 @@ onMounted(() => {
             <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Home</a></li>
             <li><a href="#features" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Features</a></li>
             <li><a href="#get-started" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Pricing</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Blog</a></li>
           </ul>
         </div>
 
@@ -131,8 +130,8 @@ onMounted(() => {
         <p class="text-sm text-center md:text-left">&copy; {{ currentYear }} TripFlowAI. All rights reserved.</p>
 
         <div class="flex space-x-6 mt-4 md:mt-0">
-          <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</a>
-          <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Terms of Service</a>
+          <router-link to="/privacy-policy" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</router-link>
+          <router-link to="/tos" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Terms of Service</router-link>
           <a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Cookie Policy</a>
         </div>
       </div>

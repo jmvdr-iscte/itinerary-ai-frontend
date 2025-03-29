@@ -34,7 +34,6 @@ const errorType = ref('');
 const selectedLocation = ref(null);
 const isApiLoaded = ref(false);
 
-// Watch for external changes to modelValue
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== address.value) {
     address.value = newValue;
@@ -79,7 +78,6 @@ const initMap = () => {
   }
 
   try {
-    // Create map centered on a default location (can be adjusted based on user's location)
     const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // New York City
 
     map.value = new window.google.maps.Map(mapElement.value, {

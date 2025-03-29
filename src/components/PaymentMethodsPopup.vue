@@ -81,7 +81,7 @@ const formatPrice = (value) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });
-  return formatter.format(value / 1000);
+  return formatter.format(value / 100);
 };
 
 const handleSubmit = async () => {

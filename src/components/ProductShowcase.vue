@@ -37,7 +37,7 @@ const formatPrice = (value, currency) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   });
-  return formatter.format(value / 1000); // Assuming value is in cents
+  return formatter.format(value / 100); // Assuming value is in cents
 };
 
 // Intersection observer to trigger animations when section is in view

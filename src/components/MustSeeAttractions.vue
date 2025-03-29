@@ -411,7 +411,7 @@ declare global {
     <div class="flex justify-between items-center mb-2">
       <div>
         <label class="form-label">Must-See Attractions</label>
-        <p class="text-xs text-gray-400">Add up to 3 attractions you don't want to miss</p>
+        <p class="text-xs text-gray-400">Add up to 3 attractions you don't want to miss (Optional)</p>
       </div>
       <button
         type="button"

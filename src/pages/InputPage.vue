@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import DestinationInput from "@/components/DestinationInput.vue";
 import TransportationSelector from "@/components/TransportationSelector.vue";
 import NumberInput from "@/components/NumberInput.vue";
@@ -11,6 +12,16 @@ import BudgetInput from "@/components/BudgetInput.vue";
 import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue";
 import MustSeeAttractions from "@/components/MustSeeAttractions.vue";
 import '@/assets/main.css';
+
+// Get route to access query parameters
+const route = useRoute();
+
+// Product data from route query parameters
+const productData = ref({
+  uid: '',
+  value: 0,
+  currency: 'USD'
+});
 
 // Form data
 const formData = ref({
@@ -46,6 +57,22 @@ const isFormValid = computed(() => {
   return destination && origin && fromDate && toDate && transportation.length > 0;
 });
 
+// Format price for display
+const formattedPrice = computed(() => {
+  if (!productData.value.value || !productData.value.currency) return '';
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: productData.value.currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+
+  // If value is in cents (e.g., 10000), convert to dollars (100.00)
+  const isInCents = productData.value.value >= 100 && String(productData.value.value).length >= 3;
+  return formatter.format(isInCents ? productData.value.value / 100 : productData.value.value);
+});
+
 // Google Maps API Key
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -63,6 +90,26 @@ onMounted(() => {
 
   // Fix for mobile viewport height issues
   updateViewportHeight();
+
+  // Get product data from route query parameters
+  if (route.query.productUid) {
+    productData.value.uid = route.query.productUid as string;
+  }
+  if (route.query.price) {
+    productData.value.value = parseInt(route.query.price as string);
+  }
+  if (route.query.currency) {
+    productData.value.currency = route.query.currency as string;
+  }
+
+  console.log('Product data received:', productData.value);
+
+  // Get categories from route query parameters
+  if (route.query.categories) {
+    const categoriesParam = route.query.categories as string;
+    formData.value.categories = categoriesParam.split(',');
+    console.log('Categories received:', formData.value.categories);
+  }
 
   // Simulate loading state
   setTimeout(() => {
@@ -119,6 +166,10 @@ function handlePaymentError(message) {
 
 function getTripData() {
   return {
+    // Include product data
+    productUid: productData.value.uid,
+    price: productData.value.value,
+    currency: productData.value.currency,
     categories: formData.value.categories,
     destination: formData.value.destination,
     number_of_people: formData.value.numberOfPeople,

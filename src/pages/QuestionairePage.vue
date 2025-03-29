@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import QuestionComponent from '@/components/QuestionComponent.vue';
 import ProgressIndicator from '@/components/ProgressIndicator.vue';
 import '@/assets/questionnaire.css';
 
 const router = useRouter();
+const route = useRoute();
 const currentStep = ref(0);
 const selectedAnswers = ref<Record<string, string>>({});
 const selectedCategories = ref<string[]>([]);
@@ -15,6 +16,13 @@ const windowWidth = ref(window.innerWidth);
 const windowHeight = ref(window.innerHeight);
 const isMobile = computed(() => windowWidth.value < 768);
 const isTablet = computed(() => windowWidth.value >= 768 && windowWidth.value < 1024);
+
+// Product data from route query parameters
+const productData = ref({
+  uid: '',
+  value: 0,
+  currency: 'USD'
+});
 
 const questions = [
   {
@@ -61,6 +69,7 @@ const questions = [
     options: {
       "Yes, it's a family trip": "FAMILY",
       "No, it's a solo or couple's trip": "LOVE",
+      "No, it's a solo trip": "ADVENTURE",
       "Business trip, so no family activities": "BUSINESS"
     }
   },
@@ -133,14 +142,19 @@ const goToStep = (step: number) => {
   }
 };
 
-// Redirect to itinerary form with selected categories
+// Redirect to itinerary form with selected categories and product data
 const finishQuestionnaire = () => {
   // Show completion animation
   isLoading.value = true;
   setTimeout(() => {
     router.push({
       path: "/itinerary",
-      query: { categories: selectedCategories.value.join(",") }
+      query: {
+        categories: selectedCategories.value.join(","),
+        productUid: productData.value.uid,
+        price: productData.value.value.toString(),
+        currency: productData.value.currency
+      }
     });
   }, 800);
 };
@@ -164,6 +178,19 @@ const handleOrientationChange = () => {
 };
 
 onMounted(() => {
+  // Get product data from route query parameters
+  if (route.query.productUid) {
+    productData.value.uid = route.query.productUid as string;
+  }
+  if (route.query.price) {
+    productData.value.value = parseInt(route.query.price as string);
+  }
+  if (route.query.currency) {
+    productData.value.currency = route.query.currency as string;
+  }
+
+  console.log('Product data received:', productData.value);
+
   window.addEventListener('resize', handleResize);
   window.addEventListener('orientationchange', handleOrientationChange);
 

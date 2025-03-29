@@ -6,8 +6,45 @@ const isInView = ref(false);
 const isHovered = ref(false);
 const isHoveredRoadTrip = ref(false);
 
+// Product data from API
+const productData = ref({
+  uid: '',
+  value: 10000,
+  currency: 'USD',
+  name: 'Custom Itinerary'
+});
+
+// Fetch product data from API
+const fetchProductData = async () => {
+  try {
+    const response = await fetch('http://localhost/product');
+    if (!response.ok) {
+      throw new Error('Failed to fetch product data');
+    }
+    const data = await response.json();
+    productData.value = data;
+    console.log('Product data fetched:', data);
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+  }
+};
+
+// Format price based on currency
+const formatPrice = (value, currency) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+  return formatter.format(value / 1000); // Assuming value is in cents
+};
+
 // Intersection observer to trigger animations when section is in view
 onMounted(() => {
+  // Fetch product data when component mounts
+  fetchProductData();
+
   const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {
       isInView.value = true;
@@ -28,6 +65,19 @@ const setHovered = (product, value) => {
   } else {
     isHoveredRoadTrip.value = value;
   }
+};
+
+// Navigate to questionnaire with product data
+const navigateToQuestionnaire = () => {
+  // Using Vue Router programmatically
+  return {
+    path: '/questionnaire',
+    query: {
+      productUid: productData.value.uid,
+      price: productData.value.value,
+      currency: productData.value.currency
+    }
+  };
 };
 
 // Features list for Trip Flow AI
@@ -173,7 +223,7 @@ const roadTripFeatures = [
 
             <!-- Price -->
             <div class="flex items-end mt-6">
-              <span class="text-5xl font-extrabold text-white">$10</span>
+              <span class="text-5xl font-extrabold text-white">{{ formatPrice(productData.value, productData.currency) }}</span>
               <span class="text-gray-400 text-lg ml-2">/ trip</span>
               <span class="ml-4 line-through text-gray-500">$19.99</span>
               <span class="ml-2 bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-semibold">50% OFF</span>
@@ -196,7 +246,7 @@ const roadTripFeatures = [
 
             <!-- Call to Action -->
             <router-link
-              to="/questionnaire"
+              :to="navigateToQuestionnaire()"
               class="block mt-8 text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-purple-500/30 transform hover:scale-[1.02] transition-all"
             >
               Get Your Itinerary

@@ -6,6 +6,7 @@ import PaymentSuccess from "@/pages/PaymentSuccess.vue";
 import PaymentCancel from "@/pages/PaymentCancel.vue";
 import PrivacyPolicy from "@/components/PrivacyPolicy.vue";
 import TermsOfService from "@/components/TermsOfService.vue";
+import AboutUs from "@/pages/AboutUs.vue";
 
 const routes = [
   { path: "/", component: LandingPage },
@@ -14,6 +15,7 @@ const routes = [
   { path: '/payment-cancel', component: PaymentCancel },
   { path: '/payment-success', component: PaymentSuccess },
   { path: '/privacy-policy', component: PrivacyPolicy },
+  { path: '/about-us', component: AboutUs },
   { path: '/tos', component: TermsOfService }
 ];
 

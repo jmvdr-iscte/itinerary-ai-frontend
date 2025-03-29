@@ -39,7 +39,8 @@ const initPlacesAutocomplete = () => {
 
   try {
     placesAutocomplete.value = new window.google.maps.places.Autocomplete(inputElement.value, {
-      fields: ['formatted_address', 'geometry', 'name'] // Only request the fields we need
+      fields: ['formatted_address', 'geometry', 'name'],
+      types: ['(regions)'], // Restrict to cities, states, and countries
     });
 
     // Update when a place is selected
@@ -161,7 +162,7 @@ onUnmounted(() => {
       {{ errorMessage }}
     </div>
 
-    <p class="text-xs text-gray-400 mt-1">Enter any location (e.g., city, landmark, address)</p>
+    <p class="text-xs text-gray-400 mt-1">Enter any location</p>
   </div>
 </template>
 

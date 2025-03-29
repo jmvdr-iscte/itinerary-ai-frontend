@@ -89,35 +89,65 @@ const initMap = () => {
       streetViewControl: false,
       fullscreenControl: false,
       styles: [
-        {
-          "featureType": "all",
+         {
+          "featureType": "landscape",
           "elementType": "geometry",
-          "stylers": [{ "color": "#242f3e" }]
+          "stylers": [
+            { "color": "#f5f5f5" }
+          ]
         },
         {
-          "featureType": "all",
-          "elementType": "labels.text.stroke",
-          "stylers": [{ "color": "#242f3e" }, { "lightness": 10 }]
+          "featureType": "poi",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#eeeeee" }
+          ]
         },
         {
-          "featureType": "all",
+          "featureType": "road",
+          "elementType": "geometry",
+          "stylers": [
+            { "color": "#ffffff" }
+          ]
+        },
+        {
+          "featureType": "road",
           "elementType": "labels.text.fill",
-          "stylers": [{ "color": "#746855" }, { "lightness": 40 }]
+          "stylers": [
+            { "color": "#9e9e9e" }
+          ]
         },
         {
           "featureType": "water",
           "elementType": "geometry",
-          "stylers": [{ "color": "#17263c" }]
+          "stylers": [
+            { "color": "#c9c9c9" }
+          ]
+        },
+        {
+          "featureType": "water",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            { "color": "#9e9e9e" }
+          ]
         }
       ]
     });
+
+    const customIcon = {
+      url: "/tripflow_icon_transparent.png",
+      scaledSize: new google.maps.Size(40, 40),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(20, 40),
+    }
 
     // Create a marker for the selected location
     marker.value = new window.google.maps.Marker({
       map: map.value,
       draggable: true,
       animation: window.google.maps.Animation.DROP,
-      position: defaultLocation
+      position: defaultLocation,
+      icon: customIcon
     });
 
     // Update address when marker is dragged

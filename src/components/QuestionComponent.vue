@@ -32,7 +32,7 @@ const getOptionIcon = (category: string) => {
     'FOOD': '🍽️',
     'RELIGION': '🕌',
   };
-  
+
   return iconMap[category] || '✨';
 };
 
@@ -56,7 +56,7 @@ const handlePrev = () => {
         <span class="text-4xl">{{ icon }}</span>
       </div>
     </div>
-    
+
     <h3 class="text-2xl font-semibold text-white text-center mb-8">
       {{ question }}
     </h3>
@@ -79,12 +79,12 @@ const handlePrev = () => {
         </span>
       </button>
     </div>
-    
+
     <!-- Navigation Buttons -->
     <div class="mt-8 flex justify-between">
-      <button 
+      <button
         v-if="currentStep > 0"
-        @click="handlePrev" 
+        @click="handlePrev"
         class="flex items-center text-gray-400 hover:text-white transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -93,10 +93,10 @@ const handlePrev = () => {
         Previous
       </button>
       <div v-else></div>
-      
+
       <div class="hidden sm:flex space-x-1">
-        <span 
-          v-for="index in totalSteps" 
+        <span
+          v-for="index in totalSteps"
           :key="index-1"
           :class="[
             'w-2 h-2 rounded-full',
@@ -104,10 +104,10 @@ const handlePrev = () => {
           ]"
         ></span>
       </div>
-      
-      <button 
+
+      <button
         v-if="currentStep < totalSteps - 1"
-        @click="handleNext" 
+        @click="handleNext"
         class="flex items-center text-gray-400 hover:text-white transition-colors"
       >
         Skip
@@ -139,7 +139,7 @@ const handlePrev = () => {
   .option-button {
     @apply py-3 px-4 text-base;
   }
-  
+
   h3 {
     @apply text-xl mb-6;
   }

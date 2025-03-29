@@ -84,8 +84,14 @@ onMounted(() => {
         <div>
           <h3 class="text-white font-semibold mb-4 text-lg">Company</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">About Us</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Careers</a></li>
+            <li>
+              <router-link
+                  to="/about-us"
+                  class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+              >
+                About Us
+              </router-link>
+            </li>            <li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Careers</a></li>
             <li>
               <router-link
                   to="/privacy-policy"

@@ -75,6 +75,15 @@ const updateSelectedMethod = (method: string) => {
   emit('update:selectedMethod', method);
 };
 
+// Format price based on currency
+const formatPrice = (value) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+  return formatter.format(value / 1000);
+};
+
 const handleSubmit = async () => {
   try {
     isProcessing.value = true;
@@ -111,7 +120,7 @@ const handleSubmit = async () => {
       transportation: props.tripData.transportation,
       email: props.tripData.email,
       budget: props.tripData.budget,
-      currency: "USD", // Adding the currency field as specified
+      currency: props.tripData.currency,
       activity_pace: props.tripData.activity_pace || null,
       must_see_attractions:
           props.tripData.must_see_attractions && props.tripData.must_see_attractions.length
@@ -159,17 +168,17 @@ const handleSubmit = async () => {
       // Step 2: Process payment with the itinerary UID
       const paymentData = {
         itinerary_uid: itineraryData.uid,
-        product_uid: "39609a11-2ab4-498a-a498-9a2c733d9c47", // This would ideally come from the itinerary or your app state
-        currency: "USD",
-        value: "10.00", // This would ideally be calculated based on the itinerary
+        product_uid: props.tripData.productUid,
+        currency: props.tripData.currency,
+        value: formatPrice(props.tripData.price),
         method: localSelectedMethod.value,
         gateway: "stripe",
-        country: "PT",
         // In a real app, these URLs would point to your success and cancel pages
         success_url: "http://localhost:5174/payment-success",
         cancel_url: "http://localhost:5174/payment-cancel"
       };
 
+      console.log('Sending payment request with data:', paymentData);
       // Emit submit event to parent component
       emit('submit');
 

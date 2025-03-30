@@ -58,10 +58,10 @@ const isAnimating = ref(false);
 // Trigger animation when changing pace
 const triggerAnimation = (pace: string) => {
   if (pace === selectedPace.value) return;
-  
+
   isAnimating.value = true;
   updateValue(pace);
-  
+
   setTimeout(() => {
     isAnimating.value = false;
   }, 600);
@@ -70,8 +70,7 @@ const triggerAnimation = (pace: string) => {
 
 <template>
   <div class="form-group">
-    <label class="form-label">Activity Pace</label>
-    <p class="text-xs text-gray-400 mb-2">Choose how active you want your itinerary to be</p>
+    <label class="block text-gray-300 font-medium mb-2">Activity Pace</label>
 
     <!-- Pace Selector Cards -->
     <div class="grid grid-cols-3 gap-3">
@@ -85,7 +84,7 @@ const triggerAnimation = (pace: string) => {
         <div class="text-2xl">🐢</div>
         <div class="text-sm font-medium mt-1">Slow</div>
       </button>
-      
+
       <button
         type="button"
         @click="triggerAnimation('MODERATE')"
@@ -96,7 +95,7 @@ const triggerAnimation = (pace: string) => {
         <div class="text-2xl">🚶</div>
         <div class="text-sm font-medium mt-1">Moderate</div>
       </button>
-      
+
       <button
         type="button"
         @click="triggerAnimation('FAST')"
@@ -113,7 +112,7 @@ const triggerAnimation = (pace: string) => {
     <div class="mt-4 p-4 rounded-xl bg-[#1E293B] border border-gray-700 overflow-hidden">
       <!-- Pace Icon and Title -->
       <div class="flex items-center">
-        <div 
+        <div
           class="text-3xl mr-3"
           :class="{ 'animate-bounce': isAnimating }"
         >
@@ -132,7 +131,7 @@ const triggerAnimation = (pace: string) => {
           <span>Active</span>
         </div>
         <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
-          <div 
+          <div
             class="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 ease-out"
             :style="{ width: `${paceInfo.energy}%` }"
           ></div>
@@ -151,7 +150,7 @@ const triggerAnimation = (pace: string) => {
           <span v-else-if="selectedPace === 'MODERATE'">3-4 activities per day</span>
           <span v-else>4-6 activities per day</span>
         </div>
-        
+
         <div class="flex items-center text-sm">
           <div class="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,6 +163,10 @@ const triggerAnimation = (pace: string) => {
         </div>
       </div>
     </div>
+    <p id="address-hint" class="text-xs text-gray-400 mb-2">
+      <span class="text-purple-400">*</span> Choose how active you want your itinerary to be
+
+    </p>
   </div>
 </template>
 

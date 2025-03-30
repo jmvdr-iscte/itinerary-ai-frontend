@@ -474,9 +474,7 @@ onUnmounted(() => {
 
 <template>
   <div class="form-group">
-    <label class="form-label">Starting Point</label>
-    <p id="address-hint" class="text-xs text-gray-400 mb-2">Enter your hotel/Airbnb address or a nearby location</p>
-
+    <label class="block text-gray-300 font-medium mb-2">Starting Point</label>
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -523,6 +521,9 @@ onUnmounted(() => {
           </svg>
         </button>
       </div>
+      <p id="address-hint" class="text-xs text-gray-400 mb-2">
+      <span class="text-purple-400">*</span> Enter your hotel/Airbnb address or a nearby location
+    </p>
     </div>
 
     <!-- Loading indicator -->

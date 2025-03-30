@@ -132,7 +132,7 @@ const handleInput = (event: Event) => {
 
 <template>
   <div class="form-group">
-    <label class="form-label">Budget</label>
+    <label class="block text-gray-300 font-medium mb-2">Budget</label>
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <span class="text-gray-400">$</span>
@@ -148,6 +148,8 @@ const handleInput = (event: Event) => {
         class="form-input pl-8 w-full bg-[#1E293B] border border-gray-700 rounded-xl p-3 text-white placeholder-gray-500 focus:border-purple-500 focus:ring focus:ring-purple-500/20 transition"
       />
     </div>
-    <p class="text-xs text-gray-400 mt-1">Enter your maximum budget for this trip (max: $1,000,000)</p>
+      <p class="text-xs text-gray-400 mb-2">
+        <span class="text-purple-400">*</span> Enter your maximum budget for this trip (max: $1,000,000)
+      </p>
   </div>
 </template>

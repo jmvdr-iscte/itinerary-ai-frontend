@@ -52,6 +52,9 @@ const isSelected = (option: string) => {
         </span>
       </div>
     </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <span class="text-purple-400">*</span> Enter the transportation options you prefer. You can select multiple options.
+    </p>
   </div>
 </template>
 

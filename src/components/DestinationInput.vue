@@ -133,7 +133,7 @@ onUnmounted(() => {
 
 <template>
   <div class="form-group">
-    <label class="form-label">Destination</label>
+    <label class="block text-gray-300 font-medium mb-2">Destination</label>
     <div class="relative">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,7 +162,10 @@ onUnmounted(() => {
       {{ errorMessage }}
     </div>
 
-    <p class="text-xs text-gray-400 mt-1">Enter any location</p>
+    <p class="text-xs text-gray-400 mt-1">
+      <span class="text-purple-400">*</span> Enter a city, state, or country. For example: "New York, NY" or "Tokyo, Japan".
+    </p>
+
   </div>
 </template>
 

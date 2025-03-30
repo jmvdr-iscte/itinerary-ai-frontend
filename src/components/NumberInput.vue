@@ -95,6 +95,9 @@ const updateValue = (event: Event) => {
         </svg>
       </button>
     </div>
+    <p id="address-hint" class="text-xs text-gray-400 mb-2">
+      <span class="text-purple-400">*</span> Enter the number of people traveling.
+    </p>
   </div>
 </template>
 

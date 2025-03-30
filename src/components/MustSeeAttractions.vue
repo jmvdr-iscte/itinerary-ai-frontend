@@ -410,7 +410,7 @@ declare global {
   <div v-if="isVisible" class="form-group">
     <div class="flex justify-between items-center mb-2">
       <div>
-        <label class="form-label">Must-See Attractions</label>
+        <label class="block text-gray-300 font-medium mb-2">Must-See Attractions</label>
         <p class="text-xs text-gray-400">Add up to 3 attractions you don't want to miss (Optional)</p>
       </div>
       <button

@@ -32,7 +32,7 @@ onMounted(() => {
       observer.disconnect();
     }
   }, { threshold: 0.2 });
-  
+
   const featuresSection = document.getElementById('features');
   if (featuresSection) {
     observer.observe(featuresSection);
@@ -47,7 +47,7 @@ onMounted(() => {
     <div class="absolute inset-0 bg-grid-pattern opacity-5 z-0"></div>
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
     <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"></div>
-    
+
     <!-- Content Container -->
     <div class="max-w-7xl mx-auto relative z-10">
       <!-- Section Header -->
@@ -56,22 +56,22 @@ onMounted(() => {
              :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
           <span class="text-xs font-semibold uppercase tracking-wider text-purple-400">Why Choose Us</span>
         </div>
-        
+
         <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent transform transition-all duration-700"
             :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
           Why Choose TripFlowAI?
         </h2>
-        
+
         <p class="text-xl text-gray-300 max-w-3xl mx-auto transform transition-all duration-700 delay-100"
            :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
           Our AI analyzes your preferences, location, and time constraints to create an optimized travel plan that's uniquely yours.
         </p>
       </div>
-      
+
       <!-- Features Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-        <div 
-          v-for="(feature, index) in features" 
+        <div
+          v-for="(feature, index) in features"
           :key="index"
           class="feature-card transform transition-all duration-700"
           :class="[
@@ -86,11 +86,11 @@ onMounted(() => {
             </div>
             <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-white/5 rounded-2xl rotate-6"></div>
           </div>
-          
+
           <!-- Feature Content -->
           <h3 class="text-2xl font-bold text-white mb-3">{{ feature.title }}</h3>
           <p class="text-gray-300">{{ feature.description }}</p>
-          
+
           <!-- Feature Details -->
           <ul class="mt-4 space-y-2">
             <li class="flex items-start">
@@ -106,17 +106,9 @@ onMounted(() => {
               <span class="text-gray-400">{{ index === 0 ? 'Discover hidden gems' : index === 1 ? 'Optimal visit times' : 'Offline access' }}</span>
             </li>
           </ul>
-          
-          <!-- Learn More Link -->
-          <a href="#" class="inline-flex items-center mt-6 text-purple-400 hover:text-purple-300 transition-colors">
-            Learn more
-            <svg class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </a>
         </div>
       </div>
-      
+
       <!-- Stats Section -->
       <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 text-center transform transition-all duration-700 delay-400"
            :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'">
@@ -143,7 +135,7 @@ onMounted(() => {
 
 <style scoped>
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 40px 40px;

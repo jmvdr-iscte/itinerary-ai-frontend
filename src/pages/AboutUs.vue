@@ -42,10 +42,6 @@ const workflowSteps = [
     description: 'Our AI analyzes your preferences to build a personalized itinerary'
   },
   {
-    title: 'Review & Customize',
-    description: 'Fine-tune your itinerary until it\'s exactly what you want'
-  },
-  {
     title: 'Enjoy Your Trip',
     description: 'Access your itinerary anytime, anywhere during your journey'
   }
@@ -367,28 +363,6 @@ onMounted(() => {
             </div>
             <h3 class="text-xl font-bold mb-3 text-white">{{ value.title }}</h3>
             <p class="text-gray-400">{{ value.description }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Our Team Section -->
-    <section class="py-20 bg-[#0F1629]">
-      <div class="container mx-auto px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-white">Meet Our Team</h2>
-          <div class="w-16 h-1 bg-gradient-to-r from-purple-500 to-indigo-500 mx-auto mt-4 mb-6"></div>
-          <p class="text-gray-300 max-w-3xl mx-auto">The passionate individuals behind TripFlow's innovation</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div v-for="(member, index) in teamMembers" :key="index" class="text-center transition-all duration-300 hover:transform hover:scale-105">
-            <div class="relative overflow-hidden rounded-xl mb-4 border border-purple-500/20">
-              <img :src="member.image" :alt="member.name" class="w-full transition-all duration-500 hover:scale-110">
-            </div>
-            <h4 class="text-xl font-bold text-white">{{ member.name }}</h4>
-            <p class="text-purple-400 mb-2">{{ member.position }}</p>
-            <p class="text-gray-400 text-sm">{{ member.description }}</p>
           </div>
         </div>
       </div>

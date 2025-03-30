@@ -165,7 +165,6 @@ const triggerAnimation = (pace: string) => {
     </div>
     <p id="address-hint" class="text-xs text-gray-400 mb-2">
       <span class="text-purple-400">*</span> Choose how active you want your itinerary to be
-
     </p>
   </div>
 </template>

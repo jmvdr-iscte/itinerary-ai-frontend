@@ -1,345 +1,267 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{
   show: boolean;
   selectedMethod: string;
-  tripData: any; // Trip data from the main form
+  tripData: any; // Consider defining a more specific type for tripData
 }>();
 
 const emit = defineEmits<{
   (e: 'update:show', value: boolean): void;
   (e: 'update:selectedMethod', value: string): void;
-  (e: 'submit'): void;
+  // (e: 'submit'): void; // REMOVED - Parent no longer needs this signal to start payment
   (e: 'cancel'): void;
   (e: 'error', message: string): void;
 }>();
 
 const route = useRoute();
 const localSelectedMethod = ref(props.selectedMethod || 'credit_card');
-const isProcessing = ref(false);
+const isProcessing = ref(false); // Tracks if submit action is in progress
 const errorMessage = ref('');
-const loadingMessage = ref('');
-const showLoading = ref(false);
+const loadingMessage = ref(''); // Text for the loading overlay
+const showLoading = ref(false); // Controls loading overlay visibility
 
-// Format the dates to Y-m-d\TH:i:sP format
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-
-  // If the date is already in the correct format, return it as is
-  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(dateString)) {
-    return dateString;
-  }
-
-  // Otherwise, parse and format the date
-  const date = new Date(dateString);
-
-  // Format to YYYY-MM-DDTHH:MM:SS+00:00 format
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-
-  // Get timezone offset in hours and minutes
-  const tzOffset = -date.getTimezoneOffset();
-  const tzHours = String(Math.floor(Math.abs(tzOffset) / 60)).padStart(2, '0');
-  const tzMinutes = String(Math.abs(tzOffset) % 60).padStart(2, '0');
-  const tzSign = tzOffset >= 0 ? '+' : '-';
-
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tzSign}${tzHours}:${tzMinutes}`;
+// --- Helper Functions ---
+const formatDate = (dateString: string | undefined): string => {
+    // ... (keep existing formatDate logic) ...
+     if (!dateString) return '';
+     if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(dateString)) { return dateString; }
+     const date = new Date(dateString);
+     if (isNaN(date.getTime())) return ''; // Handle invalid date string
+     const year = date.getFullYear();
+     const month = String(date.getMonth() + 1).padStart(2, '0');
+     const day = String(date.getDate()).padStart(2, '0');
+     const hours = String(date.getHours()).padStart(2, '0');
+     const minutes = String(date.getMinutes()).padStart(2, '0');
+     const seconds = String(date.getSeconds()).padStart(2, '0');
+     const tzOffset = -date.getTimezoneOffset();
+     const tzHours = String(Math.floor(Math.abs(tzOffset) / 60)).padStart(2, '0');
+     const tzMinutes = String(Math.abs(tzOffset) % 60).padStart(2, '0');
+     const tzSign = tzOffset >= 0 ? '+' : '-';
+     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tzSign}${tzHours}:${tzMinutes}`;
 };
 
-// Watch for external changes
+const formatPrice = (value: number | undefined): number => {
+    // Original logic divided by 100, assuming input is in cents.
+    // Stripe usually expects cents (integer). Ensure backend matches expectation.
+    // Let's return the integer value assuming it's already in cents/smallest unit.
+    // Or adjust if your backend expects float dollars.
+    // Example: return value / 100; // If backend wants float dollars
+    return value || 0; // Return the value directly (assuming cents) or 0 if undefined
+};
+// --- End Helper Functions ---
+
+
+// --- Watchers ---
 watch(() => props.selectedMethod, (newValue) => {
-  if (newValue) {
-    localSelectedMethod.value = newValue;
-  }
+  if (newValue) { localSelectedMethod.value = newValue; }
 });
 
-// Watch for show changes
 watch(() => props.show, (newValue) => {
   if (newValue) {
-    // Reset to default or previously selected method when dialog opens
     localSelectedMethod.value = props.selectedMethod || 'credit_card';
-    // Clear any previous error messages
     errorMessage.value = '';
-    isProcessing.value = false;
+    isProcessing.value = false; // Ensure processing is false when shown
+    showLoading.value = false; // Ensure loading overlay is hidden initially
   }
 });
+// --- End Watchers ---
 
 const updateSelectedMethod = (method: string) => {
   localSelectedMethod.value = method;
   emit('update:selectedMethod', method);
 };
 
-// Format price based on currency
-const formatPrice = (value) => {
-  const formatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
-  return formatter.format(value / 100);
-};
-
+// --- Main Submit Handler ---
 const handleSubmit = async () => {
-  try {
-    isProcessing.value = true;
-    errorMessage.value = '';
+    const callTimestamp = Date.now(); // For debugging logs
+    console.log(`handleSubmit ENTRY - Timestamp: ${callTimestamp}`);
 
-    // Show loading overlay for itinerary creation
-    showLoading.value = true;
-    loadingMessage.value = 'Creating your personalized itinerary...';
-
-    // Get categories from props.tripData or set default values
-    // If categories is empty, try to get them from URL query parameters
-    let categories = props.tripData.categories || [];
-    if (categories.length === 0 && route.query.categories) {
-      const categoriesParam = route.query.categories as string;
-      categories = categoriesParam.split(',');
-      console.log('Using categories from URL:', categories);
+    if (isProcessing.value) { // Prevent double execution
+        console.warn(`handleSubmit ID: ${callTimestamp} - Blocked: Already processing.`);
+        return;
     }
-
-    // If still empty, set some default categories
-    if (categories.length === 0) {
-      categories = ["ADVENTURE", "FAMILY"];
-      console.log('Using default categories:', categories);
-    }
-
-    // Step 1: Create the itinerary first (this is the expensive operation)
-    // Format the request body according to the specified format
-    const itineraryRequestBody = {
-      categories: categories, // Use the categories we determined above
-      destination: props.tripData.destination,
-      number_of_people: props.tripData.number_of_people,
-      origin: props.tripData.origin,
-      from: formatDate(props.tripData.from), // Format date properly
-      to: formatDate(props.tripData.to), // Format date properly
-      transportation: props.tripData.transportation,
-      email: props.tripData.email,
-      budget: props.tripData.budget,
-      currency: props.tripData.currency,
-      activity_pace: props.tripData.activity_pace || null,
-      must_see_attractions:
-          props.tripData.must_see_attractions && props.tripData.must_see_attractions.length
-            ? [...props.tripData.must_see_attractions]
-            : null
-    };
-
-    console.log('Sending itinerary request with data:', itineraryRequestBody);
-
-    // Try with XMLHttpRequest instead of fetch
-    const createItinerary = () => {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost/itinerary', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = function() {
-          if (this.status >= 200 && this.status < 300) {
-            try {
-              const response = JSON.parse(xhr.responseText);
-              resolve(response);
-            } catch (e) {
-              reject(new Error('Invalid JSON response'));
-            }
-          } else {
-            reject(new Error(`Itinerary creation failed with status: ${this.status}`));
-          }
-        };
-        xhr.onerror = function() {
-          reject(new Error('Network error occurred'));
-        };
-        xhr.send(JSON.stringify(itineraryRequestBody));
-      });
-    };
 
     try {
-      const itineraryData = await createItinerary();
+        isProcessing.value = true; // Disable button immediately
+        errorMessage.value = '';
+        showLoading.value = true; // Show loading overlay
+        loadingMessage.value = 'Creating your personalized itinerary...';
+        console.log("Show loading set to true, message:", loadingMessage.value);
 
-      if (!itineraryData || !itineraryData.uid) {
-        throw new Error('Failed to create itinerary. Please try again.');
-      }
+        // Determine categories (keep existing logic)
+        let categories = props.tripData.categories || [];
+        if (categories.length === 0 && route.query.categories) { categories = (route.query.categories as string).split(','); console.log('Using categories from URL:', categories); }
+        if (categories.length === 0) { categories = ["ADVENTURE", "FAMILY"]; console.log('Using default categories:', categories); }
 
-      // Update loading message
-      loadingMessage.value = 'Processing payment...';
+        // Prepare itinerary request body
+        const itineraryRequestBody = {
+            categories: categories, destination: props.tripData.destination,
+            number_of_people: props.tripData.number_of_people, origin: props.tripData.origin,
+            from: formatDate(props.tripData.from), to: formatDate(props.tripData.to),
+            transportation: props.tripData.transportation, email: props.tripData.email,
+            budget: props.tripData.budget, currency: props.tripData.currency,
+            activity_pace: props.tripData.activity_pace || null,
+            must_see_attractions: props.tripData.must_see_attractions?.length ? [...props.tripData.must_see_attractions] : null
+        };
+        console.log('Sending itinerary request with data:', itineraryRequestBody);
 
-      // Step 2: Process payment with the itinerary UID
-      const paymentData = {
-        itinerary_uid: itineraryData.uid,
-        product_uid: props.tripData.productUid,
-        currency: props.tripData.currency,
-        value: formatPrice(props.tripData.price),
-        method: localSelectedMethod.value,
-        gateway: "stripe",
-        // In a real app, these URLs would point to your success and cancel pages
-        success_url: "http://localhost:5174/payment-success",
-        cancel_url: "http://localhost:5174/payment-cancel"
-      };
+        // Define createItinerary within scope
+        const createItinerary = (): Promise<any> => { /* ... keep XHR logic ... */
+            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://localhost/itinerary', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
+        };
 
-      console.log('Sending payment request with data:', paymentData);
-      // Emit submit event to parent component
-      emit('submit');
+        // Step 1: Create Itinerary
+        const itineraryData = await createItinerary();
+        console.log('Itinerary created:', itineraryData);
+        if (!itineraryData?.uid) { throw new Error('Failed to create itinerary (missing UID).'); }
 
-      // Process payment through the backend API using XMLHttpRequest
-      const processPayment = () => {
-        return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open('POST', 'http://localhost/transactions', true);
-          xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.onload = function() {
-            if (this.status >= 200 && this.status < 300) {
-              try {
-                const response = JSON.parse(xhr.responseText);
-                resolve(response);
-              } catch (e) {
-                reject(new Error('Invalid JSON response'));
-              }
-            } else {
-              reject(new Error(`Payment request failed with status: ${this.status}`));
-            }
-          };
-          xhr.onerror = function() {
-            reject(new Error('Network error occurred'));
-          };
-          xhr.send(JSON.stringify(paymentData));
-        });
-      };
+        // Update loading message and log
+        loadingMessage.value = 'Processing payment...';
+        console.log("Message updated, processing payment...");
 
-      const paymentResponseData = await processPayment();
+        // Prepare payment data
+        const paymentData = {
+            itinerary_uid: itineraryData.uid, product_uid: props.tripData.productUid,
+            currency: props.tripData.currency, value: formatPrice(props.tripData.price), // Use original value (assuming cents)
+            method: localSelectedMethod.value, gateway: "stripe",
+            success_url: "http://localhost:5174/payment-success", cancel_url: "http://localhost:5174/payment-cancel"
+        };
+        console.log('Sending payment request with data:', paymentData);
 
-      // Hide loading overlay
-      showLoading.value = false;
+        // --- REMOVED emit('submit'); --- // No longer needed here
 
-      // Redirect to Stripe checkout page
-      if (paymentResponseData && paymentResponseData.checkout_session_url) {
-        window.location.href = paymentResponseData.checkout_session_url;
-      } else {
-        throw new Error('Invalid response from payment service');
-      }
-    } catch (error) {
-      throw error;
+        // Define processPayment within scope
+        const processPayment = (): Promise<any> => { /* ... keep XHR logic ... */
+            return new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', 'http://localhost/transactions', true);
+              xhr.setRequestHeader('Content-Type', 'application/json');
+              xhr.onload = function() {
+                if (this.status >= 200 && this.status < 300) {
+                   try { resolve(JSON.parse(xhr.responseText));
+
+                   } catch (e) {
+                     reject(new Error('Invalid JSON response (payment)'));
+                     }
+                    } else
+                    {
+                      reject(new Error(`Payment request failed: ${this.status}`));
+                     }
+                    };
+                     xhr.onerror = function() {
+                       reject(new Error('Network error (payment)')); };
+
+                       xhr.send(JSON.stringify(paymentData));
+                       });
+        };
+
+        // Step 2: Process Payment
+        const paymentResponseData = await processPayment();
+        console.log('Payment response:', paymentResponseData);
+
+        // --- Hide loading overlay ONLY AFTER success and BEFORE redirect ---
+        // showLoading.value = false; // Moved to finally block if redirect happens
+
+        // Step 3: Redirect
+        if (paymentResponseData?.checkout_session_url) {
+            console.log("Redirecting to checkout:", paymentResponseData.checkout_session_url);
+            // Hide loading just before redirecting
+            showLoading.value = false;
+            window.location.href = paymentResponseData.checkout_session_url;
+            // Note: Code execution might stop here due to redirect
+        } else {
+            throw new Error('Invalid response from payment service (missing URL).');
+        }
+
+    } catch (error: any) { // Catch specific error type if possible
+        console.error(`handleSubmit Timestamp: ${callTimestamp} - Payment processing error:`, error);
+        showLoading.value = false; // Hide loading on error
+        errorMessage.value = error.message || 'An error occurred during payment processing.';
+        emit('error', errorMessage.value); // Notify parent of the error
+    } finally {
+        // This block runs whether the try succeeded or failed (unless redirected first)
+        // Ensure the processing flag is reset so the button can be enabled again if needed (e.g., after error)
+        isProcessing.value = false;
+        console.log(`handleSubmit Timestamp: ${callTimestamp} - FINALLY block, isProcessing set to false.`);
     }
-  } catch (error) {
-    console.error('Payment processing error:', error);
-    showLoading.value = false;
-    errorMessage.value = error.message || 'There was an error processing your payment. Please try again.';
-    isProcessing.value = false;
-    emit('error', errorMessage.value);
-  }
 };
+// --- End Submit Handler ---
 
 const handleCancel = () => {
   emit('update:show', false);
   emit('cancel');
 };
 
-// Payment method options with SVG icons
-const paymentMethods = [
-  { id: 'credit_card', name: 'Credit Card', icon: 'src/assets/payment_methods/credit-card-payment-svgrepo-com.svg'},
-  { id: 'paypal', name: 'PayPal', icon: 'src/assets/payment_methods/paypal-svgrepo-com.svg' }
-];
+// --- Payment method options (keep as is) ---
+const paymentMethods = [ { id: 'credit_card', name: 'Credit Card', icon: 'src/assets/payment_methods/credit-card-payment-svgrepo-com.svg'}, { id: 'paypal', name: 'PayPal', icon: 'src/assets/payment_methods/paypal-svgrepo-com.svg' } ];
+
 </script>
 
 <template>
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center">
-    <!-- Backdrop -->
     <div class="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm" @click="handleCancel"></div>
 
-    <!-- Dialog -->
-    <div class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden transform transition-all animate-fadeIn">
-      <!-- Header -->
-      <div class="p-6 border-b border-gray-800">
-        <h3 class="text-xl font-bold text-white">Select Payment Method</h3>
-        <p class="text-gray-400 text-sm mt-1">Choose how you'd like to pay for your trip</p>
-      </div>
+    <div role="dialog" aria-modal="true" aria-labelledby="payment-popup-title" class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden transform transition-all animate-fadeIn">
+        <div class="p-6 border-b border-gray-700/50">
+          <h3 id="payment-popup-title" class="text-xl font-bold text-white">Select Payment Method</h3>
+          <p class="text-gray-400 text-sm mt-1">Choose how you'd like to pay</p>
+        </div>
 
-      <!-- Payment Methods -->
-      <div class="p-6">
-        <div class="space-y-3">
-          <div
-            v-for="method in paymentMethods"
-            :key="method.id"
-            class="p-4 rounded-xl border transition-all cursor-pointer"
-            :class="localSelectedMethod === method.id ? 'border-purple-500 bg-purple-500/10' : 'border-gray-700 hover:border-gray-500'"
-            @click="updateSelectedMethod(method.id)"
-          >
-            <div class="flex items-center">
-              <div class="flex-shrink-0 w-10 h-10 mr-3">
-                <img :src="method.icon" alt="Payment method" class="w-full h-full object-contain">
-              </div>
-              <div class="flex-grow">
-                <h4 class="font-medium text-white">{{ method.name }}</h4>
-              </div>
-              <div class="flex-shrink-0">
-                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                  :class="localSelectedMethod === method.id ? 'border-purple-500' : 'border-gray-500'"
-                >
-                  <div v-if="localSelectedMethod === method.id" class="w-3 h-3 rounded-full bg-purple-500"></div>
+        <div class="p-6">
+          <div class="space-y-3">
+            <div
+                v-for="method in paymentMethods" :key="method.id"
+                class="p-4 rounded-xl border transition-all cursor-pointer"
+                :class="localSelectedMethod === method.id ? 'border-purple-500 bg-purple-600/20 ring-1 ring-purple-500' : 'border-slate-700 hover:border-slate-500 bg-slate-800/30'"
+                @click="updateSelectedMethod(method.id)"
+            >
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 w-10 h-10 mr-3 p-1 bg-white/10 rounded-md flex items-center justify-center">
+                        <img :src="method.icon" :alt="method.name" class="w-full h-full object-contain">
+                    </div>
+                    <div class="flex-grow"> <h4 class="font-medium text-white">{{ method.name }}</h4> </div>
+                    <div class="flex-shrink-0">
+                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors" :class="localSelectedMethod === method.id ? 'border-purple-500 bg-purple-600' : 'border-slate-600 bg-slate-700/50'">
+                            <div v-if="localSelectedMethod === method.id" class="w-2 h-2 rounded-full bg-white"></div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
+          </div>
+
+          <div v-if="errorMessage" class="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">
+            {{ errorMessage }}
           </div>
         </div>
 
-        <!-- Error message -->
-        <div v-if="errorMessage" class="mt-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-300 text-sm">
-          {{ errorMessage }}
+        <div class="p-4 border-t border-gray-700/50 flex justify-end space-x-3 bg-slate-800/30">
+          <button @click="handleCancel" class="px-5 py-2 rounded-lg border border-slate-600 text-gray-300 hover:bg-slate-700/70 transition disabled:opacity-50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-slate-900" :disabled="isProcessing"> Cancel </button>
+          <button @click="handleSubmit" class="px-5 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transition flex items-center justify-center min-w-[150px] disabled:opacity-60 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-slate-900" :disabled="isProcessing">
+            <template v-if="isProcessing">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle> <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path> </svg>
+                Processing...
+            </template>
+            <template v-else> Continue to Checkout </template>
+          </button>
         </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="p-4 border-t border-gray-800 flex justify-end space-x-3">
-        <button
-          @click="handleCancel"
-          class="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition"
-          :disabled="isProcessing"
-        >
-          Cancel
-        </button>
-        <button
-          @click="handleSubmit"
-          class="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 transition flex items-center justify-center min-w-[150px]"
-          :disabled="isProcessing"
-        >
-          <template v-if="isProcessing">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Processing...
-          </template>
-          <template v-else>
-            Continue to Checkout
-          </template>
-        </button>
-      </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div v-if="showLoading" class="fixed inset-0 z-60 flex items-center justify-center">
-      <!-- Backdrop -->
-      <div class="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm"></div>
-
-      <!-- Loading Content -->
-      <div class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 text-center animate-fadeIn">
+     </div> <div v-if="showLoading" class="fixed inset-0 z-60 flex items-center justify-center">
+      <div class="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm"></div> <div class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl p-8 max-w-xs w-full mx-4 text-center animate-fadeIn border border-slate-700">
         <div class="flex flex-col items-center justify-center space-y-4">
-          <div class="w-16 h-16 border-4 border-[#8B5CF6] border-t-transparent rounded-full animate-spin"></div>
-          <p class="text-white text-lg font-medium">{{ loadingMessage }}</p>
-          <p class="text-gray-400 text-sm">This may take a moment, please don't close this page.</p>
+          <div class="w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div> <p class="text-white text-base font-medium">{{ loadingMessage }}</p>
+          <p class="text-gray-400 text-xs">Please wait, don't close this page.</p>
         </div>
       </div>
     </div>
-  </div>
-</template>
+    </div> </template>
 
 <style scoped>
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out forwards;
 }

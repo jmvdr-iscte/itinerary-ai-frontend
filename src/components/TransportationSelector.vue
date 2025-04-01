@@ -1,83 +1,101 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, getCurrentInstance, computed } from 'vue';
 
 const props = defineProps<{
-  modelValue: string[];
+  // Defensively allow null/undefined from parent, although parent should ideally always provide an array
+  modelValue: string[] | null | undefined;
   options: Array<{ value: string; label: string; icon: string }>;
+  label?: string;
+  required?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string[]): void;
 }>();
 
-const toggleOption = (option: string) => {
-  const currentValue = [...props.modelValue];
-  const index = currentValue.indexOf(option);
+const instance = getCurrentInstance();
+const _uid = instance?.uid;
+
+// Create a computed property that ALWAYS returns a valid array,
+// guarding against null/undefined props.modelValue from the parent.
+const currentSelection = computed<string[]>(() => {
+  // If props.modelValue is an array, use it, otherwise default to an empty array.
+  return Array.isArray(props.modelValue) ? props.modelValue : [];
+});
+
+const toggleOption = (optionValue: string) => {
+  // 1. Use the safe 'currentSelection' computed property as the base.
+  const baseArray = currentSelection.value;
+  // 2. Create a new array copy to avoid mutating the computed result directly.
+  const newValueArray = [...baseArray];
+
+  const index = newValueArray.indexOf(optionValue);
 
   if (index === -1) {
-    currentValue.push(option);
+    newValueArray.push(optionValue); // Add
   } else {
-    currentValue.splice(index, 1);
+    newValueArray.splice(index, 1); // Remove
   }
 
-  emit('update:modelValue', currentValue);
+  // 3. Log *before* emitting.
+  console.log(`TransportationSelector: Emitting update:modelValue - ${JSON.stringify(newValueArray)}`);
+
+  // 4. Emit the new array.
+  emit('update:modelValue', newValueArray);
 };
 
-const isSelected = (option: string) => {
-  return props.modelValue.includes(option);
+// Check selection based on the safe 'currentSelection' computed property.
+const isSelected = (optionValue: string): boolean => {
+  return currentSelection.value.includes(optionValue);
 };
 </script>
 
 <template>
-  <div class="transportation-selector">
-    <label class="block text-gray-300 font-medium mb-2">Transportation</label>
-    <div class="grid grid-cols-2 gap-3">
-      <div
+  <div>
+    <label
+      v-if="props.label"
+      :id="`transport-label-${_uid}`"
+      class="block text-sm font-medium text-gray-300 mb-2"
+    >
+      {{ props.label }}
+       <span v-if="props.required" class="text-red-400">*</span>
+    </label>
+
+    <div
+      role="group"
+      :aria-labelledby="`transport-label-${_uid}`"
+      class="flex flex-wrap gap-2"
+    >
+      <button
+        type="button"
         v-for="option in options"
         :key="option.value"
+        role="checkbox"
+        :aria-checked="isSelected(option.value)"
         @click="toggleOption(option.value)"
         :class="[
-          'flex items-center p-3 rounded-xl border cursor-pointer transition-all',
-          isSelected(option.value)
-            ? 'bg-[#8B5CF6]/20 border-[#8B5CF6] text-white shadow-md shadow-[#8B5CF6]/20'
-            : 'bg-[#0F1629] border-gray-700 text-gray-400 hover:border-gray-500'
+          'inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-150 ease-in-out', // Base pill shape/style
+          'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-slate-900', // Standard focus
+          isSelected(option.value) // Use isSelected based on computed prop
+            ? 'bg-purple-600 border-transparent text-white hover:bg-purple-700 shadow-md shadow-purple-900/30' // Selected style
+            : 'bg-slate-700/60 border-slate-600 text-gray-300 hover:bg-slate-600/80 hover:border-slate-500 hover:text-gray-100' // Unselected style
         ]"
       >
-        <span class="text-xl mr-2">{{ option.icon }}</span>
+        <span class="text-lg mr-1.5 -ml-1" aria-hidden="true">{{ option.icon }}</span>
         <span>{{ option.label }}</span>
-        <span v-if="isSelected(option.value)" class="ml-auto text-[#8B5CF6]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-        </span>
-      </div>
+        <span v-if="isSelected(option.value)" class="sr-only">(selected)</span>
+      </button>
     </div>
-    <p class="text-xs text-gray-400 mb-2">
-        <span class="text-purple-400">*</span> Enter the transportation options you prefer. You can select multiple options.
+
+     <p class="mt-1.5 text-xs text-gray-400">
+       Select one or more preferred methods of transportation.
     </p>
   </div>
 </template>
 
 <style scoped>
-.transportation-selector .grid > div {
-  position: relative;
-  overflow: hidden;
-}
-
-.transportation-selector .grid > div::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.transportation-selector .grid > div:hover::before {
-  opacity: 1;
+/* Keep button font size consistent */
+button {
+    font-size: inherit;
 }
 </style>

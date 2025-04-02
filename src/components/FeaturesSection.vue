@@ -59,7 +59,7 @@ onMounted(() => {
 
         <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent transform transition-all duration-700"
             :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
-          Why Choose TripFlowAI?
+          Why Choose SeemlessTrip?
         </h2>
 
         <p class="text-xl text-gray-300 max-w-3xl mx-auto transform transition-all duration-700 delay-100"

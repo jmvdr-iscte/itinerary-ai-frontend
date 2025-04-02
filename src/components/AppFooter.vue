@@ -96,11 +96,11 @@ onMounted(() => {
 					<div class="flex items-center mb-4">
 						<img
 							src="/tripflowai_icon_small.png"
-							alt="TripFlowAI Logo"
-							class="w-10 h-10"
-						/>
+							alt="SeemlessTrip Logo"
+              class="w-15 h-10 rounded-full mr-1"
+              />
 						<h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-							TripFlow<span class="text-[#8B5CF6]">AI</span>
+							Seemless<span class="text-[#8B5CF6]">Trip</span>
 						</h1>
 					</div>
 					<p class="text-gray-500 mb-4">
@@ -129,10 +129,39 @@ onMounted(() => {
 				<div>
 					<h3 class="text-white font-semibold mb-4 text-lg">Quick Links</h3>
 					<ul class="space-y-2">
-						<li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Home</a></li>
-						<li><a href="#features" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Features</a></li>
-						<li><a href="#get-started" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Pricing</a></li>
-					</ul>
+      <li>
+        <router-link
+          to="/"
+          class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+          active-class="text-[#8B5CF6]" exact-active-class="text-[#8B5CF6] font-semibold" >
+          Home
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          :to="{ path: '/', hash: '#features' }"
+          class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+        >
+          Features
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          :to="{ path: '/', hash: '#get-started' }"
+          class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+        >
+          Pricing
+        </router-link>
+      </li>
+      <li>
+        <router-link
+          to="/about-us"  class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
+          active-class="text-[#8B5CF6]"
+        >
+          About Us
+        </router-link>
+      </li>
+      </ul>
 				</div>
 
 				<!-- Company -->
@@ -225,7 +254,7 @@ onMounted(() => {
 			<!-- Bottom Footer -->
 			<div class="flex flex-col md:flex-row justify-between items-center transform transition-all duration-700 delay-300"
 					 :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
-				<p class="text-sm text-center md:text-left">&copy; {{ currentYear }} TripFlowAI. All rights reserved.</p>
+				<p class="text-sm text-center md:text-left">&copy; {{ currentYear }} SeemlessTrip. All rights reserved.</p>
 
 				<div class="flex space-x-6 mt-4 md:mt-0">
 					<router-link to="/privacy-policy" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</router-link>

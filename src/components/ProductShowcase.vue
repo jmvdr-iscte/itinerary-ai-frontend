@@ -86,8 +86,6 @@ const tripFlowFeatures = [
   "Optimized routes with Google Maps integration",
   "Instant delivery to your email",
   "24/7 customer support via chat",
-  "Free updates and adjustments",
-  "Money-back guarantee"
 ];
 
 // Features list for Road Trip AI (coming soon)
@@ -200,7 +198,6 @@ const roadTripFeatures = [
           </p>
         </div>
 
-        <!-- Right Column: TripFlow AI (Current Product) -->
         <div class="w-full lg:w-1/2 transform transition-all duration-700 delay-200"
              :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
           <!-- Pricing Card -->
@@ -218,7 +215,7 @@ const roadTripFeatures = [
               MOST POPULAR
             </div>
 
-            <h3 class="text-3xl font-bold text-white">TripFlow AI</h3>
+            <h3 class="text-3xl font-bold text-white">Personalized Itinerary</h3>
             <p class="text-gray-400 mt-2">Create your perfect itinerary in seconds.</p>
 
             <!-- Price -->

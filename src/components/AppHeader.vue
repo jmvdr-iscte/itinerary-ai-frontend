@@ -42,53 +42,52 @@ onUnmounted(() => {
       <div class="flex items-center">
         <img
           src="/tripflowai_icon_small.png"
-          alt="TripFlowAI Logo"
-          class="w-10 h-10 rounded-full mr-3 shadow-lg"
+          alt="SeemlessTrip Logo"
+          class="w-15 h-10 rounded-full mr-1 shadow-lg"
         />
         <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-          TripFlow<span class="text-[#8B5CF6]">AI</span>
+          Seemless<span class="text-[#8B5CF6]">Trip</span>
         </h1>
       </div>
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:block">
         <ul class="flex space-x-8">
-          <li>
-            <a
-              href="#"
-              class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
-            >
-              Home
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#features"
-              class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
-            >
-              Features
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#get-started"
-              class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
-            >
-              Pricing
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
-            >
-              Contact
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </li>
+            <li>
+      <router-link
+        to="/"
+        class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
+        exact-active-class="text-[#8B5CF6]" >
+        Home
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
+      </router-link>
+    </li>
+    <li>
+      <router-link
+        :to="{ path: '/', hash: '#features' }"
+        class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
+        active-class="text-[#8B5CF6]" >
+        Features
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
+      </router-link>
+    </li>
+    <li>
+      <router-link
+        :to="{ path: '/', hash: '#get-started' }"
+        class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
+        active-class="text-[#8B5CF6]" >
+        Pricing
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
+      </router-link>
+    </li>
+    <li>
+      <router-link
+        :to="{ path: '/contact-us' }" class="text-white hover:text-[#8B5CF6] transition-colors relative group py-2"
+        active-class="text-[#8B5CF6]" >
+        Contact
+        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B5CF6] transition-all duration-300 group-hover:w-full"></span>
+      </router-link>
+    </li>
         </ul>
       </nav>
 

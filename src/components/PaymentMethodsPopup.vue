@@ -196,18 +196,18 @@ const handleCancel = () => {
 };
 
 // --- Payment method options (keep as is) ---
-const paymentMethods = [ { id: 'credit_card', name: 'Credit Card', icon: 'src/assets/payment_methods/credit-card-payment-svgrepo-com.svg'}, { id: 'paypal', name: 'PayPal', icon: 'src/assets/payment_methods/paypal-svgrepo-com.svg' } ];
+const paymentMethods = [ { id: 'credit_card', name: 'Credit/Debit Card', icon: 'src/assets/payment_methods/Gemini_Generated_Image_nkjuwpnkjuwpnkju.png'},
+{ id: 'paypal', name: 'PayPal', icon: 'src/assets/payment_methods/Gemini_Generated_Image_3sa91h3sa91h3sa9.png' } ];
 
 </script>
-
 <template>
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center">
     <div class="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm" @click="handleCancel"></div>
 
     <div role="dialog" aria-modal="true" aria-labelledby="payment-popup-title" class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden transform transition-all animate-fadeIn">
-        <div class="p-6 border-b border-gray-700/50">
+        <div class="p-6 bg-gradient-to-r from-purple-600 to-indigo-600">
           <h3 id="payment-popup-title" class="text-xl font-bold text-white">Select Payment Method</h3>
-          <p class="text-gray-400 text-sm mt-1">Choose how you'd like to pay</p>
+          <p class="text-gray-200 text-sm mt-1">Choose how you'd like to pay</p>
         </div>
 
         <div class="p-6">
@@ -219,7 +219,7 @@ const paymentMethods = [ { id: 'credit_card', name: 'Credit Card', icon: 'src/as
                 @click="updateSelectedMethod(method.id)"
             >
                 <div class="flex items-center">
-                    <div class="flex-shrink-0 w-10 h-10 mr-3 p-1 bg-white/10 rounded-md flex items-center justify-center">
+                    <div class="flex-shrink-3 w-12 h-12 mr-2 flex items-center justify-center overflow-hidden">
                         <img :src="method.icon" :alt="method.name" class="w-full h-full object-contain">
                     </div>
                     <div class="flex-grow"> <h4 class="font-medium text-white">{{ method.name }}</h4> </div>
@@ -247,15 +247,21 @@ const paymentMethods = [ { id: 'credit_card', name: 'Credit Card', icon: 'src/as
             <template v-else> Continue to Checkout </template>
           </button>
         </div>
-     </div> <div v-if="showLoading" class="fixed inset-0 z-60 flex items-center justify-center">
-      <div class="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm"></div> <div class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl p-8 max-w-xs w-full mx-4 text-center animate-fadeIn border border-slate-700">
+     </div>
+
+     <div v-if="showLoading" class="fixed inset-0 z-60 flex items-center justify-center">
+      <div class="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm"></div>
+      <div class="relative bg-gradient-to-br from-[#1E293B] to-[#0F1629] rounded-2xl shadow-xl p-8 max-w-xs w-full mx-4 text-center animate-fadeIn border border-slate-700">
         <div class="flex flex-col items-center justify-center space-y-4">
-          <div class="w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div> <p class="text-white text-base font-medium">{{ loadingMessage }}</p>
+          <div class="w-12 h-12 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-white text-base font-medium">{{ loadingMessage }}</p>
           <p class="text-gray-400 text-xs">Please wait, don't close this page.</p>
         </div>
       </div>
     </div>
-    </div> </template>
+    </div>
+</template>
+
 
 <style scoped>
 @keyframes fadeIn {

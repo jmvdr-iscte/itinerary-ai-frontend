@@ -102,7 +102,7 @@ const handleSubmit = async () => {
             number_of_people: props.tripData.number_of_people, origin: props.tripData.origin,
             from: formatDate(props.tripData.from), to: formatDate(props.tripData.to),
             transportation: props.tripData.transportation, email: props.tripData.email,
-            budget: props.tripData.budget, currency: props.tripData.currency,
+            budget: props.tripData.budget ?? 0, currency: props.tripData.currency,
             activity_pace: props.tripData.activity_pace || null,
             must_see_attractions: props.tripData.must_see_attractions?.length ? [...props.tripData.must_see_attractions] : null
         };

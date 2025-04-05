@@ -42,11 +42,11 @@ onUnmounted(() => {
       <div class="flex items-center">
         <img
           src="/tripflowai_icon_small.png"
-          alt="SeemlessTrip Logo"
+          alt="CarefreeTrip Logo"
           class="w-15 h-10 rounded-full mr-1 shadow-lg"
         />
         <h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-          Seemless<span class="text-[#8B5CF6]">Trip</span>
+          Carefree<span class="text-[#8B5CF6]">Trip</span>
         </h1>
       </div>
 

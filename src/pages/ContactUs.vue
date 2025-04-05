@@ -13,7 +13,7 @@ const formError = ref('');
 const isLoading = ref(false); // Loading state for API call
 
 // Placeholder contact info - replace with your actual details
-const contactEmail = 'support@seemlesstrip.ai';
+const contactEmail = 'support@CarefreeTrip.ai';
 const contactPhone = '+1 (555) 123-4567';
 const contactAddress = '123 AI Way, Innovation Hub, Tech City, 90210';
 

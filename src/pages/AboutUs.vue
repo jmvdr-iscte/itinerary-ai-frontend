@@ -52,9 +52,9 @@ const teamMembers = [
 
 // Testimonials
 const testimonials = [
-  { quote: '"SeemlessTrip completely transformed our family vacation. The AI understood exactly what activities would keep both our teenagers and younger children engaged. It was like having a personal travel agent who really knew us."', name: 'Jennifer K.', type: 'Family Traveler', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' },
-  { quote: '"As a solo traveler, I was amazed at how SeemlessTrip created an itinerary that perfectly balanced adventure and relaxation. I discovered hidden gems I would never have found on my own. This is the future of travel planning!"', name: 'Michael T.', type: 'Adventure Seeker', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' },
-  { quote: '"My husband and I have very different travel preferences, but SeemlessTrip somehow created an itinerary that made us both happy. The AI\'s ability to balance different interests is truly impressive. We\'ll never plan a trip any other way."', name: 'Sarah L.', type: 'Couple Traveler', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' }
+  { quote: '"CarefreeTrip completely transformed our family vacation. The AI understood exactly what activities would keep both our teenagers and younger children engaged. It was like having a personal travel agent who really knew us."', name: 'Jennifer K.', type: 'Family Traveler', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' },
+  { quote: '"As a solo traveler, I was amazed at how CarefreeTrip created an itinerary that perfectly balanced adventure and relaxation. I discovered hidden gems I would never have found on my own. This is the future of travel planning!"', name: 'Michael T.', type: 'Adventure Seeker', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' },
+  { quote: '"My husband and I have very different travel preferences, but CarefreeTrip somehow created an itinerary that made us both happy. The AI\'s ability to balance different interests is truly impressive. We\'ll never plan a trip any other way."', name: 'Sarah L.', type: 'Couple Traveler', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=60&q=80' }
 ];
 
 const scrollToSection = (sectionId: string) => {
@@ -134,9 +134,9 @@ onMounted(() => {
             </div>
             <div class="md:w-1/2 md:pl-12">
               <h3 class="text-2xl font-bold mb-4 text-white">From Frustration to Innovation</h3>
-              <p class="text-gray-300 mb-6">SeemlessTrip was born from a simple observation: planning the perfect trip is time-consuming, stressful, and often results in generic experiences that don't match travelers' unique preferences.</p>
+              <p class="text-gray-300 mb-6">CarefreeTrip was born from a simple observation: planning the perfect trip is time-consuming, stressful, and often results in generic experiences that don't match travelers' unique preferences.</p>
               <p class="text-gray-300 mb-6">Our founders, avid travelers themselves, experienced this frustration firsthand. They spent countless hours researching destinations, reading reviews, and creating itineraries, only to find that their carefully crafted plans often missed hidden gems or included attractions that didn't match their interests.</p>
-              <p class="text-gray-300">That's when the idea struck: what if artificial intelligence could analyze traveler preferences and create perfectly tailored itineraries in seconds? SeemlessTrip was created to make this vision a reality, combining cutting-edge AI technology with deep travel expertise to revolutionize how people plan their journeys.</p>
+              <p class="text-gray-300">That's when the idea struck: what if artificial intelligence could analyze traveler preferences and create perfectly tailored itineraries in seconds? CarefreeTrip was created to make this vision a reality, combining cutting-edge AI technology with deep travel expertise to revolutionize how people plan their journeys.</p>
             </div>
           </div>
         </div>
@@ -175,9 +175,9 @@ onMounted(() => {
           <div class="flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 md:pr-12 mb-10 md:mb-0">
               <h3 class="text-2xl font-bold mb-4 text-white">The Science Behind Perfect Itineraries</h3>
-              <p class="text-gray-300 mb-6">At the heart of SeemlessTrip is our proprietary AI engine that analyzes thousands of data points to create travel experiences that feel like they were crafted just for you.</p>
+              <p class="text-gray-300 mb-6">At the heart of CarefreeTrip is our proprietary AI engine that analyzes thousands of data points to create travel experiences that feel like they were crafted just for you.</p>
               <p class="text-gray-300 mb-6">Our technology goes beyond simple recommendations. It understands the nuances of travel preferences, from activity pace to cultural interests, and uses this understanding to build cohesive itineraries that maximize enjoyment while minimizing travel time.</p>
-              <p class="text-gray-300">The more you use SeemlessTrip, the smarter it gets. Our AI learns from your feedback and travel patterns, continuously improving its recommendations to match your evolving preferences.</p>
+              <p class="text-gray-300">The more you use CarefreeTrip, the smarter it gets. Our AI learns from your feedback and travel patterns, continuously improving its recommendations to match your evolving preferences.</p>
             </div>
             <div class="md:w-1/2">
               <div class="bg-[#0F1629]/80 rounded-xl p-8 shadow-lg border border-purple-500/20">
@@ -199,7 +199,7 @@ onMounted(() => {
       <section class="py-20 bg-[#0F1629]">
         <div class="container mx-auto px-6">
           <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-white">How SeemlessTrip Works</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-white">How CarefreeTrip Works</h2>
             <div class="w-16 h-1 bg-gradient-to-r from-purple-500 to-indigo-500 mx-auto mt-4 mb-6"></div>
             <p class="text-gray-300 max-w-3xl mx-auto">Creating your perfect itinerary in just a few simple steps</p>
           </div>
@@ -221,7 +221,7 @@ onMounted(() => {
           <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-white">Our Values</h2>
             <div class="w-16 h-1 bg-gradient-to-r from-purple-500 to-indigo-500 mx-auto mt-4 mb-6"></div>
-            <p class="text-gray-300 max-w-3xl mx-auto">The principles that guide everything we do at SeemlessTrip</p>
+            <p class="text-gray-300 max-w-3xl mx-auto">The principles that guide everything we do at CarefreeTrip</p>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div v-for="(value, index) in companyValues" :key="index" class="bg-[#0F1629]/80 rounded-xl p-8 shadow-lg border border-purple-500/20 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
@@ -240,7 +240,7 @@ onMounted(() => {
            <div class="text-center mb-16">
              <h2 class="text-3xl md:text-4xl font-bold text-white">What Our Users Say</h2>
              <div class="w-16 h-1 bg-gradient-to-r from-purple-500 to-indigo-500 mx-auto mt-4 mb-6"></div>
-             <p class="text-gray-300 max-w-3xl mx-auto">Real experiences from travelers who've used SeemlessTrip</p>
+             <p class="text-gray-300 max-w-3xl mx-auto">Real experiences from travelers who've used CarefreeTrip</p>
            </div>
            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
              <div v-for="(testimonial, index) in testimonials" :key="index" class="bg-[#0F1629]/80 p-8 rounded-xl shadow-lg border border-purple-500/20 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">

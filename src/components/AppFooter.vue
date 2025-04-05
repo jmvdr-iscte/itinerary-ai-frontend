@@ -96,11 +96,11 @@ onMounted(() => {
 					<div class="flex items-center mb-4">
 						<img
 							src="/tripflowai_icon_small.png"
-							alt="SeemlessTrip Logo"
+							alt="CarefreeTrip Logo"
               class="w-15 h-10 rounded-full mr-1"
               />
 						<h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-							Seemless<span class="text-[#8B5CF6]">Trip</span>
+							Carefree<span class="text-[#8B5CF6]">Trip</span>
 						</h1>
 					</div>
 					<p class="text-gray-500 mb-4">
@@ -254,7 +254,7 @@ onMounted(() => {
 			<!-- Bottom Footer -->
 			<div class="flex flex-col md:flex-row justify-between items-center transform transition-all duration-700 delay-300"
 					 :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
-				<p class="text-sm text-center md:text-left">&copy; {{ currentYear }} SeemlessTrip. All rights reserved.</p>
+				<p class="text-sm text-center md:text-left">&copy; {{ currentYear }} CarefreeTrip. All rights reserved.</p>
 
 				<div class="flex space-x-6 mt-4 md:mt-0">
 					<router-link to="/privacy-policy" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</router-link>

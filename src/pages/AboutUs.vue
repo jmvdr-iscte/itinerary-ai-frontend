@@ -13,7 +13,6 @@ import AppFooter from '@/components/AppFooter.vue';
 const newsletterEmail = ref('');
 
 // --- Removed currentYear - likely handled within AppFooter ---
-// const currentYear = new Date().getFullYear();
 
 // --- Data definitions remain the same ---
 // AI Features data

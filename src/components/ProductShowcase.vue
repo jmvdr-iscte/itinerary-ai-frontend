@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'; // <-- Import computed
-import { useRouter } from 'vue-router'; // <-- Import useRouter
+import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-// Animation states
+// Animation & state
 const isInView = ref(false);
 const isHovered = ref(false);
 const isHoveredRoadTrip = ref(false);
 
-// API call state
-const isLoading = ref(false); // <-- Add loading state
-const apiCallSuccessful = ref(false); // <-- Add success state
+// API loading & response state (Product)
+const isLoading = ref(false);
+const apiCallSuccessful = ref(false);
 
-// Product data from API
+// API loading & response state (Transaction Count) - NEW
+const isLoadingCount = ref(false);
+const transactionCount = ref<number | null>(null); // Store the count, null initially
+
+// Product data
 const productData = ref({
   uid: '',
   value: 10000, // Default/fallback value
@@ -19,67 +23,94 @@ const productData = ref({
   name: 'Custom Itinerary'
 });
 
-// Fetch product data from API
+// Fetch pricing & product data
 const fetchProductData = async () => {
-  isLoading.value = true; // <-- Start loading
-  apiCallSuccessful.value = false; // Reset success state
+  isLoading.value = true;
+  apiCallSuccessful.value = false;
   try {
-    // IMPORTANT: Replace 'http://localhost/product' with your actual API endpoint
-    const response = await fetch('http://localhost/product');
-    if (!response.ok) {
-        // Optionally read error details from response if API provides them
-        // const errorData = await response.json().catch(() => null);
-        // console.error('API Error Response:', errorData);
-        throw new Error(`Failed to fetch product data. Status: ${response.status}`);
-    }
+    // Adjust endpoint as needed (relative or absolute)
+    // const response = await fetch('http://128.199.62.202/product'); // Example absolute
+    const response = await fetch('http://128.199.62.202/product'); // Example relative
+    if (!response.ok)
+     throw new Error(`Product API error: ${response.status}`);
+
     const data = await response.json();
-    if (!data || !data.uid || typeof data.value === 'undefined' || !data.currency) {
-        throw new Error('Invalid product data received from API');
+    if (!data?.uid || typeof data.value !== 'number' || !data.currency) {
+      throw new Error('Invalid product data structure received: ' + JSON.stringify(data));
     }
+
     productData.value = data;
-    apiCallSuccessful.value = true; // <-- Set success state
-    console.log('Product data fetched:', data);
+    apiCallSuccessful.value = true;
+    console.log('✅ Product data loaded:', data);
   } catch (error) {
-    console.error('Error fetching product data:', error);
-    // Keep apiCallSuccessful.value as false
-    // Optionally, set default/fallback values or show an error message
-    productData.value = { // Reset to defaults or specific error state
-        uid: '',
-        value: 10000,
-        currency: 'USD',
-        name: 'Custom Itinerary (Error Loading)'
+    console.error('❌ Error fetching product:', error);
+    // Reset product data to defaults on error
+    productData.value = {
+      uid: '',
+      value: 10000,
+      currency: 'USD',
+      name: 'Custom Itinerary (Error Loading)'
     };
   } finally {
-    isLoading.value = false; // <-- Stop loading regardless of outcome
+    isLoading.value = false;
   }
 };
 
-// Format price based on currency
-const formatPrice = (value, currency) => {
-  if (typeof value !== 'number' || !currency) return '$--.--'; // Handle invalid data
-  const formatter = new Intl.NumberFormat('en-US', {
+// Fetch transaction count
+const fetchTransactionCount = async () => {
+  isLoadingCount.value = true;
+  transactionCount.value = null; // Reset before fetching
+  try {
+    // Adjust endpoint as needed (relative or absolute)
+    // const response = await fetch('http://128.199.62.202/transactions/count'); // Example absolute
+    const response = await fetch('http://128.199.62.202/transactions/count'); // Example relative
+    if (!response.ok) {
+      throw new Error(`Count API error: ${response.status}`);
+    }
+    const data = await response.json();
+
+    // API returns {"count":"{number}"} - parse the string count
+    if (data && typeof data.count === 'string' && !isNaN(parseInt(data.count, 10))) {
+       const countValue = parseInt(data.count, 10);
+       transactionCount.value = countValue;
+       console.log('✅ Transaction count loaded:', countValue);
+    } else if (data && typeof data.count === 'number') {
+       // Handle case where count might already be a number
+       transactionCount.value = data.count;
+       console.log('✅ Transaction count loaded:', data.count);
+    } else {
+       throw new Error('Invalid count data structure received: ' + JSON.stringify(data));
+    }
+  } catch (error) {
+    console.error('❌ Error fetching transaction count:', error);
+    transactionCount.value = null; // Set to null on error to show fallback text
+  } finally {
+    isLoadingCount.value = false;
+  }
+};
+
+// Format price display
+const formatPrice = (value: number, currency: string) => {
+  // ... null checks ...
+  return new Intl.NumberFormat('en-US', { // Or 'de-DE', etc.
     style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 0, // Keep cents handling as before
-    maximumFractionDigits: 0
-  });
-  return formatter.format(value / 100); // Assuming value is in cents
+    currency: currency, // <--- Uses the currency string passed in
+    minimumFractionDigits: 2, // Use 2 for cents
+    maximumFractionDigits: 2  // Use 2 for cents
+  }).format(value / 100);
 };
 
-// Use Vue Router instance
+// Router navigation
 const router = useRouter();
-
-// Navigate to questionnaire with product data
 const navigateToQuestionnaire = () => {
-  // Check if the API call was successful before navigating
-  if (!apiCallSuccessful.value || isLoading.value) {
-    console.warn('Navigation blocked: API data not loaded successfully.');
-    return; // Prevent navigation
+  // Only navigate if product data is loaded successfully
+  if (!apiCallSuccessful.value || isLoading.value || !productData.value.uid) {
+    console.warn('⛔ Navigation prevented: product data invalid, missing UID, or still loading');
+    return;
   }
 
-  // Programmatic navigation using router.push
   router.push({
-    path: '/questionnaire', // Ensure this is your correct questionnaire route path
+    path: '/questionnaire', // Ensure this route exists
     query: {
       productUid: productData.value.uid,
       price: productData.value.value,
@@ -88,37 +119,36 @@ const navigateToQuestionnaire = () => {
   });
 };
 
-// Computed property to determine if the button should be disabled
-const isGetItineraryDisabled = computed(() => {
-    return isLoading.value || !apiCallSuccessful.value;
-});
+// Button disabled logic
+const isGetItineraryDisabled = computed(() =>
+  // Disable if product is loading OR if the API call failed (no valid UID)
+  isLoading.value || !apiCallSuccessful.value || !productData.value.uid
+);
 
-// Intersection observer to trigger animations when section is in view
+// Intersection Observer setup
 onMounted(() => {
-  // Fetch product data when component mounts
+  // Fetch data when component mounts
   fetchProductData();
+  fetchTransactionCount();
 
-  // Ensure the target element exists before observing
+  // Set up observer for animations
   const showcaseSection = document.getElementById('get-started');
   if (showcaseSection) {
     const observer = new IntersectionObserver((entries) => {
-      // Check if the entry is intersecting
       if (entries[0]?.isIntersecting) {
         isInView.value = true;
-        observer.unobserve(showcaseSection); // Use unobserve instead of disconnect if observing single element
-        // observer.disconnect(); // Use disconnect if observing multiple elements with the same observer
+        observer.unobserve(showcaseSection); // Stop observing once in view
       }
-    }, { threshold: 0.2 }); // Trigger when 20% of the element is visible
-
+    }, { threshold: 0.2 }); // Trigger when 20% is visible
     observer.observe(showcaseSection);
   } else {
-    console.warn('Element with ID "get-started" not found for IntersectionObserver.');
-    // Fallback if observer fails - maybe set isInView true after a short delay?
-    // setTimeout(() => { isInView.value = true; }, 500);
+    console.warn('⚠️ #get-started element not found for Intersection Observer');
+    // Fallback? Maybe set isInView true immediately or after short delay
+    // isInView.value = true;
   }
 });
 
-// Toggle hover state
+// Hover control
 const setHovered = (product: 'tripflow' | 'roadtrip', value: boolean) => {
   if (product === 'tripflow') {
     isHovered.value = value;
@@ -127,7 +157,7 @@ const setHovered = (product: 'tripflow' | 'roadtrip', value: boolean) => {
   }
 };
 
-// Features list for Trip Flow AI
+// Feature descriptions
 const tripFlowFeatures = [
   "Personalized travel plans based on your preferences",
   "Optimized routes with Google Maps integration",
@@ -135,7 +165,6 @@ const tripFlowFeatures = [
   "24/7 customer support via chat",
 ];
 
-// Features list for Road Trip AI (coming soon)
 const roadTripFeatures = [
   "Specialized road trip routes and attractions",
   "Gas station and rest stop planning",
@@ -144,7 +173,9 @@ const roadTripFeatures = [
   "Weather-aware planning for all seasons",
   "Downloadable offline maps"
 ];
+
 </script>
+
 
 <template>
   <section
@@ -179,11 +210,20 @@ const roadTripFeatures = [
 
             <h3 class="text-3xl font-bold text-white">Personalized Roadtrip</h3>
             <p class="text-gray-400 mt-2">Create your perfect road adventure.</p>
-            <div class="flex items-end mt-6">
-              <span class="text-5xl font-extrabold text-white">$15</span>
-              <span class="text-gray-400 text-lg ml-2">/ trip</span>
-              <span class="ml-4 bg-gray-500/20 text-gray-300 px-2 py-1 rounded text-xs font-semibold">PRE-ORDER</span>
-            </div>
+            <div class="mt-6 min-h-[4rem] flex items-end"> <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
+              Loading price info...
+          </div>
+          <div v-else-if="apiCallSuccessful" class="flex items-end w-full flex-wrap">
+              <span class="text-5xl font-extrabold text-white mr-2">
+                  {{ formatPrice(1500, productData.currency) }}
+              </span>
+              <span class="text-gray-400 text-lg self-end pb-1 mr-3">/ trip</span>
+              <span class="ml-4 bg-gray-500/20 text-gray-300 px-2 py-1 rounded text-xs font-semibold self-end pb-1">PRE-ORDER</span>
+          </div>
+          <div v-else class="w-full text-center text-red-400 py-4">
+               Price info unavailable.
+          </div>
+        </div>
             <div class="my-6 h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent"></div>
             <ul class="space-y-4 text-gray-300">
               <li v-for="(feature, index) in roadTripFeatures" :key="index" class="flex items-start">
@@ -204,10 +244,11 @@ const roadTripFeatures = [
             </button>
 
             <div class="flex justify-center items-center mt-6 space-x-2">
-                <span class="text-sm text-gray-400 mr-1">Secure Payments:</span> <img src="https://js.stripe.com/v3/fingerprinted/img/visa-2055f7d85aac6a706583a0001f99d717.svg" alt="Visa" class="h-5 opacity-60">
+                <span class="text-sm text-gray-400 mr-1">Secure Payments:</span>
+                <img src="https://js.stripe.com/v3/fingerprinted/img/visa-2055f7d85aac6a706583a0001f99d717.svg" alt="Visa" class="h-5 opacity-60">
                 <img src="https://js.stripe.com/v3/fingerprinted/img/mastercard-8b1a1702415134b00f813fb62fa47e0e.svg" alt="Mastercard" class="h-5 opacity-60">
                 <img src="https://js.stripe.com/v3/fingerprinted/img/amex-c6ea0750d9f85947b80b4b2ff7f78e21.svg" alt="American Express" class="h-5 opacity-60">
-                </div>
+            </div>
             </div> <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm">
             <span class="inline-block w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
             <span>124 people on the waitlist</span>
@@ -227,15 +268,13 @@ const roadTripFeatures = [
 
             <h3 class="text-3xl font-bold text-white">Personalized Itinerary</h3>
             <p class="text-gray-400 mt-2">Create your perfect itinerary in seconds.</p>
-            <div class="mt-6 min-h-[4rem] flex items-end">
-              <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
+            <div class="mt-6 min-h-[4rem] flex items-end"> <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
                 Loading price...
               </div>
               <div v-else-if="apiCallSuccessful" class="flex items-end w-full flex-wrap">
                 <span class="text-5xl font-extrabold text-white mr-2">{{ formatPrice(productData.value, productData.currency) }}</span>
                 <span class="text-gray-400 text-lg self-end pb-1 mr-3">/ trip</span>
-                <span class="line-through text-gray-500 self-end pb-1 mr-2">$19.99</span>
-                <span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-semibold self-end pb-1">50% OFF</span>
+
               </div>
               <div v-else class="w-full text-center text-red-400 py-4">
                  Price unavailable. Please try again later.
@@ -273,15 +312,25 @@ const roadTripFeatures = [
                 />
               <span>supported by Stripe</span>
             </div>
-
-          </div><p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm">
-            <span class="relative flex h-3 w-3 mr-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </div><p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm min-h-[20px]">
+            <span class="relative flex h-3 w-3 mr-2 flex-shrink-0"> <span v-if="!isLoadingCount && transactionCount !== null" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span v-if="isLoadingCount" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3"
+                      :class="{
+                        'bg-green-500': !isLoadingCount && transactionCount !== null,
+                        'bg-yellow-500': isLoadingCount,
+                        'bg-red-500': !isLoadingCount && transactionCount === null
+                      }">
+                </span>
             </span>
-            <span>12 travelers purchased in the last 24 hours</span>
+
+            <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
+            <span v-else-if="transactionCount !== null && transactionCount >= 0">
+                {{ transactionCount }} traveler{{ transactionCount === 1 ? '' : 's' }} purchased in the last 24 hours
+            </span>
+            <span v-else class="opacity-75">Purchase data unavailable</span>
           </p>
-        </div> </div> </div> </section>
+          </div> </div> </div> </section>
 </template>
 
 <style scoped>
@@ -303,43 +352,32 @@ const roadTripFeatures = [
 }
 
 @keyframes shine {
-  0% { transform: translateX(-100%) skewX(-20deg); } /* Added skew */
-  /* 50% { transform: translateX(0%) skewX(-20deg); } */ /* Optional midpoint */
+  0% { transform: translateX(-100%) skewX(-20deg); }
   100% { transform: translateX(100%) skewX(-20deg); }
 }
 
 .shine-effect {
-  transform: translateX(-100%) skewX(-20deg); /* Initial state */
-  animation: shine 4s cubic-bezier(0.7, 0, 0.3, 1) infinite; /* Smoother bezier, adjust duration */
+  transform: translateX(-100%) skewX(-20deg);
+  animation: shine 4s cubic-bezier(0.7, 0, 0.3, 1) infinite;
   animation-play-state: paused;
-  opacity: 0.6; /* Slightly more subtle shine */
+  opacity: 0.6;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.08) 50%, /* Reduced intensity */
+    rgba(255, 255, 255, 0.08) 50%,
     rgba(255, 255, 255, 0) 100%
   );
 }
 
-/* Apply hover effect directly to the parent card */
-.group:hover .shine-effect, /* If using group hover */
-div:hover > .shine-effect { /* If shine is direct child */
+div:hover > .shine-effect {
   animation-play-state: running;
 }
 
-/* Animation delays (kept for potential future use, but using ease-out on main transition) */
-/* .delay-100 { transition-delay: 100ms; } */
-/* .delay-200 { transition-delay: 200ms; } */
-/* .delay-300 { transition-delay: 300ms; } */
-
-/* Grayscale effect for coming soon product */
 .grayscale {
   filter: grayscale(0.8);
 }
 
-/* Ensure disabled button styles are explicit if needed */
 button:disabled {
-  /* Tailwind classes handle most, but good for overrides */
-  /* Example: border-color: theme('colors.gray.500'); */
+  /* Tailwind classes handle most styling */
 }
 </style>

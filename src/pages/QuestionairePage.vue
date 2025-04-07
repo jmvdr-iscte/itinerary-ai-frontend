@@ -68,7 +68,7 @@ const questions = [
     icon: "👨‍👩‍👧‍👦",
     options: {
       "Yes, it's a family trip": "FAMILY",
-      "No, it's a solo or couple's trip": "LOVE",
+      "No, it's a couple's trip": "LOVE",
       "No, it's a solo trip": "ADVENTURE",
       "Business trip, so no family activities": "BUSINESS"
     }

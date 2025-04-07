@@ -28,7 +28,7 @@ const submitEmail = async () => {
 		subscriptionStatus.value = 'loading';
 		isSubmitting.value = true;
 
-		const response = await fetch('http://localhost/user/email', {
+		const response = await fetch('http://128.199.62.202/user/email', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -259,7 +259,6 @@ onMounted(() => {
 				<div class="flex space-x-6 mt-4 md:mt-0">
 					<router-link to="/privacy-policy" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Privacy Policy</router-link>
 					<router-link to="/tos" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Terms of Service</router-link>
-					<a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors text-sm">Cookie Policy</a>
 				</div>
 			</div>
 		</div>

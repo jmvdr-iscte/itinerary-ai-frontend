@@ -110,7 +110,7 @@ const handleSubmit = async () => {
 
         // Define createItinerary within scope
         const createItinerary = (): Promise<any> => { /* ... keep XHR logic ... */
-            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://localhost/itinerary', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
+            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://128.199.62.202/itineraries', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
         };
 
         // Step 1: Create Itinerary
@@ -137,7 +137,7 @@ const handleSubmit = async () => {
         const processPayment = (): Promise<any> => { /* ... keep XHR logic ... */
             return new Promise((resolve, reject) => {
               const xhr = new XMLHttpRequest();
-              xhr.open('POST', 'http://localhost/transactions', true);
+              xhr.open('POST', 'http://128.199.62.202/transactions', true);
               xhr.setRequestHeader('Content-Type', 'application/json');
               xhr.onload = function() {
                 if (this.status >= 200 && this.status < 300) {

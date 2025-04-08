@@ -163,6 +163,7 @@ const tripFlowFeatures = [
   "Optimized routes with Google Maps integration",
   "Instant delivery to your email",
   "24/7 customer support via chat",
+  "Seamless booking for attractions and activities"
 ];
 
 const roadTripFeatures = [

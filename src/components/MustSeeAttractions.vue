@@ -88,7 +88,7 @@ const updateValue = () => {
 
 // Add a new attraction input field
 const addAttraction = () => {
-  if (attractions.value.length < 3) {
+  if (attractions.value.length < 10) {
     attractions.value.push({ address: '', name: '' });
 
     // Initialize autocomplete for the new field after DOM update

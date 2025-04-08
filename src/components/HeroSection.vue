@@ -92,7 +92,7 @@ onMounted(() => {
         class="mt-6 text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-8 transition-all duration-700"
         :class="[isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10', `delay-${animationDelay + 100}`]"
       >
-        Let our AI generate the perfect trip tailored to your interests, preferences, and travel style.
+        No more endless searching and planning. Create your personalized carefree trip in minutes!
       </p>
 
       <!-- CTA Buttons -->

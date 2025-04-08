@@ -127,7 +127,7 @@ const handleSubmit = async () => {
             itinerary_uid: itineraryData.uid, product_uid: props.tripData.productUid,
             currency: props.tripData.currency, value: formatPrice(props.tripData.price), // Use original value (assuming cents)
             method: localSelectedMethod.value, gateway: "stripe",
-            success_url: "http://localhost:5174/payment-success", cancel_url: "http://localhost:5174/payment-cancel"
+            success_url: "http://localhost:5173/payment-success", cancel_url: "http://localhost:5173/payment-cancel"
         };
         console.log('Sending payment request with data:', paymentData);
 

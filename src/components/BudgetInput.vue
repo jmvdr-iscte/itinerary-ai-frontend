@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, getCurrentInstance } from 'vue';
+import { ref, watch, computed, getCurrentInstance, nextTick } from 'vue'; // Added nextTick
 
 const props = defineProps<{
   modelValue: number | string | null; // Allow null
@@ -32,123 +32,153 @@ const inputRef = ref<HTMLInputElement | null>(null);
 // Helper to parse value safely
 const parseValue = (val: number | string | null): number | null => {
     if (val === null || val === undefined || val === '') return null;
-    const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : val; // Remove commas before parsing
+    // Remove currency symbol and commas before parsing
+    const cleanString = typeof val === 'string'
+        ? val.replace(displaySymbol, '').replace(/,/g, '')
+        : String(val);
+    const num = parseFloat(cleanString);
     return isNaN(num) ? null : num;
 };
+
 
 // Initialize internalValue from modelValue
 const syncFromModel = (modelVal: number | string | null) => {
     const num = parseValue(modelVal);
+    // Store the raw numeric string without formatting
     internalValue.value = num === null ? '' : String(num);
 };
 
-watch(() => props.modelValue, (newValue) => {
-    // Avoid disrupting typing if focused, unless modelValue becomes drastically different
-    if (!isFocused.value) {
+watch(() => props.modelValue, (newValue, oldValue) => {
+    const newNum = parseValue(newValue);
+    const internalNum = parseValue(internalValue.value);
+
+    // Only sync from model if not focused OR if the external value
+    // is significantly different from the current internal numeric value.
+    // This prevents minor formatting differences during typing from resetting the input.
+    if (!isFocused.value || newNum !== internalNum) {
         syncFromModel(newValue);
-    } else {
-        // If focused, check if external value differs significantly from internal
-        const currentInternalNum = parseValue(internalValue.value);
-        const newModelNum = parseValue(newValue);
-        if (currentInternalNum !== newModelNum) {
-             syncFromModel(newValue);
-        }
     }
 }, { immediate: true });
 
 
 // Format number with commas for display when not focused
 const formattedDisplayValue = computed(() => {
-  if (internalValue.value === '') return '';
+  if (!internalValue.value && internalValue.value !== '0') return ''; // Handle empty string correctly
   const num = parseFloat(internalValue.value); // Use the raw internal value
-  if (isNaN(num)) return internalValue.value; // Show raw value if somehow invalid
+  if (isNaN(num)) return internalValue.value; // Show raw value if somehow invalid (shouldn't happen often)
+
   // Allow up to 2 decimal places for budget
   return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 });
 
 // The value shown in the input depends on focus state
 const displayValue = computed(() => {
-    return isFocused.value ? internalValue.value : formattedDisplayValue.value;
+    if (isFocused.value) {
+        return internalValue.value; // Show raw number string when editing
+    } else {
+        // When not focused, show formatted value OR empty if internalValue is empty
+        return internalValue.value === '' ? '' : formattedDisplayValue.value;
+    }
 });
 
 // --- Event Handlers ---
 
 const handleFocus = () => {
   isFocused.value = true;
-  // Optional: Select all text on focus for easier replacement
-  // nextTick(() => inputRef.value?.select());
+  // When focusing, ensure the input shows the raw internal numeric string
+  // Use nextTick to ensure the input value is updated *after* focus state changes displayValue
+  nextTick(() => {
+      if (inputRef.value) {
+         inputRef.value.value = internalValue.value;
+         // Optional: Select text on focus
+         // inputRef.value.select();
+      }
+  });
 };
 
 const handleBlur = () => {
   isFocused.value = false;
   // Final validation and emit on blur
   let valueToEmit: number | null = null;
+  let finalNumericValue : number | null = null;
+
   if (internalValue.value !== '') {
       let numericValue = parseFloat(internalValue.value);
       if (!isNaN(numericValue)) {
          // Enforce min/max strictly on blur
          if (numericValue < effectiveMin) numericValue = effectiveMin;
          if (numericValue > effectiveMax) numericValue = effectiveMax;
-         valueToEmit = numericValue;
+
+          // Round to 2 decimal places if necessary before emitting
+         finalNumericValue = parseFloat(numericValue.toFixed(2));
+         valueToEmit = finalNumericValue;
+
       } else {
-          // If invalid content somehow remains, revert or clear
-          valueToEmit = parseValue(props.modelValue); // Revert to last valid modelValue
+          // If invalid content somehow remains, clear it or revert
+           valueToEmit = null; // Clear if invalid
+           finalNumericValue = null;
       }
   } // else valueToEmit remains null
 
-  // Update internal value to the cleaned numeric string
-  internalValue.value = valueToEmit === null ? '' : String(valueToEmit);
+  // Update internal value to the cleaned/constrained numeric string *without* formatting
+  internalValue.value = finalNumericValue === null ? '' : String(finalNumericValue);
 
-  // Emit only if the validated numeric value differs from the current modelValue
+  // Emit only if the final validated numeric value differs from the current modelValue's parsed number
   const currentModelNum = parseValue(props.modelValue);
+   // Compare numeric values directly, handling nulls
   if (currentModelNum !== valueToEmit) {
      emit('update:modelValue', valueToEmit);
+  }
+
+  // Force update the input display to the formatted value AFTER blur logic
+  // Needed if the value was clamped or changed during blur validation.
+  if (inputRef.value) {
+      inputRef.value.value = displayValue.value; // Use computed displayValue for formatting
   }
 };
 
 
-// Prevent invalid characters on keydown
+// Prevent invalid characters on keydown (mostly allows standard input flow)
 const handleKeyDown = (event: KeyboardEvent) => {
   const target = event.target as HTMLInputElement;
-  const value = target.value; // Use target.value as internalValue might not be updated yet
-  const selectionStart = target.selectionStart ?? 0;
-  const selectionEnd = target.selectionEnd ?? 0;
+  const value = target.value; // Use current input value
   const key = event.key;
 
-  // Allow navigation, modification, and copy/paste keys
-  if (event.ctrlKey || event.metaKey ||
-      ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Backspace', 'Delete',
-       'Tab', 'Escape', 'Enter', 'Home', 'End', 'a', 'c', 'v', 'x', 'z', 'y'].includes(key.toLowerCase())) {
+  // Allow: Backspace, Delete, Tab, Escape, Enter, Home, End, Arrow Keys
+  if ([
+    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End',
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+  ].includes(key)) {
+    return;
+  }
+
+  // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X (Cmd on Mac)
+  if ((event.ctrlKey || event.metaKey) && ['a', 'c', 'v', 'x', 'z', 'y'].includes(key.toLowerCase())) {
     return;
   }
 
   // Allow digits
   if (/^\d$/.test(key)) {
-      // Check max length before allowing digit (e.g., 7 digits for integer part)
-      const potentialValue = value.slice(0, selectionStart) + key + value.slice(selectionEnd);
-      const parts = potentialValue.split('.');
-      if (parts[0] && parts[0].length > 7) { // Limit integer part length (adjust if needed)
-          console.warn(`Max integer length reached`);
-          event.preventDefault();
-          return;
-      }
-      // Check if adding digit would exceed max value (approximate check)
-      const approxNumValue = parseFloat(potentialValue.replace(/,/g, '')); // Quick check without full parsing
-      if (!isNaN(approxNumValue) && approxNumValue > effectiveMax) {
-          // If adding the digit makes it exceed max, potentially just set to max?
-          // Or prevent if it's already at max and trying to add more.
-          const currentNum = parseFloat(value.replace(/,/g, ''));
-           if (!isNaN(currentNum) && currentNum >= effectiveMax){
-                event.preventDefault(); // Prevent adding digit if already at max
-                return;
-           }
-           // Allow if it brings it *up to* max, handleInput will cap it.
-      }
+       // Basic check against max value - prevent typing numbers obviously too large
+       // More precise check happens in handleInput
+       const potentialValue = value.slice(0, target.selectionStart ?? 0) + key + value.slice(target.selectionEnd ?? 0);
+       const approxNumValue = parseFloat(potentialValue.replace(/,/g, '')); // Quick check
+       if (!isNaN(approxNumValue) && approxNumValue > effectiveMax * 1.1) { // Allow slight over typing before blocking
+           event.preventDefault();
+           return;
+       }
       return; // Allow digit
   }
 
-  // Allow decimal point if not already present
+  // Allow decimal point only if one doesn't already exist
   if (key === '.' && !value.includes('.')) {
+    // Prevent leading decimal if desired (e.g., force '0.')
+    // if (value === '' || target.selectionStart === 0) {
+    //   target.value = '0.';
+    //   internalValue.value = '0.'; // Sync internal state
+    //   event.preventDefault(); // Prevent the original '.' insertion
+    //   return;
+    // }
     return; // Allow decimal point
   }
 
@@ -156,76 +186,84 @@ const handleKeyDown = (event: KeyboardEvent) => {
   event.preventDefault();
 };
 
-// Handle input event for validation and emitting
+
+// Handle input event for cleaning, basic validation, and emitting
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   let value = target.value;
+  const start = target.selectionStart; // Store cursor position
 
-  // Store cursor position
-  const start = target.selectionStart;
-
-  // Basic filtering: Allow only digits and one decimal point
+  // 1. Clean the input string: Allow only digits and one decimal point
   let numericString = value.replace(/[^\d.]/g, '');
   const parts = numericString.split('.');
-  if (parts.length > 2) { // More than one decimal point
+  if (parts.length > 2) { // More than one decimal point? Keep only the first.
     numericString = parts[0] + '.' + parts.slice(1).join('');
   }
-   // Limit decimal places (e.g., to 2) - optional, could do on blur instead
+  // Optional: Limit decimal places during typing (e.g., to 2)
    if (parts[1] && parts[1].length > 2) {
        numericString = parts[0] + '.' + parts[1].substring(0, 2);
    }
 
+  // 2. Update internal state *directly* with the cleaned string
+  internalValue.value = numericString;
 
-  // Limit integer part length
-  const integerPart = numericString.split('.')[0];
-  if (integerPart && integerPart.length > 7) {
-      const decimalPart = numericString.split('.')[1];
-      numericString = integerPart.substring(0, 7) + (decimalPart !== undefined ? '.' + decimalPart : '');
-  }
-
-
-  let numericValue: number | null = null;
+  // 3. Parse the cleaned string and prepare value to emit
   let valueToEmit: number | null = null;
-
   if (numericString === '') {
-      internalValue.value = '';
-      valueToEmit = null;
+      valueToEmit = null; // Emit null if empty
   } else {
-      numericValue = parseFloat(numericString);
-      if (!isNaN(numericValue)) {
-         // Apply min/max constraints
-         if (numericValue < effectiveMin) numericValue = effectiveMin;
-         if (numericValue > effectiveMax) numericValue = effectiveMax;
-         valueToEmit = numericValue;
-         internalValue.value = String(numericValue); // Update internal state with validated number string
+      const potentialNum = parseFloat(numericString);
+      if (!isNaN(potentialNum)) {
+          // Check against MAX - If exceeding max, cap the internal value and emit max.
+          if (potentialNum > effectiveMax) {
+              internalValue.value = String(effectiveMax); // Cap internal value
+              valueToEmit = effectiveMax;              // Emit max value
+              numericString = String(effectiveMax);     // Use capped string for display sync below
+          } else {
+              valueToEmit = potentialNum; // Emit the current valid number (could be below min temporarily)
+          }
       } else {
-          // Should not happen often due to filtering, but handle just in case
-          internalValue.value = ''; // Clear if invalid remains
-          valueToEmit = null;
+          // If somehow still invalid after cleaning (e.g., just ".")
+           // Treat as empty for emission purposes, but keep internalValue as is for typing continuity
+           // internalValue.value = numericString; // Keep "." if user typed it
+           valueToEmit = null; // Don't emit an invalid number
       }
   }
 
+  // 4. Synchronize the input display IF IT CHANGED due to cleaning or capping
+  // Use nextTick to avoid interfering with ongoing input composition
+  nextTick(() => {
+      if (target.value !== numericString) {
+          target.value = numericString; // Update display to cleaned/capped value
 
-  // Ensure the input visually reflects the cleaned/capped value immediately
-  // This is crucial if capping at max/min happened.
-  const displaySyncValue = internalValue.value; // Use the cleaned internal value
-  if (target.value !== displaySyncValue) {
-      target.value = displaySyncValue;
-      // Restore cursor position if possible (can be tricky)
-      if(start !== null) {
-          // Simple cursor restoration (might be off if length changed significantly)
-          const diff = target.value.length - value.length;
-          const newPos = Math.max(0, Math.min(target.value.length, start + diff));
-          target.setSelectionRange(newPos, newPos);
+          // Restore cursor position carefully
+          if(start !== null) {
+              // Calculate expected new cursor position based on length change
+              const newLength = numericString.length;
+              const oldLength = value.length; // Original value before cleaning
+              let newPos = start + (newLength - oldLength);
+
+              // Simple boundary checks for the new position
+               newPos = Math.max(0, Math.min(newLength, newPos));
+
+               // Attempt to set selection range
+               try {
+                   target.setSelectionRange(newPos, newPos);
+               } catch (e) {
+                   console.error("Error setting selection range:", e);
+               }
+          }
       }
-  }
+  });
 
-  // Emit the validated numeric value (or null) if it differs from modelValue
+
+  // 5. Emit the potential numeric value (or null) if it differs from the *parsed* modelValue
   const currentModelNum = parseValue(props.modelValue);
-   if (currentModelNum !== valueToEmit) {
+  if (currentModelNum !== valueToEmit) {
       emit('update:modelValue', valueToEmit);
-   }
+  }
 };
+
 
 // Formatted Max value for helper text
 const formattedMax = computed(() => {
@@ -249,13 +287,14 @@ const formattedMax = computed(() => {
       <input
         :id="`budget-input-${_uid}`"
         ref="inputRef"
-        type="text"
-        inputmode="decimal" :value="displayValue" @input="handleInput"
+        type="text" inputmode="decimal"
+        :value="displayValue" @input="handleInput"
         @keydown="handleKeyDown"
         @focus="handleFocus"
         @blur="handleBlur"
         :placeholder="props.placeholder || '0'"
-        class="component-input pl-8" :required="props.required"
+        class="component-input pl-8"
+        :required="props.required"
         :aria-describedby="`budget-hint-${_uid}`"
         aria-label="Budget amount input"
         autocomplete="off"

@@ -295,7 +295,7 @@ function submitPaymentMethod() {
                 v-model="formData.origin"
                 :api-key="googleMapsApiKey"
                 @location-selected="handleLocationSelected"
-                label="Where are you starting from?"
+                label="Where did you find accommodation?"
                 placeholder="e.g., 123 St. Tripflow, US"
                 required
               />
@@ -340,7 +340,8 @@ function submitPaymentMethod() {
               <DateTimeInput
                   v-model="formData.toDate"
                   label="End Date"
-                  :minDate="formData.fromDate" required
+                  :minDate="formData.fromDate"
+                  required
               />
 
               <ActivityPaceSelector

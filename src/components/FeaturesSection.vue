@@ -108,27 +108,6 @@ onMounted(() => {
           </ul>
         </div>
       </div>
-
-      <!-- Stats Section -->
-      <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 text-center transform transition-all duration-700 delay-400"
-           :class="isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'">
-        <div class="stat-card">
-          <div class="text-4xl font-bold text-white mb-2">10k+</div>
-          <p class="text-gray-400">Happy Travelers</p>
-        </div>
-        <div class="stat-card">
-          <div class="text-4xl font-bold text-white mb-2">50+</div>
-          <p class="text-gray-400">Countries Covered</p>
-        </div>
-        <div class="stat-card">
-          <div class="text-4xl font-bold text-white mb-2">98%</div>
-          <p class="text-gray-400">Satisfaction Rate</p>
-        </div>
-        <div class="stat-card">
-          <div class="text-4xl font-bold text-white mb-2">24/7</div>
-          <p class="text-gray-400">Customer Support</p>
-        </div>
-      </div>
     </div>
   </section>
 </template>

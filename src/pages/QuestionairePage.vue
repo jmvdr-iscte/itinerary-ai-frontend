@@ -21,7 +21,8 @@ const isTablet = computed(() => windowWidth.value >= 768 && windowWidth.value < 
 const productData = ref({
   uid: '',
   value: 0,
-  currency: 'USD'
+  currency: 'USD',
+  symbol: '$'
 });
 
 const questions = [
@@ -153,7 +154,8 @@ const finishQuestionnaire = () => {
         categories: selectedCategories.value.join(","),
         productUid: productData.value.uid,
         price: productData.value.value.toString(),
-        currency: productData.value.currency
+        currency: productData.value.currency,
+        symbol: productData.value.symbol
       }
     });
   }, 800);
@@ -187,6 +189,9 @@ onMounted(() => {
   }
   if (route.query.currency) {
     productData.value.currency = route.query.currency as string;
+  }
+  if (route.query.symbol) {
+    productData.value.symbol = route.query.symbol as string;
   }
 
   console.log('Product data received:', productData.value);

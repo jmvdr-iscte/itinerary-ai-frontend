@@ -351,7 +351,7 @@ const handleManualInput = (index: number) => {
     updateValue();
 
     // Add another field if this is the last one and we have fewer than 3
-    if (index === attractions.value.length - 1 && attractions.value.length < 3) {
+    if (index === attractions.value.length - 1 && attractions.value.length < 10) {
       addAttraction();
     }
   }
@@ -411,7 +411,7 @@ declare global {
     <div class="flex justify-between items-center mb-2">
       <div>
         <label class="block text-gray-300 font-medium mb-2">Must-See Attractions</label>
-        <p class="text-xs text-gray-400">Add up to 3 attractions you don't want to miss (Optional)</p>
+        <p class="text-xs text-gray-400">Add up to 10 attractions you don't want to miss (Optional)</p>
       </div>
       <button
         type="button"
@@ -458,7 +458,7 @@ declare global {
       </div>
 
       <!-- Add button -->
-      <div v-if="attractions.length < 3" class="flex justify-center">
+      <div v-if="attractions.length < 10" class="flex justify-center">
         <button
           type="button"
           @click="addAttraction"

@@ -26,7 +26,8 @@ const route = useRoute();
 const productData = ref({
   uid: '',
   value: 0,
-  currency: 'USD'
+  currency: 'USD',
+  symbol: '$'
 });
 
 // Form data - using refs for reactivity
@@ -117,6 +118,9 @@ onMounted(() => {
   }
   if (route.query.currency) {
     productData.value.currency = route.query.currency as string;
+  }
+  if (route.query.symbol) {
+    productData.value.symbol = route.query.symbol as string;
   }
   console.log('Product data received:', productData.value);
 
@@ -313,7 +317,7 @@ function submitPaymentMethod() {
                   label="Estimated Budget"
                   :min="0"
                   :max="1000000"
-                  :currencySymbol="productData.currency === 'EUR' ? '€' : '$'" />
+                  :currencySymbol="productData.symbol" />
 
               <MustSeeAttractions
                 v-model="formData.mustSeeAttractions"

@@ -20,7 +20,8 @@ const productData = ref({
   uid: '',
   value: 10000, // Default/fallback value
   currency: 'USD', // Default/fallback currency
-  name: 'Custom Itinerary'
+  name: 'Custom Itinerary',
+  symbol: 'USD' // Default/fallback symbol
 });
 
 // Fetch pricing & product data
@@ -49,7 +50,8 @@ const fetchProductData = async () => {
       uid: '',
       value: 10000,
       currency: 'USD',
-      name: 'Custom Itinerary (Error Loading)'
+      name: 'Custom Itinerary (Error Loading)',
+      symbol: 'USD'
     };
   } finally {
     isLoading.value = false;
@@ -114,7 +116,8 @@ const navigateToQuestionnaire = () => {
     query: {
       productUid: productData.value.uid,
       price: productData.value.value,
-      currency: productData.value.currency
+      currency: productData.value.currency,
+      symbol: productData.value.symbol
     }
   });
 };

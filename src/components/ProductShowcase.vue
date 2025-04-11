@@ -241,19 +241,22 @@ const roadTripFeatures = [
               class="block w-full mt-8 text-center bg-gray-600 text-white px-6 py-4 rounded-xl text-lg font-semibold shadow-lg transition-all cursor-not-allowed opacity-80"
               disabled
             >
-              Join Waitlist
+              Not Available
             </button>
 
-            <div class="flex justify-center items-center mt-6 space-x-2">
-                <span class="text-sm text-gray-400 mr-1">Secure Payments:</span>
-                <img src="https://js.stripe.com/v3/fingerprinted/img/visa-2055f7d85aac6a706583a0001f99d717.svg" alt="Visa" class="h-5 opacity-60">
-                <img src="https://js.stripe.com/v3/fingerprinted/img/mastercard-8b1a1702415134b00f813fb62fa47e0e.svg" alt="Mastercard" class="h-5 opacity-60">
-                <img src="https://js.stripe.com/v3/fingerprinted/img/amex-c6ea0750d9f85947b80b4b2ff7f78e21.svg" alt="American Express" class="h-5 opacity-60">
+            <div class="flex justify-center items-center mt-6 text-sm text-gray-400 space-x-1.5">
+                <img
+                  src="/src/assets/payment_methods/stripe-icon.svg" alt="Stripe"
+                  class="h-5 w-auto"
+                  aria-hidden="true"
+                />
+              <span>supported by Stripe</span>
             </div>
-            </div> <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm">
+            </div> 
+            <!-- <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm">
             <span class="inline-block w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
             <span>124 people on the waitlist</span>
-          </p>
+          </p> -->
         </div> <div class="w-full lg:w-1/2 transform transition-all duration-700 ease-out delay-100"
              :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
           <div

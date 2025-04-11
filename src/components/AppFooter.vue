@@ -133,7 +133,7 @@ onMounted(() => {
         <router-link
           to="/"
           class="text-gray-400 hover:text-[#8B5CF6] transition-colors"
-          active-class="text-[#8B5CF6]" exact-active-class="text-[#8B5CF6] font-semibold" >
+         >
           Home
         </router-link>
       </li>
@@ -176,7 +176,6 @@ onMounted(() => {
 								About Us
 							</router-link>
 						</li>
-						<li><a href="#" class="text-gray-400 hover:text-[#8B5CF6] transition-colors">Careers</a></li>
 						<li>
 							<router-link
 									to="/privacy-policy"

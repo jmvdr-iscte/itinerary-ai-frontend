@@ -185,14 +185,7 @@ onMounted(() => {
                   <a :href="'tel:' + contactPhone" class="text-purple-400 hover:text-purple-300 transition-colors">{{ contactPhone }}</a>
                   <p class="text-sm text-gray-400 mt-1">Mon-Fri, 9am - 5pm WEST</p> </div>
               </div>
-               <div class="flex items-start space-x-4">
-                 <div class="flex-shrink-0 w-8 h-8 mt-1 bg-purple-900/30 rounded-full flex items-center justify-center border border-purple-500/30"><i class="fas fa-map-marker-alt text-purple-400"></i></div>
-                 <div>
-                   <h3 class="font-semibold text-white">Visit Us</h3>
-                   <p class="text-gray-300">{{ contactAddress }}</p>
-                   <p class="text-sm text-gray-400 mt-1">Please schedule an appointment beforehand.</p>
-                 </div>
-               </div>
+              
             </div>
           </div>
         </div>

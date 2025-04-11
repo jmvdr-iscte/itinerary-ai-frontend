@@ -6,7 +6,6 @@ const router = useRouter();
 
 onMounted(() => {
   // You can add analytics tracking or other cancel-related logic here
-  console.log('Payment cancelled');
 });
 
 const goToHome = () => {

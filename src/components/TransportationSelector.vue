@@ -37,9 +37,6 @@ const toggleOption = (optionValue: string) => {
     newValueArray.splice(index, 1); // Remove
   }
 
-  // 3. Log *before* emitting.
-  console.log(`TransportationSelector: Emitting update:modelValue - ${JSON.stringify(newValueArray)}`);
-
   // 4. Emit the new array.
   emit('update:modelValue', newValueArray);
 };

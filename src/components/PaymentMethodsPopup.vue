@@ -77,7 +77,6 @@ const updateSelectedMethod = (method: string) => {
 // --- Main Submit Handler ---
 const handleSubmit = async () => {
     const callTimestamp = Date.now(); // For debugging logs
-    console.log(`handleSubmit ENTRY - Timestamp: ${callTimestamp}`);
 
     if (isProcessing.value) { // Prevent double execution
         console.warn(`handleSubmit ID: ${callTimestamp} - Blocked: Already processing.`);
@@ -89,12 +88,13 @@ const handleSubmit = async () => {
         errorMessage.value = '';
         showLoading.value = true; // Show loading overlay
         loadingMessage.value = 'Creating your personalized itinerary...';
-        console.log("Show loading set to true, message:", loadingMessage.value);
 
         // Determine categories (keep existing logic)
         let categories = props.tripData.categories || [];
-        if (categories.length === 0 && route.query.categories) { categories = (route.query.categories as string).split(','); console.log('Using categories from URL:', categories); }
-        if (categories.length === 0) { categories = ["ADVENTURE", "FAMILY"]; console.log('Using default categories:', categories); }
+        if (categories.length === 0 && route.query.categories) { categories = (route.query.categories as string).split(','); }
+        if (categories.length === 0) { categories = ["ADVENTURE", "FAMILY"];
+
+         }
 
         // Prepare itinerary request body
         const itineraryRequestBody = {
@@ -106,7 +106,6 @@ const handleSubmit = async () => {
             activity_pace: props.tripData.activity_pace || null,
             must_see_attractions: props.tripData.must_see_attractions?.length ? [...props.tripData.must_see_attractions] : null
         };
-        console.log('Sending itinerary request with data:', itineraryRequestBody);
 
         // Define createItinerary within scope
         const createItinerary = (): Promise<any> => { /* ... keep XHR logic ... */
@@ -115,12 +114,10 @@ const handleSubmit = async () => {
 
         // Step 1: Create Itinerary
         const itineraryData = await createItinerary();
-        console.log('Itinerary created:', itineraryData);
         if (!itineraryData?.uid) { throw new Error('Failed to create itinerary (missing UID).'); }
 
         // Update loading message and log
         loadingMessage.value = 'Processing payment...';
-        console.log("Message updated, processing payment...");
 
         // Prepare payment data
         const paymentData = {
@@ -129,7 +126,6 @@ const handleSubmit = async () => {
             method: localSelectedMethod.value, gateway: "stripe",
             success_url: "http://localhost:5173/payment-success", cancel_url: "http://localhost:5173/payment-cancel"
         };
-        console.log('Sending payment request with data:', paymentData);
 
         // --- REMOVED emit('submit'); --- // No longer needed here
 
@@ -160,14 +156,12 @@ const handleSubmit = async () => {
 
         // Step 2: Process Payment
         const paymentResponseData = await processPayment();
-        console.log('Payment response:', paymentResponseData);
 
         // --- Hide loading overlay ONLY AFTER success and BEFORE redirect ---
         // showLoading.value = false; // Moved to finally block if redirect happens
 
         // Step 3: Redirect
         if (paymentResponseData?.checkout_session_url) {
-            console.log("Redirecting to checkout:", paymentResponseData.checkout_session_url);
             // Hide loading just before redirecting
             showLoading.value = false;
             window.location.href = paymentResponseData.checkout_session_url;
@@ -185,7 +179,6 @@ const handleSubmit = async () => {
         // This block runs whether the try succeeded or failed (unless redirected first)
         // Ensure the processing flag is reset so the button can be enabled again if needed (e.g., after error)
         isProcessing.value = false;
-        console.log(`handleSubmit Timestamp: ${callTimestamp} - FINALLY block, isProcessing set to false.`);
     }
 };
 // --- End Submit Handler ---

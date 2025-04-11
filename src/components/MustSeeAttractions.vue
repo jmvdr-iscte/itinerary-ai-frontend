@@ -131,7 +131,6 @@ const removeAttraction = (index: number) => {
 // Initialize Places Autocomplete for a specific input
 const initPlacesAutocomplete = (inputElement: HTMLInputElement, index: number) => {
   if (!window.google || !window.google.maps || !window.google.maps.places || !inputElement) {
-    console.log('Google Maps API not fully loaded or input element not available');
     return;
   }
 
@@ -199,7 +198,6 @@ const initPlacesAutocomplete = (inputElement: HTMLInputElement, index: number) =
 const initPlacesAutocompletes = () => {
   // Make sure we have input elements before trying to initialize
   if (!inputElements.value || inputElements.value.length === 0) {
-    console.log('No input elements available yet');
     return;
   }
 
@@ -234,7 +232,6 @@ const loadGoogleMapsAPI = () => {
     // Check if the script is already being loaded
     if (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
       // Script tag exists but API not ready yet, wait for it
-      console.log('Google Maps script tag exists, waiting for it to load');
 
       // Set a timeout to avoid infinite waiting
       const timeout = setTimeout(() => {
@@ -256,8 +253,6 @@ const loadGoogleMapsAPI = () => {
       return;
     }
 
-    console.log('Creating Google Maps script tag');
-
     // Create script element
     const script = document.createElement('script');
     const apiKey = props.apiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -274,7 +269,6 @@ const loadGoogleMapsAPI = () => {
     script.defer = true;
 
     script.onload = () => {
-      console.log('Google Maps script loaded');
       // Just because script is loaded doesn't mean API is ready
       const checkApiReady = setInterval(() => {
         if (isGoogleMapsLoaded()) {
@@ -326,7 +320,6 @@ const retryApiLoad = () => {
   if (props.destination) {
     loadGoogleMapsAPI()
       .then(() => {
-        console.log('Google Maps API loaded successfully on retry');
         nextTick(() => {
           initPlacesAutocompletes();
         });
@@ -358,32 +351,26 @@ const handleManualInput = (index: number) => {
 };
 
 onMounted(() => {
-  console.log('MustSeeAttractions component mounted');
 
   // Only try to load API if destination is provided
   if (props.destination) {
-    console.log('Destination provided, loading Google Maps API');
     apiLoadAttempted.value = true;
     loadGoogleMapsAPI()
       .then(() => {
-        console.log('Google Maps API loaded successfully');
         nextTick(() => {
           initPlacesAutocompletes();
         });
       })
       .catch(error => {
-        console.error('Failed to load Google Maps API:', error);
         errorMessage.value = 'Failed to load Google Maps API. Please try refreshing the page.';
         isLoading.value = false;
       });
   } else {
-    console.log('No destination provided, skipping Google Maps API load');
     isLoading.value = false;
   }
 });
 
 onUnmounted(() => {
-  console.log('MustSeeAttractions component unmounted');
 
   // Clean up event listeners
   placesAutocompletes.value.forEach(autocomplete => {

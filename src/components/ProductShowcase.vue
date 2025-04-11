@@ -42,7 +42,6 @@ const fetchProductData = async () => {
 
     productData.value = data;
     apiCallSuccessful.value = true;
-    console.log('✅ Product data loaded:', data);
   } catch (error) {
     console.error('❌ Error fetching product:', error);
     // Reset product data to defaults on error
@@ -75,11 +74,9 @@ const fetchTransactionCount = async () => {
     if (data && typeof data.count === 'string' && !isNaN(parseInt(data.count, 10))) {
        const countValue = parseInt(data.count, 10);
        transactionCount.value = countValue;
-       console.log('✅ Transaction count loaded:', countValue);
     } else if (data && typeof data.count === 'number') {
        // Handle case where count might already be a number
        transactionCount.value = data.count;
-       console.log('✅ Transaction count loaded:', data.count);
     } else {
        throw new Error('Invalid count data structure received: ' + JSON.stringify(data));
     }

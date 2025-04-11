@@ -85,13 +85,6 @@ const formattedPrice = computed(() => {
   return formatter.format(valueInFullUnits);
 });
 
-// Google Maps API Key from environment variables
-const googleMapsApiKey = import.meta.env.VITE_Maps_API_KEY;
-if (!googleMapsApiKey) {
-  console.warn("Google Maps API Key (VITE_Maps_API_KEY) is missing!");
-  // Optionally handle this case, maybe disable map features
-}
-
 // Transportation options (can be moved to a separate config file if large)
 const transportationOptions = [
   { value: "WALK", label: "Walking", icon: "🚶" },
@@ -122,13 +115,11 @@ onMounted(() => {
   if (route.query.symbol) {
     productData.value.symbol = route.query.symbol as string;
   }
-  console.log('Product data received:', productData.value);
 
   // Get categories from route query parameters
   if (route.query.categories) {
     const categoriesParam = route.query.categories as string;
     formData.value.categories = categoriesParam.split(',').map(cat => cat.trim()).filter(cat => cat); // Trim whitespace and filter empty strings
-    console.log('Categories received:', formData.value.categories);
   }
 
   // Simulate initial loading state (replace with actual data fetching if needed)
@@ -157,7 +148,6 @@ function updateViewportHeight() {
 
 // Handler for GoogleMapsOriginInput selection
 function handleLocationSelected(location: any) { // Replace 'any' with a specific type if available
-  console.log('Location selected:', location);
   formData.value.originLocation = location; // Store the whole location object if needed
   formData.value.origin = location.address; // Update the origin string for display/submission
 }
@@ -166,7 +156,6 @@ function handleLocationSelected(location: any) { // Replace 'any' with a specifi
 function openEmailPopup() {
   if (!isFormValid.value) {
       console.warn("Form is invalid, cannot proceed to email popup.");
-      // Optionally show a message to the user
       return;
   }
   uiState.value.showEmailPopup = true;
@@ -197,7 +186,6 @@ function closePaymentMethodsPopup() {
 // Handler for email submission (triggers payment popup)
 function submitEmail() {
   // Email validation is good practice here or within the EmailPopup component
-  console.log("Email submitted:", formData.value.email);
   openPaymentMethodsPopup();
 }
 
@@ -237,13 +225,7 @@ function getTripData() {
 
 // Handler for final payment method submission
 function submitPaymentMethod() {
-  console.log("Selected payment method:", uiState.value.selectedPaymentMethod);
-  console.log("Final trip data for submission:", getTripData());
-  // --- ADD YOUR PAYMENT PROCESSING LOGIC HERE ---
-  // This function would likely call your backend API with getTripData()
-  // and the selected payment method/token from PaymentMethodsPopup
   closePaymentMethodsPopup();
-  // Potentially show a success message or redirect
 }
 </script>
 

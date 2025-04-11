@@ -194,8 +194,6 @@ onMounted(() => {
     productData.value.symbol = route.query.symbol as string;
   }
 
-  console.log('Product data received:', productData.value);
-
   window.addEventListener('resize', handleResize);
   window.addEventListener('orientationchange', handleOrientationChange);
 

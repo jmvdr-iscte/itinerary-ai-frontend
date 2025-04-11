@@ -6,7 +6,6 @@ const router = useRouter();
 
 onMounted(() => {
   // You can add analytics tracking or other success-related logic here
-  console.log('Payment successful!');
 });
 
 const goToHome = () => {

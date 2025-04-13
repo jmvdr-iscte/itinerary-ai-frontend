@@ -28,7 +28,7 @@ const submitEmail = async () => {
 		subscriptionStatus.value = 'loading';
 		isSubmitting.value = true;
 
-		const response = await fetch('http://128.199.62.202/user/email', {
+		const response = await fetch('http://localhost/user/email', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

@@ -23,26 +23,6 @@ const errorMessage = ref('');
 const loadingMessage = ref(''); // Text for the loading overlay
 const showLoading = ref(false); // Controls loading overlay visibility
 
-// --- Helper Functions ---
-const formatDate = (dateString: string | undefined): string => {
-    // ... (keep existing formatDate logic) ...
-     if (!dateString) return '';
-     if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(dateString)) { return dateString; }
-     const date = new Date(dateString);
-     if (isNaN(date.getTime())) return ''; // Handle invalid date string
-     const year = date.getFullYear();
-     const month = String(date.getMonth() + 1).padStart(2, '0');
-     const day = String(date.getDate()).padStart(2, '0');
-     const hours = String(date.getHours()).padStart(2, '0');
-     const minutes = String(date.getMinutes()).padStart(2, '0');
-     const seconds = String(date.getSeconds()).padStart(2, '0');
-     const tzOffset = -date.getTimezoneOffset();
-     const tzHours = String(Math.floor(Math.abs(tzOffset) / 60)).padStart(2, '0');
-     const tzMinutes = String(Math.abs(tzOffset) % 60).padStart(2, '0');
-     const tzSign = tzOffset >= 0 ? '+' : '-';
-     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${tzSign}${tzHours}:${tzMinutes}`;
-};
-
 const formatPrice = (value: number | undefined): number => {
     // Original logic divided by 100, assuming input is in cents.
     // Stripe usually expects cents (integer). Ensure backend matches expectation.
@@ -99,17 +79,20 @@ const handleSubmit = async () => {
         // Prepare itinerary request body
         const itineraryRequestBody = {
             categories: categories, destination: props.tripData.destination,
-            number_of_people: props.tripData.number_of_people, origin: props.tripData.origin,
-            from: formatDate(props.tripData.from), to: formatDate(props.tripData.to),
-            transportation: props.tripData.transportation, email: props.tripData.email,
+            number_of_people: props.tripData.number_of_people,
+            origin: props.tripData.origin,
+            transportation: props.tripData.transportation,
+            email: props.tripData.email,
+            number_of_days: props.tripData.number_of_days,
             budget: props.tripData.budget ?? 0, currency: props.tripData.currency,
             activity_pace: props.tripData.activity_pace || null,
-            must_see_attractions: props.tripData.must_see_attractions?.length ? [...props.tripData.must_see_attractions] : null
+            season: props.tripData.season,
+            user_input: props.tripData.user_input || null,
         };
 
         // Define createItinerary within scope
         const createItinerary = (): Promise<any> => { /* ... keep XHR logic ... */
-            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://128.199.62.202/itineraries', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
+            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://localhost/itineraries', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
         };
 
         // Step 1: Create Itinerary
@@ -127,13 +110,11 @@ const handleSubmit = async () => {
             success_url: "http://localhost:5173/payment-success", cancel_url: "http://localhost:5173/payment-cancel"
         };
 
-        // --- REMOVED emit('submit'); --- // No longer needed here
-
         // Define processPayment within scope
         const processPayment = (): Promise<any> => { /* ... keep XHR logic ... */
             return new Promise((resolve, reject) => {
               const xhr = new XMLHttpRequest();
-              xhr.open('POST', 'http://128.199.62.202/transactions', true);
+              xhr.open('POST', 'http://localhost/transactions', true);
               xhr.setRequestHeader('Content-Type', 'application/json');
               xhr.onload = function() {
                 if (this.status >= 200 && this.status < 300) {

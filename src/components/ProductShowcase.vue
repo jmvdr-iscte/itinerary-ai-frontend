@@ -30,8 +30,8 @@ const fetchProductData = async () => {
   apiCallSuccessful.value = false;
   try {
     // Adjust endpoint as needed (relative or absolute)
-    // const response = await fetch('http://128.199.62.202/product'); // Example absolute
-    const response = await fetch('http://128.199.62.202/product'); // Example relative
+    // const response = await fetch('http://localhost/product'); // Example absolute
+    const response = await fetch('http://localhost/product'); // Example relative
     if (!response.ok)
      throw new Error(`Product API error: ${response.status}`);
 
@@ -63,8 +63,8 @@ const fetchTransactionCount = async () => {
   transactionCount.value = null; // Reset before fetching
   try {
     // Adjust endpoint as needed (relative or absolute)
-    // const response = await fetch('http://128.199.62.202/transactions/count'); // Example absolute
-    const response = await fetch('http://128.199.62.202/transactions/count'); // Example relative
+    // const response = await fetch('http://localhost/transactions/count'); // Example absolute
+    const response = await fetch('http://localhost/transactions/count'); // Example relative
     if (!response.ok) {
       throw new Error(`Count API error: ${response.status}`);
     }

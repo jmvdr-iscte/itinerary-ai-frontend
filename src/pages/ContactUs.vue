@@ -52,7 +52,7 @@ const handleSubmit = async () => {
 
   try {
     // --- API Call ---
-    const response = await fetch('http://128.199.62.202/user/support', { // UPDATE WITH YOUR ACTUAL API ENDPOINT
+    const response = await fetch('http://localhost/user/support', { // UPDATE WITH YOUR ACTUAL API ENDPOINT
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const handleSubmit = async () => {
     console.error('Fetch Error:', error);
     formError.value = 'Unable to reach the server. Please check your connection or try again later.';
      if (error instanceof TypeError && error.message.toLowerCase().includes('fetch')) {
-         formError.value = 'Network error or potential CORS issue. Ensure the server at http://128.199.62.202 allows requests from this origin.';
+         formError.value = 'Network error or potential CORS issue. Ensure the server at http://localhost allows requests from this origin.';
     }
   } finally {
       isLoading.value = false; // Stop loading

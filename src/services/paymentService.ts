@@ -21,7 +21,7 @@ export const paymentService = {
     cancel_url: string;
   }) {
     try {
-      const response = await fetch('http://128.199.62.202/transactions', {
+      const response = await fetch('http://localhost/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

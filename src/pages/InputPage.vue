@@ -7,15 +7,13 @@ import { useRoute } from "vue-router";
 import DestinationInput from "@/components/DestinationInput.vue";
 import TransportationSelector from "@/components/TransportationSelector.vue";
 import NumberInput from "@/components/NumberInput.vue";
-import DateTimeInput from "@/components/DateTimeInput.vue";
 import EmailPopup from "@/components/EmailPopup.vue";
 import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue";
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
 import BudgetInput from "@/components/BudgetInput.vue";
 import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue";
 import MustSeeAttractions from "@/components/MustSeeAttractions.vue";
-
-// --- Import base CSS (includes Tailwind) ---
+import SeasonSelector from "@/components/SeasonSelector.vue";
 import '@/assets/main.css'; // Make sure this contains Tailwind directives and any base styles
 
 // --- State and Logic ---
@@ -35,13 +33,13 @@ const formData = ref({
   categories: [] as string[], // Explicitly type as string array
   destination: "",
   numberOfPeople: 1,
+  numberOfDays: 1,
   origin: "",
   originLocation: null as any, // Consider defining a type for location object
-  fromDate: "",
-  toDate: "",
   transportation: [] as string[], // Explicitly type as string array
   budget: 0,
   activityPace: "MODERATE", // Default value
+  season: "",
   mustSeeAttractions: [] as string[], // Explicitly type as string array
   email: ""
 });
@@ -62,28 +60,28 @@ const isMobile = computed(() => uiState.value.windowWidth < 768);
 
 // Form validation computed property
 const isFormValid = computed(() => {
-  const { destination, origin, fromDate, toDate, transportation } = formData.value;
+  const { destination, origin, transportation, season } = formData.value;
   // Add more checks if needed (e.g., numberOfPeople > 0)
-  return !!destination && !!origin && !!fromDate && !!toDate && transportation.length > 0;
+  return !!destination && !!origin && transportation.length > 0 && !!season ;
 });
 
-// Format price for display (ensure this logic matches your price format)
-const formattedPrice = computed(() => {
-  if (!productData.value.value || !productData.value.currency) return '';
+// // Format price for display (ensure this logic matches your price format)
+// const formattedPrice = computed(() => {
+//   if (!productData.value.value || !productData.value.currency) return '';
 
-  const formatter = new Intl.NumberFormat('en-US', { // Or locale as needed
-    style: 'currency',
-    currency: productData.value.currency,
-    minimumFractionDigits: 0, // Adjust if you need cents
-    maximumFractionDigits: 0  // Adjust if you need cents
-  });
+//   const formatter = new Intl.NumberFormat('en-US', { // Or locale as needed
+//     style: 'currency',
+//     currency: productData.value.currency,
+//     minimumFractionDigits: 0, // Adjust if you need cents
+//     maximumFractionDigits: 0  // Adjust if you need cents
+//   });
 
-  // Assuming price might be in cents, adjust if it's already in full units
-  const isInCents = productData.value.value >= 100 && String(productData.value.value).length >= 3;
-  const valueInFullUnits = isInCents ? productData.value.value / 100 : productData.value.value;
+//   // Assuming price might be in cents, adjust if it's already in full units
+//   const isInCents = productData.value.value >= 100 && String(productData.value.value).length >= 3;
+//   const valueInFullUnits = isInCents ? productData.value.value / 100 : productData.value.value;
 
-  return formatter.format(valueInFullUnits);
-});
+//   return formatter.format(valueInFullUnits);
+// });
 
 // Transportation options (can be moved to a separate config file if large)
 const transportationOptions = [
@@ -91,6 +89,13 @@ const transportationOptions = [
   { value: "CAR", label: "Car", icon: "🚗" },
   { value: "BIKE", label: "Bicycle", icon: "🚲" },
   { value: "PUBLIC_TRANSPORT", label: "Public Transport", icon: "🚆" }
+];
+
+const seasonOptions = [
+  { value: "WINTER", label: "Winter", icon: "❄️" },
+  { value: "SPRING", label: "Spring", icon: "🌸" },
+  { value: "SUMMER", label: "Summer", icon: "☀️" },
+  { value: "AUTUMN", label: "Autumn", icon: "🍂" }
 ];
 
 // Lifecycle hooks
@@ -211,12 +216,11 @@ function getTripData() {
     number_of_people: formData.value.numberOfPeople,
     origin: formData.value.origin,
     origin_location: formData.value.originLocation, // May include lat/lng etc.
-    from: formData.value.fromDate,
-    to: formData.value.toDate,
     transportation: formData.value.transportation,
+    number_of_days: formData.value.numberOfDays,
     budget: formData.value.budget > 0 ? formData.value.budget : undefined, // Send budget only if set
+    season: formData.value.season,
     activity_pace: formData.value.activityPace,
-    must_see_attractions: formData.value.mustSeeAttractions,
 
     // User Info
     email: formData.value.email
@@ -294,20 +298,20 @@ function submitPaymentMethod() {
                   required
               />
 
+              <NumberInput
+                  v-model="formData.numberOfDays"
+                  label="Number of Days"
+                  :min="1"
+                  :max="30"
+                  required
+              />
+
               <BudgetInput
                   v-model="formData.budget"
                   label="Estimated Budget"
                   :min="0"
                   :max="1000000"
                   :currencySymbol="productData.symbol" />
-
-              <MustSeeAttractions
-                v-model="formData.mustSeeAttractions"
-                :api-key="googleMapsApiKey"
-                :destination="formData.destination"
-                label="Must-See Attractions"
-                placeholder="Add attractions one by one"
-              />
             </div>
 
             <div class="space-y-6 flex flex-col">
@@ -317,16 +321,10 @@ function submitPaymentMethod() {
                   label="Preferred Transportation"
                   required
               />
-
-              <DateTimeInput
-                  v-model="formData.fromDate"
-                  label="Start Date"
-                  required
-              />
-              <DateTimeInput
-                  v-model="formData.toDate"
-                  label="End Date"
-                  :minDate="formData.fromDate"
+              <SeasonSelector
+                  v-model="formData.season"
+                  :options="seasonOptions"
+                  label="The season"
                   required
               />
 

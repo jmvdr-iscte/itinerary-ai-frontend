@@ -162,7 +162,7 @@ const tripFlowFeatures = [
   "Personalized travel plans based on your preferences",
   "Optimized routes with Google Maps integration",
   "Instant delivery to your email",
-  "24/7 customer support via chat",
+  "24/7 customer support via email",
   "Seamless booking for attractions and activities"
 ];
 
@@ -246,7 +246,7 @@ const roadTripFeatures = [
 
             <div class="flex justify-center items-center mt-6 text-sm text-gray-400 space-x-1.5">
                 <img
-                  src="/src/assets/payment_methods/stripe-icon.svg" alt="Stripe"
+                  src="https://images.tripvibes.me/stripe-icon.svg" alt="Stripe"
                   class="h-5 w-auto"
                   aria-hidden="true"
                 />
@@ -310,7 +310,7 @@ const roadTripFeatures = [
             </button>
             <div class="flex justify-center items-center mt-6 text-sm text-gray-400 space-x-1.5">
                 <img
-                  src="/src/assets/payment_methods/stripe-icon.svg" alt="Stripe"
+                  src="https://images.tripvibes.me/stripe-icon.svg" alt="Stripe"
                   class="h-5 w-auto"
                   aria-hidden="true"
                 />

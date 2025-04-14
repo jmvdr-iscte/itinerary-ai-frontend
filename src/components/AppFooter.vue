@@ -95,10 +95,10 @@ onMounted(() => {
 				<div class="md:col-span-1">
 					<div class="flex items-center mb-4">
 						<img
-							src="/tripflowai_icon_small.png"
+							src="https://images.tripvibes.me/tripflowai_icon_small.png"
 							alt="TripVibes Logo"
-              class="w-15 h-10 rounded-full mr-1"
-              />
+              				class="w-15 h-10 rounded-full mr-1"
+            			 />
 						<h1 class="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
 							Trip<span class="text-[#8B5CF6]">Vibes</span>
 						</h1>

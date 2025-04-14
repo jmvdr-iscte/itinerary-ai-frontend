@@ -88,7 +88,7 @@ const initMap = () => {
       styles: mapDarkStyle // *** COSMETIC CHANGE: Apply dark style ***
     });
 
-    const customIcon = { url: "/tripflow_icon_transparent.png", scaledSize: new google.maps.Size(40, 40), origin: new google.maps.Point(0, 0), anchor: new google.maps.Point(20, 40), };
+    const customIcon = { url: "https://images.tripvibes.me/tripflow_icon_transparent.png", scaledSize: new google.maps.Size(40, 40), origin: new google.maps.Point(0, 0), anchor: new google.maps.Point(20, 40), };
     marker.value = new window.google.maps.Marker({ map: map.value, draggable: true, animation: window.google.maps.Animation.DROP, position: initialCenter, icon: customIcon });
 
     // Original listener logic kept

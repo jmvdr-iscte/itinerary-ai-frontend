@@ -41,7 +41,7 @@ onUnmounted(() => {
       <!-- Logo -->
       <div class="flex items-center">
         <img
-          src="/tripflowai_icon_small.png"
+          src="https://images.tripvibes.me/tripflowai_icon_small.png"
           alt="TripVibes Logo"
           class="w-15 h-10 rounded-full mr-1 shadow-lg"
         />

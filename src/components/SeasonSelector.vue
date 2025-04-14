@@ -70,6 +70,10 @@ const isSelected = (optionValue: string): boolean => {
         </button>
     </div>
 
+    <p class="mt-1.5 text-xs text-gray-400">
+       Select the season.
+    </p>
+    
     <p v-if="false" class="mt-1.5 text-xs text-gray-400">
        Select the season.
     </p>

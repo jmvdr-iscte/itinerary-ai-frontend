@@ -13,7 +13,7 @@ const formError = ref('');
 const isLoading = ref(false); // Loading state for API call
 
 // Placeholder contact info - replace with your actual details
-const contactEmail = 'support@CarefreeTrip.ai';
+const contactEmail = 'support@TripVibes.ai';
 const contactPhone = '+1 (555) 123-4567';
 const contactAddress = '123 AI Way, Innovation Hub, Tech City, 90210';
 
@@ -122,7 +122,7 @@ onMounted(() => {
             Get in Touch
           </h1>
           <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
-            We'd love to hear from you! Whether you have a question about our features, trials, pricing, or anything else, our team is ready to answer all your questions.
+            We'd love to hear from you! Whether you have a question about our features, pricing, support or anything else, our team is ready to answer all your questions.
           </p>
         </div>
       </section>
@@ -164,7 +164,7 @@ onMounted(() => {
             </form>
           </div>
 
-          <div class="w-full max-w-2xl mx-auto mt-16">
+          <!-- <div class="w-full max-w-2xl mx-auto mt-16">
             <h2 class="text-2xl font-bold mb-6 text-white text-center md:text-left">Contact Information</h2>
             <p class="text-gray-300 mb-8 text-center md:text-left">
               Reach out to us directly through the channels below. We aim to respond within 24 business hours.
@@ -187,7 +187,7 @@ onMounted(() => {
               </div>
               
             </div>
-          </div>
+          </div> -->
         </div>
       </section>
     </main>

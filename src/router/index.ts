@@ -26,7 +26,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // 1. If navigating back/forward using browser buttons, use saved position
     if (savedPosition) {
       return savedPosition;
     }
@@ -50,10 +49,8 @@ const router = createRouter({
       });
     }
 
-    // 3. Otherwise, scroll to the top of the page
     return { top: 0, behavior: 'smooth' };
   }
-  // --- END OF scrollBehavior ---
 });
 
 export default router;

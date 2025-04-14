@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 
 const lastUpdated = ref('March 27, 2024');
-const companyName = 'CarefreeTrip';
+const companyName = 'TripVibes';
 const activeSection = ref(0);
 
 // Animation on scroll

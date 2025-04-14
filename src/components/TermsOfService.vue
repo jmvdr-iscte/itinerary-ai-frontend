@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 
 const lastUpdated = ref('March 27, 2024');
-const companyName = 'CarefreeTrip';
+const companyName = 'TripVibes';
 const activeSection = ref(0);
 
 // Animation on scroll
@@ -113,10 +113,6 @@ const scrollToSection = (index: number) => {
                 <li class="flex items-start">
                   <span class="text-[#8B5CF6] mr-2">•</span>
                   <span>Providing accurate and current information</span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-[#8B5CF6] mr-2">•</span>
-                  <span>Maintaining the confidentiality of your account</span>
                 </li>
                 <li class="flex items-start">
                   <span class="text-[#8B5CF6] mr-2">•</span>

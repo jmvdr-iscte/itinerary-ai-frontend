@@ -12,7 +12,7 @@ import PaymentMethodsPopup from "@/components/PaymentMethodsPopup.vue";
 import GoogleMapsOriginInput from "@/components/GoogleMapsOriginInput.vue";
 import BudgetInput from "@/components/BudgetInput.vue";
 import ActivityPaceSelector from "@/components/ActivityPaceSelector.vue";
-import MustSeeAttractions from "@/components/MustSeeAttractions.vue";
+import UserInput from "@/components/UserInput.vue";
 import SeasonSelector from "@/components/SeasonSelector.vue";
 import '@/assets/main.css'; // Make sure this contains Tailwind directives and any base styles
 
@@ -35,16 +35,15 @@ const formData = ref({
   numberOfPeople: 1,
   numberOfDays: 1,
   origin: "",
-  originLocation: null as any, // Consider defining a type for location object
+  originLocation: "", // Consider defining a type for location object
   transportation: [] as string[], // Explicitly type as string array
   budget: 0,
   activityPace: "MODERATE", // Default value
   season: "",
-  mustSeeAttractions: [] as string[], // Explicitly type as string array
+  userInput: "", // Optional user input
   email: ""
 });
 
-// UI state - using refs for reactivity
 const uiState = ref({
   showEmailPopup: false,
   showPaymentMethodsPopup: false,
@@ -64,25 +63,6 @@ const isFormValid = computed(() => {
   // Add more checks if needed (e.g., numberOfPeople > 0)
   return !!destination && !!origin && transportation.length > 0 && !!season ;
 });
-
-// // Format price for display (ensure this logic matches your price format)
-// const formattedPrice = computed(() => {
-//   if (!productData.value.value || !productData.value.currency) return '';
-
-//   const formatter = new Intl.NumberFormat('en-US', { // Or locale as needed
-//     style: 'currency',
-//     currency: productData.value.currency,
-//     minimumFractionDigits: 0, // Adjust if you need cents
-//     maximumFractionDigits: 0  // Adjust if you need cents
-//   });
-
-//   // Assuming price might be in cents, adjust if it's already in full units
-//   const isInCents = productData.value.value >= 100 && String(productData.value.value).length >= 3;
-//   const valueInFullUnits = isInCents ? productData.value.value / 100 : productData.value.value;
-
-//   return formatter.format(valueInFullUnits);
-// });
-
 // Transportation options (can be moved to a separate config file if large)
 const transportationOptions = [
   { value: "WALK", label: "Walking", icon: "🚶" },
@@ -177,7 +157,6 @@ function openPaymentMethodsPopup() {
   if (formData.value.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.value.email)) {
       uiState.value.showPaymentMethodsPopup = true;
   } else {
-      // Handle invalid email case if needed after submission from EmailPopup
       console.warn("Email might be invalid or missing.");
       // Re-open email popup or show an error within it
       uiState.value.showEmailPopup = true; // Re-open if needed
@@ -220,6 +199,7 @@ function getTripData() {
     number_of_days: formData.value.numberOfDays,
     budget: formData.value.budget > 0 ? formData.value.budget : undefined, // Send budget only if set
     season: formData.value.season,
+    user_input: formData.value.userInput,
     activity_pace: formData.value.activityPace,
 
     // User Info
@@ -234,107 +214,105 @@ function submitPaymentMethod() {
 </script>
 
 <template>
-  <div class="min-h-screen-safe bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-gray-200 flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 w-full font-sans antialiased overflow-x-hidden">
+  <div class="min-h-screen-safe bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-gray-200 flex flex-col items-center p-4 sm:p-6 md:p-8 w-full font-sans antialiased overflow-x-hidden">
+
     <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-600/10 rounded-full filter blur-3xl animate-float opacity-70"></div>
-      <div class="absolute bottom-1/4 right-1/3 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-3xl animate-float" style="animation-delay: 1s; animation-duration: 7s; opacity: 70;"></div>
-      <div class="absolute top-1/3 right-1/4 w-56 h-56 bg-sky-600/10 rounded-full filter blur-3xl animate-float" style="animation-delay: 2s; animation-duration: 8s; opacity: 70;"></div>
+      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-600/10 rounded-full filter blur-3xl animate-float opacity-60"></div>
+      <div class="absolute bottom-1/4 right-1/3 w-96 h-96 bg-indigo-600/10 rounded-full filter blur-3xl animate-float opacity-60" style="animation-delay: 1s; animation-duration: 7s;"></div>
+      <div class="absolute top-1/3 right-1/4 w-56 h-56 bg-sky-600/10 rounded-full filter blur-3xl animate-float opacity-60" style="animation-delay: 2s; animation-duration: 8s;"></div>
     </div>
 
-    <div class="w-full max-w-4xl mx-auto flex-grow flex flex-col justify-center relative z-10 py-8">
+    <div class="w-full max-w-2xl mx-auto flex-grow flex flex-col justify-center relative z-10 py-8">
+
       <div v-if="uiState.isLoading" class="glassmorphic-card p-8 flex flex-col items-center justify-center space-y-4">
-        <div class="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-gray-300">Loading your trip planner...</p>
-      </div>
+         <div class="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
+         <p class="text-gray-300">Loading your trip planner...</p>
+       </div>
 
       <div v-else-if="uiState.showError" class="glassmorphic-card p-8 flex flex-col items-center justify-center space-y-5 text-center">
-         <div class="w-16 h-16 rounded-full bg-red-500/30 flex items-center justify-center border border-red-500/50 mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+        <div class="w-16 h-16 rounded-full bg-red-500/30 flex items-center justify-center border border-red-500/50 mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /> </svg>
         </div>
         <h3 class="text-xl font-semibold text-white">Oops! Something went wrong.</h3>
         <p class="text-gray-300 max-w-md">{{ uiState.errorMessage }}</p>
-        <button
-          @click="uiState.showError = false; uiState.isLoading = false;"
-          class="mt-4 px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-        >
-          Try Again
-        </button>
+        <button @click="uiState.showError = false; uiState.isLoading = false;" class="mt-4 px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:from-purple-700 hover:to-indigo-700 transition duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"> Try Again </button>
       </div>
 
       <div v-else class="glassmorphic-card w-full animate-fadeIn overflow-hidden">
         <div class="card-header p-6 md:p-8 border-b border-white/10">
-          <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-2 tracking-tight">Plan Your Dream Trip</h2>
-          <p class="text-center text-gray-300 text-sm md:text-base">Fill in the details below to create your perfect itinerary</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-2 tracking-tight">Plan Your Perfect Trip</h2>
+          <p class="text-center text-gray-300 text-sm md:text-base">Fill in the details below to get your itinerary.</p>
         </div>
 
         <div class="p-6 md:p-8">
-          <form @submit.prevent="openEmailPopup" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 form-container">
+          <form @submit.prevent="openEmailPopup" class="space-y-7">
 
-            <div class="space-y-6 flex flex-col">
-              <DestinationInput
-                  v-model="formData.destination"
-                  :api-key="googleMapsApiKey"
-                  label="Where are you going?"
-                  placeholder="e.g., Paris, France"
-                  required
-              />
-
-              <GoogleMapsOriginInput
-                v-model="formData.origin"
-                :api-key="googleMapsApiKey"
-                @location-selected="handleLocationSelected"
-                label="Where did you find accommodation?"
-                placeholder="e.g., 123 St. Tripflow, US"
+            <DestinationInput
+                v-model="formData.destination"
+                label="Where are you going?"
+                placeholder="e.g., Paris, France"
                 required
-              />
+            />
 
-              <NumberInput
-                  v-model="formData.numberOfPeople"
-                  label="Number of People"
-                  :min="1"
-                  :max="10"
-                  required
-              />
+            <GoogleMapsOriginInput
+              v-model="formData.origin"
+              @location-selected="handleLocationSelected"
+              label="Where did you find accomodation?"
+              placeholder="Hotel name, address, or area"
+              required
+            />
 
-              <NumberInput
+            <div class="grid grid-cols-2 gap-x-4 gap-y-6"> 
+               <NumberInput
                   v-model="formData.numberOfDays"
-                  label="Number of Days"
-                  :min="1"
-                  :max="30"
+                  label="For how many days?"
+                  :min="1" :max="30"
                   required
-              />
-
-              <BudgetInput
-                  v-model="formData.budget"
-                  label="Estimated Budget"
-                  :min="0"
-                  :max="1000000"
-                  :currencySymbol="productData.symbol" />
+               />
+               <NumberInput
+                  v-model="formData.numberOfPeople"
+                  label="How many people?"
+                  :min="1" :max="10"
+                  required
+               />
             </div>
 
-            <div class="space-y-6 flex flex-col">
-              <TransportationSelector
-                  v-model="formData.transportation"
-                  :options="transportationOptions"
-                  label="Preferred Transportation"
-                  required
-              />
-              <SeasonSelector
-                  v-model="formData.season"
-                  :options="seasonOptions"
-                  label="The season"
-                  required
-              />
+            <SeasonSelector
+                v-model="formData.season"
+                :options="seasonOptions"
+                label="Preferred Season"
+                required
+            />
 
-              <ActivityPaceSelector
-                  v-model="formData.activityPace"
-                  label="Activity Pace"
-              />
-            </div>
+            <TransportationSelector
+                v-model="formData.transportation"
+                :options="transportationOptions"
+                label="Preferred Transportation"
+                required
+            />
 
-            <div class="md:col-span-2 mt-6">
+            <BudgetInput
+                v-model="formData.budget"
+                label="What is your budget?"
+                :min="0" :max="1000000"
+                :currencySymbol="productData.symbol"
+                required
+            />
+
+            <ActivityPaceSelector
+                v-model="formData.activityPace"
+                label="What's your activity pace?"
+                required
+            />
+
+            <UserInput
+                v-model="formData.userInput"
+                label="Give us some tips!"
+                placeholder="Vibe, interests, must-dos..."
+                :maxLength="256"
+            />
+
+            <div class="pt-5"> 
               <button
                 type="submit"
                 class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5 flex justify-center items-center disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
@@ -342,36 +320,22 @@ function submitPaymentMethod() {
                 aria-label="Continue to next step"
               >
                 <span class="mr-2">Continue</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /> </svg>
               </button>
             </div>
+
           </form>
-        </div>
-      </div>
-    </div>
+        </div> 
+      </div> 
 
-    <EmailPopup
-      v-model="formData.email"
-      v-model:show="uiState.showEmailPopup"
-      @submit="submitEmail"
-      @cancel="closeEmailPopup"
-    />
+    </div> 
 
-    <PaymentMethodsPopup
-      v-model:selectedMethod="uiState.selectedPaymentMethod"
-      v-model:show="uiState.showPaymentMethodsPopup"
-      :tripData="getTripData()"
-      @submit="submitPaymentMethod"
-      @cancel="closePaymentMethodsPopup"
-      @error="handlePaymentError"
-    />
+    <EmailPopup v-model="formData.email" v-model:show="uiState.showEmailPopup" @submit="submitEmail" @cancel="closeEmailPopup" />
+    <PaymentMethodsPopup v-model:selectedMethod="uiState.selectedPaymentMethod" v-model:show="uiState.showPaymentMethodsPopup" :tripData="getTripData()" @submit="submitPaymentMethod" @cancel="closePaymentMethodsPopup" @error="handlePaymentError" />
+
   </div>
 </template>
-
 <style scoped>
-/* Base font and smoothing (consider adding 'Inter' via font import in main.css or index.html) */
 .font-sans {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }

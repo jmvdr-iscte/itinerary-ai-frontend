@@ -139,7 +139,7 @@ const handleSubmit = async () => {
         };
 
         const createItinerary = (): Promise<any> => {
-            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://localhost/itineraries', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
+            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'https://api.tripvibes.me/itineraries', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (itinerary)')); } } else { reject(new Error(`Itinerary creation failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (itinerary)')); }; xhr.send(JSON.stringify(itineraryRequestBody)); });
         };
 
         const itineraryData = await createItinerary();
@@ -155,7 +155,7 @@ const handleSubmit = async () => {
         };
 
         const processPayment = (): Promise<any> => {
-            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'http://localhost/transactions', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (payment)')); } } else { reject(new Error(`Payment request failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (payment)')); }; xhr.send(JSON.stringify(paymentData)); });
+            return new Promise((resolve, reject) => { const xhr = new XMLHttpRequest(); xhr.open('POST', 'https://api.tripvibes.me/transactions', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.onload = function() { if (this.status >= 200 && this.status < 300) { try { resolve(JSON.parse(xhr.responseText)); } catch (e) { reject(new Error('Invalid JSON response (payment)')); } } else { reject(new Error(`Payment request failed: ${this.status}`)); } }; xhr.onerror = function() { reject(new Error('Network error (payment)')); }; xhr.send(JSON.stringify(paymentData)); });
         };
 
         const paymentResponseData = await processPayment();

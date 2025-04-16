@@ -28,7 +28,7 @@ const submitEmail = async () => {
 		subscriptionStatus.value = 'loading';
 		isSubmitting.value = true;
 
-		const response = await fetch('http://localhost/user/email', {
+		const response = await fetch('https://api.tripvibes.me/user/email', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

@@ -29,9 +29,7 @@ const fetchProductData = async () => {
   isLoading.value = true;
   apiCallSuccessful.value = false;
   try {
-    // Adjust endpoint as needed (relative or absolute)
-    // const response = await fetch('http://localhost/product'); // Example absolute
-    const response = await fetch('http://localhost/product'); // Example relative
+    const response = await fetch('https://api.tripvibes.me/product'); // Example relative
     if (!response.ok)
      throw new Error(`Product API error: ${response.status}`);
 
@@ -64,7 +62,7 @@ const fetchTransactionCount = async () => {
   try {
     // Adjust endpoint as needed (relative or absolute)
     // const response = await fetch('http://localhost/transactions/count'); // Example absolute
-    const response = await fetch('http://localhost/transactions/count'); // Example relative
+    const response = await fetch('https://api.tripvibes.me/transactions/count'); // Example relative
     if (!response.ok) {
       throw new Error(`Count API error: ${response.status}`);
     }

@@ -129,9 +129,9 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
             <div id="email-terms-hint" class="text-sm text-gray-400">
               By continuing, you agree to our
-              <a href="http://localhost::5174/tos" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 underline focus:outline-none focus:ring-1 focus:ring-purple-500 rounded">Terms of Service</a>
+              <a href="http://localhost::5173/tos" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 underline focus:outline-none focus:ring-1 focus:ring-purple-500 rounded">Terms of Service</a>
               and acknowledge our
-              <a href="http://localhost::5174/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 underline focus:outline-none focus:ring-1 focus:ring-purple-500 rounded">Privacy Policy</a>.
+              <a href="http://localhost::5173/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:text-purple-300 underline focus:outline-none focus:ring-1 focus:ring-purple-500 rounded">Privacy Policy</a>.
             </div>
 
             <div class="flex justify-between items-center pt-4"> <button

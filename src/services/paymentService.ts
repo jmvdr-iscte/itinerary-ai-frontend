@@ -21,7 +21,7 @@ export const paymentService = {
     cancel_url: string;
   }) {
     try {
-      const response = await fetch('http://localhost/transactions', {
+      const response = await fetch('https://api.tripvibes.me/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

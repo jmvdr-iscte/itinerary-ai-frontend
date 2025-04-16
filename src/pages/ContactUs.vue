@@ -52,7 +52,7 @@ const handleSubmit = async () => {
 
   try {
     // --- API Call ---
-    const response = await fetch('http://localhost/user/support', { // UPDATE WITH YOUR ACTUAL API ENDPOINT
+    const response = await fetch('https://api.tripvibes.me/user/support', { // UPDATE WITH YOUR ACTUAL API ENDPOINT
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

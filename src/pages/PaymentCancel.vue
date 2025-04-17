@@ -14,7 +14,7 @@ const goToHome = () => {
 
 const retryPayment = () => {
   // Navigate back to the payment selection page
-  router.push('/payment');
+  router.back();
 };
 </script>
 

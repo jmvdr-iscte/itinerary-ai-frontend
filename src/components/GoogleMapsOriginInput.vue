@@ -85,7 +85,7 @@ const initMap = () => {
     map.value = new window.google.maps.Map(mapElement.value, {
       center: initialCenter, zoom: 13, mapTypeControl: false,
       streetViewControl: false, fullscreenControl: false,
-      styles: mapDarkStyle // *** COSMETIC CHANGE: Apply dark style ***
+      styles: mapDarkStyle
     });
 
     const customIcon = { url: "https://images.tripvibes.me/tripflow_icon_transparent.png", scaledSize: new google.maps.Size(40, 40), origin: new google.maps.Point(0, 0), anchor: new google.maps.Point(20, 40), };
@@ -136,7 +136,7 @@ const initPlacesAutocomplete = () => {
 
   try {
     placesAutocomplete.value = new window.google.maps.places.Autocomplete(inputElement.value, {
-      types: ['address'], fields: ['formatted_address', 'geometry']
+      fields: ['formatted_address', 'geometry']
     });
 
     // Original listener logic kept

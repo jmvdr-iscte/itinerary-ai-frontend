@@ -36,7 +36,8 @@ const goToHome = () => {
         <h2 class="text-3xl font-bold text-white mb-4">Payment Successful!</h2>
         <p class="text-gray-300 mb-8">
           Thank you for your payment. Your transaction has been completed successfully.
-          We've sent a confirmation email with your receipt and trip details.
+          We've sent a confirmation email with your trip details.
+          If you can't find it, please check your spam folder or contact support.
         </p>
 
         <!-- Return Button -->

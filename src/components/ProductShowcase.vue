@@ -195,68 +195,6 @@ const roadTripFeatures = [
 
         <div class="w-full lg:w-1/2 transform transition-all duration-700 ease-out"
              :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'">
-
-          <div
-            class="bg-gray-800/80 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-2xl border border-gray-500/20 relative overflow-hidden transition-all duration-300 grayscale h-full flex flex-col"
-            :class="{ 'transform scale-[1.02] shadow-gray-500/20': isHoveredRoadTrip }"
-            @mouseenter="setHovered('roadtrip', true)"
-            @mouseleave="setHovered('roadtrip', false)"
-          >
-            <div class="absolute -top-1 -right-1 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-xs font-bold px-4 py-1 rounded-bl-lg rounded-tr-2xl shadow-lg transform rotate-0">
-              COMING SOON
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent shine-effect"></div>
-
-            <h3 class="text-3xl font-bold text-white">Personalized Roadtrip</h3>
-            <p class="text-gray-400 mt-2">Create your perfect road adventure.</p>
-            <div class="mt-6 min-h-[4rem] flex items-end"> <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
-              Loading price info...
-          </div>
-          <div v-else-if="apiCallSuccessful" class="flex items-end w-full flex-wrap">
-              <span class="text-5xl font-extrabold text-white mr-2">
-                  {{ formatPrice(1500, productData.currency) }}
-              </span>
-              <span class="text-gray-400 text-lg self-end pb-1 mr-3">/ trip</span>
-              <span class="ml-4 bg-gray-500/20 text-gray-300 px-2 py-1 rounded text-xs font-semibold self-end pb-1">PRE-ORDER</span>
-          </div>
-          <div v-else class="w-full text-center text-red-400 py-4">
-               Price info unavailable.
-          </div>
-        </div>
-            <div class="my-6 h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent"></div>
-            <ul class="space-y-4 text-gray-300">
-              <li v-for="(feature, index) in roadTripFeatures" :key="index" class="flex items-start">
-                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-gray-500/20 flex items-center justify-center mr-3">
-                  <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <span>{{ feature }}</span>
-              </li>
-            </ul>
-            <div class="flex-grow"></div>
-            <button
-              class="block w-full mt-8 text-center bg-gray-600 text-white px-6 py-4 rounded-xl text-lg font-semibold shadow-lg transition-all cursor-not-allowed opacity-80"
-              disabled
-            >
-              Not Available
-            </button>
-
-            <div class="flex justify-center items-center mt-6 text-sm text-gray-400 space-x-1.5">
-                <img
-                  src="https://images.tripvibes.me/stripe-icon.svg" alt="Stripe"
-                  class="h-5 w-auto"
-                  aria-hidden="true"
-                />
-              <span>supported by Stripe</span>
-            </div>
-            </div> 
-            <!-- <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm">
-            <span class="inline-block w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
-            <span>124 people on the waitlist</span>
-          </p> -->
-        </div> <div class="w-full lg:w-1/2 transform transition-all duration-700 ease-out delay-100"
-             :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
           <div
             class="bg-[#1E293B]/90 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-2xl border border-purple-500/20 relative overflow-hidden transition-all duration-300 h-full flex flex-col"
             :class="{ 'transform scale-[1.02] shadow-purple-500/20': isHovered }"
@@ -270,13 +208,13 @@ const roadTripFeatures = [
 
             <h3 class="text-3xl font-bold text-white">Personalized Itinerary</h3>
             <p class="text-gray-400 mt-2">Create your perfect itinerary in seconds.</p>
-            <div class="mt-6 min-h-[4rem] flex items-end"> <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
+            <div class="mt-6 min-h-[4rem] flex items-end">
+              <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
                 Loading price...
               </div>
               <div v-else-if="apiCallSuccessful" class="flex items-end w-full flex-wrap">
                 <span class="text-5xl font-extrabold text-white mr-2">{{ formatPrice(productData.value, productData.currency) }}</span>
                 <span class="text-gray-400 text-lg self-end pb-1 mr-3">/ trip</span>
-
               </div>
               <div v-else class="w-full text-center text-red-400 py-4">
                  Price unavailable. Please try again later.
@@ -314,8 +252,10 @@ const roadTripFeatures = [
                 />
               <span>supported by Stripe</span>
             </div>
-            </div><p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm min-h-[20px]">
-            <span class="relative flex h-3 w-3 mr-2 flex-shrink-0"> <span v-if="!isLoadingCount && transactionCount !== null" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          </div>
+          <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm min-h-[20px]">
+            <span class="relative flex h-3 w-3 mr-2 flex-shrink-0">
+                <span v-if="!isLoadingCount && transactionCount !== null" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span v-if="isLoadingCount" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3 w-3"
                       :class="{
@@ -325,14 +265,75 @@ const roadTripFeatures = [
                       }">
                 </span>
             </span>
-
             <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
             <span v-else-if="transactionCount !== null && transactionCount >= 0">
                 {{ transactionCount }} traveler{{ transactionCount === 1 ? '' : 's' }} purchased in the last 24 hours
             </span>
             <span v-else class="opacity-75">Purchase data unavailable</span>
           </p>
-          </div> </div> </div> </section>
+        </div>
+
+        <div class="w-full lg:w-1/2 transform transition-all duration-700 ease-out delay-100"
+             :class="isInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
+          <div
+            class="bg-gray-800/80 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-2xl border border-gray-500/20 relative overflow-hidden transition-all duration-300 grayscale h-full flex flex-col"
+            :class="{ 'transform scale-[1.02] shadow-gray-500/20': isHoveredRoadTrip }"
+            @mouseenter="setHovered('roadtrip', true)"
+            @mouseleave="setHovered('roadtrip', false)"
+          >
+            <div class="absolute -top-1 -right-1 bg-gradient-to-r from-gray-500 to-gray-700 text-white text-xs font-bold px-4 py-1 rounded-bl-lg rounded-tr-2xl shadow-lg transform rotate-0">
+              COMING SOON
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent shine-effect"></div>
+
+            <h3 class="text-3xl font-bold text-white">Personalized Roadtrip</h3>
+            <p class="text-gray-400 mt-2">Create your perfect road adventure.</p>
+            <div class="mt-6 min-h-[4rem] flex items-end">
+              <div v-if="isLoading" class="w-full text-center text-gray-400 animate-pulse py-4">
+                Loading price info...
+              </div>
+              <div v-else-if="apiCallSuccessful" class="flex items-end w-full flex-wrap">
+                  <span class="text-5xl font-extrabold text-white mr-2">
+                      {{ formatPrice(1500, productData.currency) }} </span>
+                  <span class="text-gray-400 text-lg self-end pb-1 mr-3">/ trip</span>
+                  <span class="ml-4 bg-gray-500/20 text-gray-300 px-2 py-1 rounded text-xs font-semibold self-end pb-1">PRE-ORDER</span>
+              </div>
+              <div v-else class="w-full text-center text-red-400 py-4">
+                   Price info unavailable.
+              </div>
+            </div>
+            <div class="my-6 h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent"></div>
+            <ul class="space-y-4 text-gray-300">
+              <li v-for="(feature, index) in roadTripFeatures" :key="index" class="flex items-start">
+                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-gray-500/20 flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span>{{ feature }}</span>
+              </li>
+            </ul>
+            <div class="flex-grow"></div>
+            <button
+              class="block w-full mt-8 text-center bg-gray-600 text-white px-6 py-4 rounded-xl text-lg font-semibold shadow-lg transition-all cursor-not-allowed opacity-80"
+              disabled
+            >
+              Not Available
+            </button>
+            <div class="flex justify-center items-center mt-6 text-sm text-gray-400 space-x-1.5">
+                <img
+                  src="https://images.tripvibes.me/stripe-icon.svg" alt="Stripe"
+                  class="h-5 w-auto"
+                  aria-hidden="true"
+                />
+              <span>supported by Stripe</span>
+            </div>
+          </div>
+           </div>
+
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped>

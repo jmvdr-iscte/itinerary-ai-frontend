@@ -75,7 +75,7 @@ const initPlacesAutocomplete = () => {
       errorMessage.value = ''; // Clear error on success
     });
   } catch (error) {
-    console.error('Error initializing Places Autocomplete:', error);
+    console.error('Error initializing Places Autocomplete:');
     errorMessage.value = "Failed to initialize search."; // Set error message
   }
 };
@@ -123,7 +123,7 @@ onMounted(async () => {
     // Original logic inits immediately after load resolves
     initPlacesAutocomplete();
   } catch (error) {
-    console.error('Error loading Google Maps API:', error);
+    console.error('Error loading Google Maps API:');
     if (!errorMessage.value) { errorMessage.value = "Failed to initialize."; }
   }
 });

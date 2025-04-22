@@ -184,7 +184,7 @@ const initMap = () => {
     console.log("Map initialized.");
 
   } catch (error: any) {
-    console.error('Error initializing map:', error);
+    console.error('Error initializing map:');
     errorMessage.value = `Unable to initialize the map: ${error.message || error}`;
     errorType.value = 'map';
     mapInitialized.value = false; // Reset flag on error
@@ -290,7 +290,7 @@ const initPlacesAutocomplete = () => {
     });
     console.log("Places Autocomplete initialized.");
   } catch (error: any) {
-    console.error('Error initializing Places Autocomplete:', error);
+    console.error('Error initializing Places Autocomplete:');
     errorMessage.value = `Error initializing address search: ${error.message || error}`;
     errorType.value = 'autocomplete';
   }
@@ -347,7 +347,7 @@ const loadGoogleMapsAPI = () => {
         isLoading.value = false;
         errorMessage.value = 'Failed to load Google Maps API script. Check network/API key.';
         errorType.value = 'api';
-        console.error("Maps API Load Error:", e);
+        console.error("Maps API Load Error:");
         reject(new Error('Failed to load Google Maps API script.'));
      };
     document.head.appendChild(script);
@@ -440,7 +440,7 @@ onMounted(async () => {
       }
   }
   catch (error) {
-    console.error('Error during onMounted setup:', error);
+    console.error('Error during onMounted setup:');
      if (!errorMessage.value) { // Set fallback error
         errorMessage.value = "Failed to initialize location component.";
         errorType.value = 'api';

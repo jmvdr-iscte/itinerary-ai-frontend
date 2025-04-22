@@ -160,15 +160,18 @@ const handleSubmit = async () => {
 
         const paymentResponseData = await processPayment();
 
-        if (paymentResponseData?.checkout_session_url) {
-            showLoading.value = false; // Hide MAIN loading overlay just before redirect
-            window.location.href = paymentResponseData.checkout_session_url;
-        } else {
-            throw new Error('Invalid response from payment service (missing URL).');
-        }
+        if (paymentResponseData?.checkout_session_url && paymentResponseData?.uid) {
+          sessionStorage.setItem('pendingTransactionUid', paymentResponseData.uid);
+
+          showLoading.value = false;
+          window.location.href = paymentResponseData.checkout_session_url;
+      } else {
+          console.error('Invalid response from payment service:');
+          throw new Error('Invalid response from payment service (missing URL or UID).');
+      }
 
     } catch (error: any) {
-        console.error(`handleSubmit Timestamp: ${callTimestamp} - Payment processing error:`, error);
+        console.error(`handleSubmit Timestamp: ${callTimestamp} - Payment processing error:`);
         showLoading.value = false; // Hide MAIN loading overlay on error
         errorMessage.value = error.message || 'An error occurred during payment processing.';
         emit('error', errorMessage.value);

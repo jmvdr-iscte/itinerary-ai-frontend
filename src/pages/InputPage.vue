@@ -61,7 +61,7 @@ const isMobile = computed(() => uiState.value.windowWidth < 768);
 const isFormValid = computed(() => {
   const { destination, origin, transportation, season } = formData.value;
   // Add more checks if needed (e.g., numberOfPeople > 0)
-  return !!destination && !!origin && transportation.length > 0 && !!season ;
+  return !!destination && !!origin && transportation.length > 0 && !!season && formData.value.numberOfDays > 0 && formData.value.numberOfPeople > 0;
 });
 // Transportation options (can be moved to a separate config file if large)
 const transportationOptions = [

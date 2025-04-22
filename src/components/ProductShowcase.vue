@@ -41,7 +41,7 @@ const fetchProductData = async () => {
     productData.value = data;
     apiCallSuccessful.value = true;
   } catch (error) {
-    console.error('❌ Error fetching product:', error);
+    console.error('❌ Error fetching product:');
     // Reset product data to defaults on error
     productData.value = {
       uid: '',
@@ -79,7 +79,7 @@ const fetchTransactionCount = async () => {
        throw new Error('Invalid count data structure received: ' + JSON.stringify(data));
     }
   } catch (error) {
-    console.error('❌ Error fetching transaction count:', error);
+    console.error('❌ Error fetching transaction count:');
     transactionCount.value = null; // Set to null on error to show fallback text
   } finally {
     isLoadingCount.value = false;

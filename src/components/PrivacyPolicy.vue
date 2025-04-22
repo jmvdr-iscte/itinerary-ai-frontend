@@ -26,7 +26,6 @@ const sections = [
   { id: 3, title: 'How We Use Your Information' },
   { id: 4, title: 'Data Security' },
   { id: 5, title: 'Your Rights' },
-  { id: 6, title: 'Contact Us' },
 ];
 
 const scrollToSection = (index: number) => {
@@ -167,29 +166,6 @@ const scrollToSection = (index: number) => {
                   <span>Opt-out of marketing communications</span>
                 </li>
               </ul>
-            </div>
-          </div>
-
-          <div class="bg-[#1E293B] rounded-xl p-6 border border-gray-700/50 shadow-xl shadow-purple-900/5 transform transition-all duration-500 opacity-0 translate-y-4"
-               :class="{'animate-fade-in': true}"
-               id="section-6">
-            <h2 class="text-2xl font-semibold mb-4 text-white flex items-center">
-              <span class="bg-gradient-to-r from-[#6B46C1] to-[#8B5CF6] text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">6</span>
-              Contact Us
-            </h2>
-            <div class="pl-11">
-              <p>
-                If you have any questions about this Privacy Policy, please contact us at:
-              </p>
-              <div class="mt-4 p-4 bg-[#0F1629] rounded-lg border border-gray-700/50 inline-block">
-                <p class="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#8B5CF6] mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                  <a href="mailto:privacy@tripflowai.com" class="text-[#8B5CF6] hover:underline">privacy@tripflowai.com</a>
-                </p>
-              </div>
             </div>
           </div>
 

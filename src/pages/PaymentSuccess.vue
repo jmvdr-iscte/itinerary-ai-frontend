@@ -21,7 +21,6 @@ const stopPolling = () => {
   if (pollIntervalId.value !== null) {
     clearInterval(pollIntervalId.value);
     pollIntervalId.value = null;
-    console.log('Polling stopped.');
   }
 };
 
@@ -30,13 +29,11 @@ const checkTransactionStatus = async (uid: string) => {
   // Only increment attempts if polling is active (or on the first manual call within startPolling)
   if (pollIntervalId.value !== null || pollAttempts.value === 0) {
       pollAttempts.value++;
-      console.log(`Polling attempt: ${pollAttempts.value}`);
   }
 
 
   // Prevent further checks if polling was already stopped elsewhere
   if (pollIntervalId.value === null && pollAttempts.value > 1) {
-      console.log('Polling already stopped, skipping check.');
       return;
   }
 
@@ -70,32 +67,27 @@ const checkTransactionStatus = async (uid: string) => {
     const currentStatus = data?.status?.toUpperCase(); // Normalize to uppercase for comparison
 
     if (currentStatus === 'COMPLETED') {
-      console.log('Status: COMPLETED');
       paymentStatus.value = 'success';
       stopPolling();
       isLoading.value = false;
     } else if (currentStatus === 'FAILED') {
-      console.log('Status: FAILED');
       paymentStatus.value = 'failed';
       errorMessage.value = data?.message || 'Payment failed. Please contact support.'; // Use backend message if available
       stopPolling();
       isLoading.value = false;
     } else if (currentStatus === 'CANCELED' || currentStatus === 'CANCELLED') { // Allow for spelling variations
-      console.log('Status: CANCELED/CANCELLED');
       paymentStatus.value = 'cancelled';
       errorMessage.value = data?.message || 'Payment was cancelled.';
       stopPolling();
       isLoading.value = false;
     } else if (pollAttempts.value >= MAX_POLL_ATTEMPTS) {
       // Reached max attempts without a final status
-      console.log('Status: Timeout (Max attempts reached)');
       paymentStatus.value = 'timeout';
       errorMessage.value = `Payment status is still pending after ${MAX_POLL_ATTEMPTS * (POLLING_INTERVAL / 1000)} seconds. Please check your email or contact support.`;
       stopPolling();
       isLoading.value = false;
     } else {
        // Status is still pending or unrecognized, continue polling (if interval is set)
-       console.log(`Status: ${currentStatus || 'Unknown'} - Continuing poll.`);
        // Ensure loading stays true while polling continues
        isLoading.value = true;
     }
@@ -111,7 +103,6 @@ const checkTransactionStatus = async (uid: string) => {
 
 // Function to start the polling process
 const startPolling = (uid: string) => {
-  console.log('Starting polling process...');
   isLoading.value = true; // Ensure loading is true at the start
   paymentStatus.value = 'pending'; // Reset status
   pollAttempts.value = 0; // Reset attempts
@@ -121,12 +112,10 @@ const startPolling = (uid: string) => {
       // Only set the interval if the first check didn't result in a final state
       // (isLoading will be false if a final state was reached)
       if (isLoading.value && pollIntervalId.value === null) {
-          console.log('Setting up interval...');
           pollIntervalId.value = setInterval(() => {
               checkTransactionStatus(uid);
           }, POLLING_INTERVAL);
       } else {
-          console.log('First check yielded final status or error, no interval needed.');
       }
   });
 };

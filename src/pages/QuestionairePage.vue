@@ -291,9 +291,6 @@ const finishQuestionnaire = () => {
   isLoading.value = true; // Show loading spinner/message
   const categoriesString = Array.from(selectedCategories.value).join(",");
 
-  console.log("Submitting - Selected Answers:", JSON.stringify(selectedAnswers.value));
-  console.log("Submitting - Selected Categories:", categoriesString);
-
   setTimeout(() => { // Simulate API call delay
     router.push({
       path: "/itinerary", // Ensure this route exists

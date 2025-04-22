@@ -115,7 +115,6 @@ const initMap = () => {
   }
   if (mapInitialized.value) return; // Prevent re-init
 
-  console.log("Initializing map...");
   try {
     // *** Compute google.maps Icon objects ***
     computedStandardIcon = {
@@ -181,7 +180,6 @@ const initMap = () => {
 
     mapInitialized.value = true; // Set flag on successful initialization
     errorMessage.value = ''; errorType.value = ''; // Clear errors
-    console.log("Map initialized.");
 
   } catch (error: any) {
     console.error('Error initializing map:');
@@ -197,12 +195,10 @@ const initMap = () => {
 const initPlacesAutocomplete = () => {
   // Check API and input element
   if (!window.google?.maps?.places || !inputElement.value) {
-      console.log("Prerequisites not met for initPlacesAutocomplete.");
       return;
   }
    if (placesAutocomplete.value) return; // Prevent re-init
 
-  console.log("Initializing Places Autocomplete...");
   try {
     placesAutocomplete.value = new window.google.maps.places.Autocomplete(inputElement.value, {
       fields: ['formatted_address', 'geometry', 'name', 'types'] // *** ADDED 'types' field ***
@@ -229,9 +225,8 @@ const initPlacesAutocomplete = () => {
       // Check if hotel icon is computed and if place type is lodging
       if (computedHotelIcon && place.types && place.types.includes('lodging')) {
           iconToUse = computedHotelIcon;
-          console.log("Selected place is lodging, using hotel icon.");
       } else {
-          console.log("Selected place is not lodging (or icons not ready), using standard icon.");
+          iconToUse = computedStandardIcon; // Reset to standard if not lodging
       }
 
       // Update state
@@ -248,7 +243,6 @@ const initPlacesAutocomplete = () => {
                console.warn("updateMap called but map/marker not ready.");
                // Attempt to initialize map if needed, then try again
                if (!mapInitialized.value) {
-                   console.log("Attempting map init from updateMap...");
                    initMap();
                    // Need to wait for initMap potentially
                    nextTick(() => {
@@ -288,7 +282,6 @@ const initPlacesAutocomplete = () => {
          updateMap();
       }
     });
-    console.log("Places Autocomplete initialized.");
   } catch (error: any) {
     console.error('Error initializing Places Autocomplete:');
     errorMessage.value = `Error initializing address search: ${error.message || error}`;
@@ -308,16 +301,14 @@ const loadGoogleMapsAPI = () => {
     const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
     if (existingScript) {
       // If script exists but API not ready, wait for it
-      console.log("API script tag exists, waiting for API object...");
       window.googleMapsCheckInterval = setInterval(() => {
         if (window.google?.maps?.places) {
           clearInterval(window.googleMapsCheckInterval); window.googleMapsCheckInterval = undefined;
-          isLoading.value = false; isApiLoaded.value = true; console.log("API object ready."); resolve();
+          isLoading.value = false; isApiLoaded.value = true; resolve();
         }
       }, 100); return;
     }
 
-    console.log("Loading Google Maps API script...");
     const script = document.createElement('script');
     const apiKey = props.apiKey || import.meta.env.VITE_Maps_API_KEY;
     // Ensure API Key exists
@@ -334,7 +325,6 @@ const loadGoogleMapsAPI = () => {
         isLoading.value = false;
         if(window.google?.maps?.places) {
             isApiLoaded.value = true;
-             console.log("Google Maps API script loaded and ready.");
             resolve();
         } else {
              console.error("Script loaded but google.maps not found!");
@@ -428,7 +418,6 @@ const useCurrentLocation = (event?: Event) => {
 
 // --- Lifecycle Hooks ---
 onMounted(async () => {
-  console.log("Component Mounted.");
   try {
       // Ensure API Loads before attempting to init autocomplete
       await loadGoogleMapsAPI();
@@ -449,7 +438,6 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  console.log("Component Unmounted.");
   if (placesAutocomplete.value) { window.google?.maps?.event.clearInstanceListeners(placesAutocomplete.value); }
   if (marker.value) { window.google?.maps?.event.clearInstanceListeners(marker.value); }
   // Don't necessarily clear map listeners unless specific ones were added

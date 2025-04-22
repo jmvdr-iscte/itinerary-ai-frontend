@@ -46,7 +46,6 @@ const paymentMethods = [
 // --- NEW: Image Load Handlers ---
 const handleImageLoad = (methodId: string) => {
     imagesLoadingStatus.value[methodId] = 'loaded';
-    // console.log(`Image loaded: ${methodId}`);
 };
 
 const handleImageError = (methodId: string) => {

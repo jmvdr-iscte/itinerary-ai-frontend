@@ -160,7 +160,6 @@ function triggerFinalSubmit() {
 
 
 function openEmailPopup() {
-  // Validation is checked by isFormValid via triggerFinalSubmit
   uiState.value.showEmailPopup = true;
 }
 

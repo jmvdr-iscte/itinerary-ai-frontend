@@ -503,7 +503,7 @@ onUnmounted(() => {
     </div>
 
     <p v-if="!errorMessage && !isLoading" :id="`origin-hint-${_uid}`" class="mt-1 text-xs text-gray-400">
-       Enter address or place name. Hotels selected via search will use a distinct marker.
+       Enter address or place name.
     </p>
 
     <div

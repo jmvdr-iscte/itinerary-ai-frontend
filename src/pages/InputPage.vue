@@ -256,7 +256,6 @@ const getConnectorClass = (step: number) => {
               </ol>
               <p class="pt-4">Fill in your trip information to generate a personalized itinerary.</p>
               </div>
-           <div class="text-xs text-gray-500">Powered by AI</div>
       </aside>
 
       <main class="flex-1 p-4 sm:p-6 md:p-8 flex flex-col items-center w-full md:max-h-screen-safe md:overflow-y-auto">

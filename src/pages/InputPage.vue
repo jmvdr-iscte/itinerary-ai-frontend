@@ -346,7 +346,7 @@ const getConnectorClass = (step: number) => {
                       <SeasonSelector
                             v-model="formData.season"
                             :options="seasonOptions"
-                            label="Preferred Season"
+                            label="Which season ?"
                             required
                         />
                     </div>

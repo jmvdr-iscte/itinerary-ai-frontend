@@ -61,14 +61,14 @@ const isMobile = computed(() => uiState.value.windowWidth < 768);
 
 // --- Step Validation ---
 const isStep1Valid = computed(() => {
-    const { destination, origin, numberOfDays, numberOfPeople } = formData.value;
-    return !!destination && !!origin && numberOfDays > 0 && numberOfPeople > 0;
+    const { destination, origin, numberOfDays, numberOfPeople, season } = formData.value;
+    return !!destination && !!origin && numberOfDays > 0 && numberOfPeople > 0 && !!season;
 });
 
 const isStep2Valid = computed(() => {
-    const { season, transportation } = formData.value;
+    const { transportation, budget } = formData.value;
     // Budget, Pace, UserInput are often optional, adjust if needed
-    return !!season && transportation.length > 0 && formData.value.budget >= 0;
+    return transportation.length > 0 && budget >= 0;
 });
 
 // Original validation for final submission trigger
@@ -343,16 +343,17 @@ const getConnectorClass = (step: number) => {
                             :min="1" :max="10"
                             required
                          />
+                     
                       </div>
-                    </div>
-
-                    <div v-if="currentStep === 2" class="space-y-7 animate-fadeIn">
-                       <SeasonSelector
+                      <SeasonSelector
                             v-model="formData.season"
                             :options="seasonOptions"
                             label="Preferred Season"
                             required
                         />
+                    </div>
+
+                    <div v-if="currentStep === 2" class="space-y-7 animate-fadeIn">
                        <TransportationSelector
                             v-model="formData.transportation"
                             :options="transportationOptions"

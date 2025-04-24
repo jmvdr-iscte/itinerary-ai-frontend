@@ -265,11 +265,11 @@ const roadTripFeatures = [
                       }">
                 </span>
             </span>
-            <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
+            <!-- <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
             <span v-else-if="transactionCount !== null && transactionCount >= 0">
                 {{ transactionCount }} traveler{{ transactionCount === 1 ? '' : 's' }} purchased in the last 24 hours
             </span>
-            <span v-else class="opacity-75">Purchase data unavailable</span>
+            <span v-else class="opacity-75">Purchase data unavailable</span> -->
           </p>
         </div>
 

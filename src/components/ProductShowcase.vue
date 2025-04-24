@@ -253,7 +253,7 @@ const roadTripFeatures = [
               <span>supported by Stripe</span>
             </div>
           </div>
-          <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm min-h-[20px]">
+          <!-- <p class="text-center text-white/70 mt-6 flex items-center justify-center text-sm min-h-[20px]">
             <span class="relative flex h-3 w-3 mr-2 flex-shrink-0">
                 <span v-if="!isLoadingCount && transactionCount !== null" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span v-if="isLoadingCount" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
@@ -265,12 +265,12 @@ const roadTripFeatures = [
                       }">
                 </span>
             </span>
-            <!-- <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
+            <span v-if="isLoadingCount" class="opacity-75 italic">Loading purchase data...</span>
             <span v-else-if="transactionCount !== null && transactionCount >= 0">
                 {{ transactionCount }} traveler{{ transactionCount === 1 ? '' : 's' }} purchased in the last 24 hours
             </span>
-            <span v-else class="opacity-75">Purchase data unavailable</span> -->
-          </p>
+            <span v-else class="opacity-75">Purchase data unavailable</span>
+          </p> -->
         </div>
 
         <div class="w-full lg:w-1/2 transform transition-all duration-700 ease-out delay-100"

@@ -125,7 +125,8 @@ const handleSubmit = async () => {
         if (categories.length === 0) { categories = ["ADVENTURE", "FAMILY"]; }
 
         const itineraryRequestBody = {
-            categories: categories, destination: props.tripData.destination,
+            categories: categories, 
+            destination: props.tripData.destination,
             number_of_people: props.tripData.number_of_people,
             origin: props.tripData.origin,
             transportation: props.tripData.transportation,

@@ -28,7 +28,7 @@ const productData = ref({
 // Form data
 const formData = ref({
   categories: [] as string[],
-  destination: "",
+  destination: [] as string[],
   numberOfPeople: 1,
   numberOfDays: 1,
   origin: "",
@@ -62,7 +62,7 @@ const isMobile = computed(() => uiState.value.windowWidth < 768);
 // --- Step Validation ---
 const isStep1Valid = computed(() => {
     const { destination, origin, numberOfDays, numberOfPeople, season } = formData.value;
-    return !!destination && !!origin && numberOfDays > 0 && numberOfPeople > 0 && !!season;
+    return destination.length > 0 && !!origin && numberOfDays > 0 && numberOfPeople > 0 && !!season;
 });
 
 const isStep2Valid = computed(() => {
@@ -213,8 +213,6 @@ function getTripData() {
 
 function submitPaymentMethod() {
   closePaymentMethodsPopup();
-  // Handle successful payment navigation/confirmation here
-  console.log("Payment Submitted (Placeholder)");
 }
 
 // Helper function for stepper classes
@@ -385,7 +383,7 @@ const getConnectorClass = (step: number) => {
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
                                 <div>
                                     <span class="block font-medium text-gray-400 mb-0.5">Destination</span>
-                                    <span class="text-gray-100 font-semibold">{{ formData.destination || 'N/A' }}</span>
+                                    <span class="text-gray-100 font-semibold">{{ formData.destination.length > 0 ? formData.destination.map(t => t.replace(/_/g, ' ')).join('; ') : 'N/A' }}</span>
                                 </div>
                                 <div>
                                     <span class="block font-medium text-gray-400 mb-0.5">Accommodation Area</span>

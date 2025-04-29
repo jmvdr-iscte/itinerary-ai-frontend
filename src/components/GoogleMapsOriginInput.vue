@@ -310,7 +310,7 @@ const loadGoogleMapsAPI = () => {
     }
 
     const script = document.createElement('script');
-    const apiKey = props.apiKey || import.meta.env.VITE_Maps_API_KEY;
+    const apiKey = props.apiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     // Ensure API Key exists
      if (!apiKey) {
         errorMessage.value = 'API Key is missing. Cannot load Google Maps.';

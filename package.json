@@ -12,6 +12,7 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@vueuse/head": "^2.0.0",
     "autoprefixer": "^10",
     "postcss": "^8",
     "tailwindcss": "^3",

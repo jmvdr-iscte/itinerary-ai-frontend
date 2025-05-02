@@ -5,8 +5,19 @@ import HeroSection from '@/components/HeroSection.vue';
 import FeaturesSection from '@/components/FeaturesSection.vue';
 import ProductShowcase from '@/components/ProductShowcase.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import { useHead } from '@vueuse/head';
 
-// Fix for mobile viewport height issues
+useHead({
+  title: 'TripVibes: Personalized Travel Itinerary Generator',
+  meta: [
+    { name: 'description', content: 'Get a custom itinerary based on your travel preferences with TripVibes.' },
+    { name: 'keywords', content: 'vacation planning, itinerary generator, trip planning, travel preferences, AI, artificial inteligence' },
+    { property: 'og:title', content: 'TripVibes: Personalized  Travel Itinerary Generator' },
+    { property: 'og:description', content: 'Get a custom itinerary based on your travel preferences.' },
+    { property: 'og:url', content: 'https://tripvibes.me' },
+  ]
+});
+
 onMounted(() => {
   // Set the value of --vh to be equal to 1% of the viewport height
   const setVh = () => {

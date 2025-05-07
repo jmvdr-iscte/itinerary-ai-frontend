@@ -167,7 +167,7 @@ onUnmounted(() => {
           </li>
           <li>
             <a
-              href="#"
+              href="https://tripvibes.me/contact-us"
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >

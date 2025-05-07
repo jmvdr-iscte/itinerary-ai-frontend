@@ -51,6 +51,21 @@ onMounted(() => {
 
       <!-- Product Section -->
       <ProductShowcase />
+      <section class="w-full flex flex-col items-center py-12 px-4 bg-[#101B35]">
+        <h2 class="text-2xl md:text-3xl font-semibold mb-8 text-center text-white">
+          See TripVibes in Action
+        </h2>
+        <div class="w-full max-w-4xl aspect-video rounded-2xl shadow-lg overflow-hidden">
+          <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/rtuoicjbr1Q?si=9GG5KU9kHspodduo&&modestbranding=1&rel=0&showinfo=0&controls=1"
+            title="TripVibes Demo"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
     </main>
 
     <AppFooter />

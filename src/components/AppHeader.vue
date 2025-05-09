@@ -140,7 +140,7 @@ onUnmounted(() => {
         <ul class="space-y-4">
           <li>
             <a
-              href="#"
+              href="https://tripvibes.me/"
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -149,7 +149,7 @@ onUnmounted(() => {
           </li>
           <li>
             <a
-              href="#features"
+              href="https://tripvibes.me/#features"
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
@@ -158,7 +158,7 @@ onUnmounted(() => {
           </li>
           <li>
             <a
-              href="#get-started"
+              href="https://tripvibes.me/contact-us/#get-started"
               class="block text-white hover:text-[#8B5CF6] transition-colors py-2"
               @click="closeMobileMenu"
             >
